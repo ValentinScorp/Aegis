@@ -7,14 +7,9 @@ namespace Aegis.Core
     public class World
     {
         private static readonly World _instance = new World();
-        private static int _instanceAccessCount;
 
         public static World Instance {
-            get {
-                _instanceAccessCount++;
-                // Debug.Log($"World.Instance accessed {_instanceAccessCount} time(s).");
-                return _instance;
-            }
+            get => _instance;
         }
 
         public event Action<WorldEntity> EntityCreated;

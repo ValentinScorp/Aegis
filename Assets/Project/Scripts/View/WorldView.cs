@@ -10,20 +10,25 @@ namespace Aegis.View
 
         private List<EntityView> _views = new();
         private World _world;
-        private void Start()
+        private void Awake()
         {
             _world = World.Instance;
-
+        }
+        private void Start()
+        {
             foreach (var entity in _world.Entities) {
                 CreateEntityView(entity);
             }
             _world.EntityCreated += OnEntityCreated;
         }
-        private void OnDestroy()
+        private void OnDisable()
         {
             if (_world != null) {
                 _world.EntityCreated -= OnEntityCreated;
-            }
+            }  
+        }
+        private void OnDestroy()
+        {
             foreach (var view in _views) {
                 if (view != null) view.Unbind();
             }

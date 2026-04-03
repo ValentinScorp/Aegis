@@ -1,18 +1,21 @@
 using UnityEngine;
 
-namespace Aegis.Core
+namespace Aegis.View
 {
     public class Selectable : MonoBehaviour
     {
-        [SerializeField] private Renderer objectRenderer;
-        [SerializeField] private Material defaultMaterial;
-        [SerializeField] private Material selectedMaterial;
+        [SerializeField] private Renderer _objectRenderer;
+
+        [SerializeField] private Color selectedColor = Color.yellow;
+
+        private MaterialPropertyBlock _mpb;
 
         private bool isSelected;
 
         private void Reset()
         {
-            objectRenderer = GetComponentInChildren<Renderer>();
+            _objectRenderer = GetComponentInChildren<Renderer>();
+            if (_objectRenderer == null) Debug.LogWarning("Didn't get Renderer in Prefab!");
         }
         public void Select()
         {
@@ -26,9 +29,17 @@ namespace Aegis.Core
         }
         private void UpdateVisual()
         {
-            if (objectRenderer == null) return;
+            if (_objectRenderer == null) return;
 
-            objectRenderer.material = isSelected ? selectedMaterial : defaultMaterial;
+            if (_mpb == null) _mpb = new MaterialPropertyBlock();
+
+            if (isSelected) {
+                _mpb.SetColor("_EmissionColor", selectedColor);
+            } else {
+                _mpb.Clear();
+            }
+
+            _objectRenderer.SetPropertyBlock(_mpb);
         }
     }
 }

@@ -81,10 +81,12 @@ namespace Aegis.View
             _animator.SetBool("isWalking", true);
             
             try {
-                yield return new WaitUntil(() => !_agent.pathPending);
-                yield return new WaitUntil(() => _agent.ReachedDestinationOrGaveUp());
+                yield return new WaitUntil(() => this != null && !_agent.pathPending);
+                yield return new WaitUntil(() => this == null || _agent.ReachedDestinationOrGaveUp());
                 OnWalkFinished();
             } finally {}
+
+            if (this != null) OnWalkFinished();
         }
         private void OnWalkFinished()
         {

@@ -15,10 +15,12 @@ namespace Aegis.Services
 
         private void Start()
         {
+            if (_inputListener == null) return;
             _inputListener.TapPerformed += OnPlayerTap;
         }
         private void OnDestroy()
         {
+            if (_inputListener == null) return;
             _inputListener.TapPerformed -= OnPlayerTap;
         }
 

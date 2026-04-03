@@ -26,24 +26,21 @@ namespace Aegis.Services
 
         private void OnHitsDetected(List<RaycastHit> list)
         {
-            if (TryGetSelectable(list, out var selectable))
-            {
+            if (TryGetSelectable(list, out var selectable)) {
                 Select(selectable);
                 return;
             }
 
             if (_selectedView == null) return;
 
-            if (TryGetGroundPoint(list, out var groundPoint))
-            {
+            if (TryGetGroundPoint(list, out var groundPoint)) {
                 _selectedView.MoveTo(groundPoint);
             }
         }
 
         private bool TryGetSelectable(List<RaycastHit> hits, out Selectable selectable)
         {
-            foreach (var hit in hits)
-            {
+            foreach (var hit in hits) {
                 selectable = hit.collider.GetComponentInParent<Selectable>();
                 if (selectable != null) return true;
             }
@@ -54,11 +51,9 @@ namespace Aegis.Services
 
         private bool TryGetGroundPoint(List<RaycastHit> hits, out Vector3 point)
         {
-            foreach (var hit in hits)
-            {
+            foreach (var hit in hits) {
                 var layerMask = 1 << hit.collider.gameObject.layer;
-                if ((layerMask & _groundMask.value) != 0)
-                {
+                if ((layerMask & _groundMask.value) != 0) {
                     point = hit.point;
                     return true;
                 }
@@ -72,11 +67,7 @@ namespace Aegis.Services
         {
             if (_selected == selectable) return;
 
-            if (_selected != null)
-            {
-                _selected.Deselect();
-            }
-
+            _selected?.Deselect();
             _selected = selectable;
             _selected.Select();
             _selectedView = _selected.GetComponentInParent<EntityView>();

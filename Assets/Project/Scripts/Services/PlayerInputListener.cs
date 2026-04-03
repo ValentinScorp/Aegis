@@ -7,16 +7,12 @@ namespace Aegis.Services
     public class PlayerInputListener : MonoBehaviour
     {
         private PlayerInputActions _inputActions;
+        private HotkeyListener _hotkeyListener;
         public event Action<Vector2> TapPerformed;
 
         private void Awake()
         {
             _inputActions = new PlayerInputActions();
-            // ServiceLocator.Register(this);
-        }
-        private void OnDestroy()
-        {
-            // ServiceLocator.Unregister<PlayerInputListener>();
         }
         private void OnEnable()
         {
@@ -34,5 +30,9 @@ namespace Aegis.Services
             TapPerformed?.Invoke(screenPosition);
             // Debug.Log("Tap at: " + screenPosition);
         }
+    }
+
+    internal class HotkeyListener
+    {
     }
 }

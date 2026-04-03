@@ -103,9 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b507313cea8fc043b79dc55cd5c7736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableObject
-  objectRenderer: {fileID: 8691110030767548739}
-  defaultMaterial: {fileID: 2100000, guid: e1669dbe7e9d0b044a9561ee2792e5da, type: 2}
-  selectedMaterial: {fileID: 2100000, guid: 250ac37c71cac1a4bbc45a49e65d188e, type: 2}
+  _objectRenderer: {fileID: 8691110030767548739}
+  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &5636412888896548542
 MonoBehaviour:
   m_ObjectHideFlags: 0
