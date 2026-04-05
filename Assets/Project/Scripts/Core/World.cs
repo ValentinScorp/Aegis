@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Aegis.Core
 {
-    public class World
+    public class World : IWorldUpdatable
     {
         private static readonly World _instance = new World();
 
@@ -18,18 +18,34 @@ namespace Aegis.Core
 
         private World()
         {
-            CreateEntity(Vector3.zero, isEnemy: false);
-            CreateEntity(new Vector3(-2f, 0.03f, 11f), isEnemy: true);
-
+            CreateEntity(new Vector3(-2f, 0.03f, 11f), factionId: 1);
+            CreateEntity(new Vector3(2f, 0.03f, 11f), factionId: 2);
         }
-        public WorldEntity CreateEntity(Vector3 position, bool isEnemy)
+        public WorldEntity CreateEntity(Vector3 position, int factionId)
         {
             var entity = new WorldEntity();
             entity.SetPosition(position);
-            entity.isEnemy = isEnemy;
+            entity.factionId = factionId;
             _entities.Add(entity);
             EntityCreated?.Invoke(entity);
             return entity;
         }
+        public void RemoveEntity(WorldEntity entity)
+        {
+            _entities.Remove(entity);
+        }
+        public void OnInteractionsUpdate()
+        {
+            foreach (var entity in _entities) {
+                entity.ScanForTarget(_entities);
+            }
+        }
+        public void OnActionsUpdate(float deltaTime)
+        {
+            foreach (var entity in _entities) {
+                entity.ProcessAction(deltaTime);
+            }
+        }
+
     }
 }

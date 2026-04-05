@@ -25,7 +25,7 @@ namespace Aegis.View
         {
             if (_world != null) {
                 _world.EntityCreated -= OnEntityCreated;
-            }  
+            }
         }
         private void OnDestroy()
         {

@@ -1043,6 +1043,50 @@ Transform:
   - {fileID: 1569074702}
   m_Father: {fileID: 1852441259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &998613208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 998613209}
+  - component: {fileID: 998613210}
+  m_Layer: 0
+  m_Name: WorldUpdater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &998613209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998613208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1074663757}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &998613210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998613208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa09bdbe8bae42241b5f7c2fff53f0b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.WorldUpdater
 --- !u!1 &1074663756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,6 +1116,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 998613209}
   - {fileID: 1814450724}
   - {fileID: 2134489056}
   - {fileID: 2138795595}
@@ -1680,7 +1725,7 @@ GameObject:
   - component: {fileID: 2134489056}
   - component: {fileID: 2134489057}
   m_Layer: 0
-  m_Name: RaycastDetector
+  m_Name: RaycastHitDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1715,7 +1760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectsHitDetector
   _camera: {fileID: 330585545}
   _canvas: {fileID: 1467308116}
-  _inputListener: {fileID: 1814450725}
+  _playerInputListener: {fileID: 1814450725}
 --- !u!1 &2138795594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1727,7 +1772,7 @@ GameObject:
   - component: {fileID: 2138795595}
   - component: {fileID: 2138795596}
   m_Layer: 0
-  m_Name: Navigator
+  m_Name: SelectionController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1760,7 +1805,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2eb3db42b24434395bc1c1fdb64554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Services.Navigator
-  _hitDetector: {fileID: 2134489057}
+  _playerInputListener: {fileID: 1814450725}
+  _raycastHitDetector: {fileID: 2134489057}
   _groundMask:
     serializedVersion: 2
     m_Bits: 1024

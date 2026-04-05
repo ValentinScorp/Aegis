@@ -10,21 +10,16 @@ namespace Aegis.View
 
         private MaterialPropertyBlock _mpb;
 
-        private bool isSelected;
+        private bool _selected;
 
         private void Reset()
         {
             _objectRenderer = GetComponentInChildren<Renderer>();
             if (_objectRenderer == null) Debug.LogWarning("Didn't get Renderer in Prefab!");
         }
-        public void Select()
+        public void Select(bool selected)
         {
-            isSelected = true;
-            UpdateVisual();
-        }
-        public void Deselect()
-        {
-            isSelected = false;
+            _selected = selected;
             UpdateVisual();
         }
         private void UpdateVisual()
@@ -33,7 +28,7 @@ namespace Aegis.View
 
             if (_mpb == null) _mpb = new MaterialPropertyBlock();
 
-            if (isSelected) {
+            if (_selected) {
                 _mpb.SetColor("_EmissionColor", selectedColor);
             } else {
                 _mpb.Clear();

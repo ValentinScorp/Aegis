@@ -6,22 +6,25 @@ using UnityEngine.UI;
 
 namespace Aegis.Services
 {
-    public class RaycastDetector : MonoBehaviour
+    public class RaycastHitDetector : MonoBehaviour
     {
         [SerializeField] private Camera _camera;
         [SerializeField] private Canvas _canvas;
-        [SerializeField] private PlayerInputListener _inputListener;
+        [SerializeField] private PlayerInputListener _playerInputListener;
         public event Action<List<RaycastHit>> HitsDetected;
-
+        private void Awake()
+        {
+            _playerInputListener = Utilities.ComponentResolver.ResolveOrFind(this, _playerInputListener);            
+        }
         private void Start()
         {
-            if (_inputListener == null) return;
-            _inputListener.TapPerformed += OnPlayerTap;
+            if (_playerInputListener == null) return;
+            _playerInputListener.TapPerformed += OnPlayerTap;
         }
         private void OnDestroy()
         {
-            if (_inputListener == null) return;
-            _inputListener.TapPerformed -= OnPlayerTap;
+            if (_playerInputListener == null) return;
+            _playerInputListener.TapPerformed -= OnPlayerTap;
         }
 
         private void OnPlayerTap(Vector2 screenPosition)
