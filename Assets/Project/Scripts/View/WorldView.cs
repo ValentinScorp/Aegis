@@ -6,7 +6,7 @@ namespace Aegis.View
 {
     public class WorldView : MonoBehaviour
     {
-        [SerializeField] private EntityView _dummyPrefab;
+        [SerializeField] private EntityView _entityPrefab;
 
         private List<EntityView> _views = new();
         private World _world;
@@ -41,7 +41,7 @@ namespace Aegis.View
 
         private void CreateEntityView(WorldEntity entity)
         {
-            var view = Instantiate(_dummyPrefab, entity.position, entity.rotation, transform);
+            var view = Instantiate(_entityPrefab, entity.Position, entity.Rotation, transform);
             view.Bind(entity);
             _views.Add(view);
         }

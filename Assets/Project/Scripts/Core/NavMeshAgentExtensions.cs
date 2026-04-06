@@ -7,7 +7,7 @@ public static class NavMeshAgentExtensions
         if (agent.pathPending) return false;
 
         if (agent.remainingDistance <= agent.stoppingDistance) {
-            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) {
+            if (!agent.hasPath || agent.velocity.sqrMagnitude <= 0.1f) {
                 return true;
             }
         }

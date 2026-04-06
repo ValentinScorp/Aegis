@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6d4482688d1134987518a770aa4ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.World
-  _entityPrefab: {fileID: 5636412888896548542, guid: ab92209af7c8f7d4594a4c10d00d8ab5, type: 3}
+  _dummyPrefab: {fileID: 5636412888896548542, guid: ab92209af7c8f7d4594a4c10d00d8ab5, type: 3}
 --- !u!1 &2028579077
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,9 +23,8 @@ namespace Aegis.Core
         }
         public WorldEntity CreateEntity(Vector3 position, int factionId)
         {
-            var entity = new WorldEntity();
-            entity.SetPosition(position);
-            entity.factionId = factionId;
+            var entity = new Unit(factionId);
+            entity.Position = position;
             _entities.Add(entity);
             EntityCreated?.Invoke(entity);
             return entity;
@@ -37,13 +36,13 @@ namespace Aegis.Core
         public void OnInteractionsUpdate()
         {
             foreach (var entity in _entities) {
-                entity.ScanForTarget(_entities);
+                if (entity is Unit unit) unit.UpdateInteractions(_entities);
             }
         }
         public void OnActionsUpdate(float deltaTime)
         {
             foreach (var entity in _entities) {
-                entity.ProcessAction(deltaTime);
+                if (entity is Unit unit) unit.UpdateActions(deltaTime);
             }
         }
 

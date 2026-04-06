@@ -13,7 +13,7 @@ namespace Aegis.Services
         [SerializeField] private RaycastHitDetector _raycastHitDetector;
         [SerializeField] private LayerMask _groundMask;
 
-        private WorldEntity _selectedEntity;
+        private Unit _selectedUnit;
 
         private void Awake()
         {
@@ -38,12 +38,13 @@ namespace Aegis.Services
         private void OnRaycastHitsDetected(List<RaycastHit> list)
         {
             if (TryGetWorldEntity(list, out var entity)) {
-                SelectNewEntity(entity);
+                if (entity is Unit unit) SelectUnit(unit);
                 return;
             }
 
             if (TryGetGroundPoint(list, out var groundPoint)) {
-                _selectedEntity?.PerformMovementTo(groundPoint);
+                if (_selectedUnit is Unit unit)
+                    unit?.PerformMovementTo(groundPoint);
             }
         }
         private bool TryGetWorldEntity(List<RaycastHit> hits, out WorldEntity worldEntity)
@@ -78,13 +79,13 @@ namespace Aegis.Services
             point = default;
             return false;
         }
-        private void SelectNewEntity(WorldEntity entity)
+        private void SelectUnit(Unit unit)
         {
-            if (_selectedEntity is not null) {
-                _selectedEntity.Select(false);                
+            if (_selectedUnit is not null) {
+                _selectedUnit.Select(false);                
             }
-            _selectedEntity = entity;
-            _selectedEntity.Select(true);
+            _selectedUnit = unit;
+            _selectedUnit.Select(true);
         }
     }
 }

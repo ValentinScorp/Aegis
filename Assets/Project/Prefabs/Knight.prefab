@@ -66,9 +66,11 @@ GameObject:
   - component: {fileID: 3506713615854190379}
   - component: {fileID: 3136518124250224216}
   - component: {fileID: 5636412888896548542}
+  - component: {fileID: 4515276628455807906}
+  - component: {fileID: 1962362919419628006}
   - component: {fileID: 9018675436902733164}
   m_Layer: 0
-  m_Name: Dummy
+  m_Name: Knight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,7 +119,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e67d3b8c23a9041a3ef344d3e1d582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.EntityView
+--- !u!114 &4515276628455807906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358281500524856689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f509dff39b9e32546892c5f11be19b03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityMovement
   _agent: {fileID: 9018675436902733164}
+--- !u!114 &1962362919419628006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358281500524856689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
   _animator: {fileID: 8691110030771623811}
 --- !u!195 &9018675436902733164
 NavMeshAgent:
@@ -133,10 +159,10 @@ NavMeshAgent:
   m_Acceleration: 16
   avoidancePriority: 50
   m_AngularSpeed: 360
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
-  m_AutoRepath: 1
+  m_AutoRepath: 0
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
