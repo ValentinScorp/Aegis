@@ -1,33 +1,36 @@
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Aegis.Core
 {
     public class UnitStateWalk : IUnitState
     {
-        private Unit _owner;
+        private Unit _self;
+        public Vector3 Destination { get; set; }
 
         public UnitStateWalk(Unit owner)
         {
-            _owner = owner;
+            _self = owner;
         }
-        public void Enter()
+        public void Enter(Vector3? destination = null)
         {
-            throw new System.NotImplementedException();
+            _self.AttackTarget = null;
+            _self.ChaseTarget = null;
+            _self.ClosestTarget = null;
         }
 
         public void Exit()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void OnActionsUpdate(float deltTime)
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void OnInteractionsUpdate(WorldEntity closestTarget)
         {
-            throw new System.NotImplementedException();
+            
         }
     }
 }

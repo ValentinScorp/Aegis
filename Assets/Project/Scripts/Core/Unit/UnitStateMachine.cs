@@ -1,5 +1,4 @@
-
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Aegis.Core
 {
@@ -9,22 +8,22 @@ namespace Aegis.Core
         public IUnitState Idle;
         public IUnitState Chase;
         public IUnitState Attack;
-        public IUnitState Walk;
+        public UnitStateWalk Walk;
 
         public UnitStateMachine(Unit owner)
         {
             Idle = new UnitStateIdle(owner);
             Chase = new UnitStateChase(owner);
-            Attack = new UnitStateChase(owner);
+            Attack = new UnitStateAttack(owner);
             Walk = new UnitStateWalk(owner);
 
             SetState(Idle);
         }
-        public void SetState(IUnitState newState)
+        public void SetState(IUnitState newState, Vector3? destination = null)
         {
             if (_currentState == newState)
                 return;
-
+            Debug.Log($"Settin new satate {newState}");
             _currentState?.Exit();
             _currentState = newState;
             _currentState?.Enter();

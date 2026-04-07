@@ -10,7 +10,6 @@ namespace Aegis.View
     public class EntityMovement : MonoBehaviour
     {
         [SerializeField] private NavMeshAgent _agent;
-        // [SerializeField] private Animator _animator;
 
         private Unit _unit;
 
@@ -55,6 +54,22 @@ namespace Aegis.View
             Stop();
             _walkCoroutine = StartCoroutine(WalkRoutine(destination));
         }
+        private IEnumerator WalkRoutine(Vector3 destination)
+        {
+            if (!_agent.SetDestination(destination)) {
+                Debug.LogWarning("EntityMovement: failed to set destination");
+                yield break;
+            }
+            OnWalkStarted?.Invoke();
+
+            try {
+                yield return new WaitUntil(() => this != null && !_agent.pathPending);
+                yield return new WaitUntil(() => this == null || _agent.ReachedDestinationOrGaveUp());
+                OnWalkFinished();
+            } finally { }
+
+            OnWalkFinished();
+        }
 
         public void Stop()
         {
@@ -76,30 +91,11 @@ namespace Aegis.View
 
             if (direction.sqrMagnitude > 0.001f)
                 transform.rotation = Quaternion.LookRotation(direction);
-        }
-
-        private IEnumerator WalkRoutine(Vector3 destination)
-        {
-            if (!_agent.SetDestination(destination)) {
-                Debug.LogWarning("EntityMovement: failed to set destination");
-                yield break;
-            }
-            OnWalkStarted?.Invoke();
-            // _animator.SetBool("PerformWalk", true);
-
-            try {
-                yield return new WaitUntil(() => this != null && !_agent.pathPending);
-                yield return new WaitUntil(() => this == null || _agent.ReachedDestinationOrGaveUp());
-                OnWalkFinished();
-            } finally { }
-
-            OnWalkFinished();
-        }
+        }        
 
         private void OnWalkFinished()
         {
             OnWalkStopped?.Invoke();
-            // _animator.SetBool("PerformWalk", false);
 
             if (_agent.pathStatus == NavMeshPathStatus.PathComplete)
                 _unit?.MovementComplete(transform.position);

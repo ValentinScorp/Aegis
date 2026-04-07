@@ -44,7 +44,7 @@ namespace Aegis.Services
 
             if (TryGetGroundPoint(list, out var groundPoint)) {
                 if (_selectedUnit is Unit unit)
-                    unit?.PerformMovementTo(groundPoint);
+                    unit?.PerformWalk(groundPoint);
             }
         }
         private bool TryGetWorldEntity(List<RaycastHit> hits, out WorldEntity worldEntity)

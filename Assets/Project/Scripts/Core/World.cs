@@ -19,7 +19,7 @@ namespace Aegis.Core
         private World()
         {
             CreateEntity(new Vector3(-2f, 0.03f, 11f), factionId: 1);
-            CreateEntity(new Vector3(2f, 0.03f, 11f), factionId: 2);
+            CreateEntity(new Vector3(6f, 0.03f, 11f), factionId: 2);
         }
         public WorldEntity CreateEntity(Vector3 position, int factionId)
         {

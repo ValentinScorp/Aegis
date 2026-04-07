@@ -15,13 +15,13 @@ namespace Aegis.Core
         public WorldEntity AttackTarget;
         public WorldEntity ChaseTarget;
 
-        public bool selectedByPlayer { get; private set; }
+        public bool SelectedByPlayer { get; private set; }
 
         public event Action<bool> WasSelectedByPlayer;
         public event Action<WorldEntity> PerformedAttack;
-        public event Action<Vector3> MovedTo;
+        public event Action<Vector3> WalkTo;
         public event Action<WorldEntity> LookedAt;
-        public UnitStateMachine StateMachine { get; private set; }
+        public UnitStateMachine StateMachine { get; private set; }        
         
         public WorldEntity ClosestTarget {
             get => _closestTarget;
@@ -39,16 +39,23 @@ namespace Aegis.Core
         }
         public void MovementComplete(Vector3 position)
         {
+            Debug.Log("Movement complete!");
             Position = position;
+            StateMachine.SetState(StateMachine.Idle);
         }
         public void Select(bool selected)
         {
-            selectedByPlayer = selected;
+            SelectedByPlayer = selected;
             WasSelectedByPlayer?.Invoke(selected);
         }
-        public void PerformMovementTo(Vector3 destination)
+        public void PerformWalk(Vector3 destination)
         {
-            MovedTo?.Invoke(destination);
+            StateMachine.SetState(StateMachine.Walk, destination);
+            WalkTo?.Invoke(destination);
+        }
+        public void UpdateChaseTargetPosition(WorldEntity entity)
+        {
+            WalkTo?.Invoke(entity.Position);            
         }
         public void LookAtEntity(WorldEntity target)
         {

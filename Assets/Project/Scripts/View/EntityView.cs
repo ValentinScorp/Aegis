@@ -29,7 +29,7 @@ namespace Aegis.View
                 _entityMovement.Bind(unit);
 
                 unit.WasSelectedByPlayer += OnPlayerSelection;
-                unit.MovedTo += _entityMovement.MoveTo;
+                unit.WalkTo += _entityMovement.MoveTo;
                 unit.PerformedAttack += _entityAnimator.PlayAttack;
                 unit.LookedAt += OnLookAt;
             }
@@ -43,7 +43,7 @@ namespace Aegis.View
                 _entityMovement.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
-                unit.MovedTo -= _entityMovement.MoveTo;
+                unit.WalkTo -= _entityMovement.MoveTo;
                 unit.PerformedAttack -= _entityAnimator.PlayAttack;
                 unit.LookedAt -= OnLookAt;
             }

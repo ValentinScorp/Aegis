@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Aegis.Core
 {
@@ -14,12 +15,15 @@ namespace Aegis.Core
             _attackCooldownTimer = 0f;
             _self = owner;
         }
-        public void Enter()
+        public void Enter(Vector3? destination = null)
         {
             _self.PerformAttack();
+            Debug.Log("Enter Attack State!");
         }
         public void Exit()
         {
+            Debug.Log("Exit Attack State!");
+            
         }
 
         public void OnActionsUpdate(float deltTime)
