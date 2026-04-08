@@ -8,9 +8,11 @@ namespace Aegis.Core
     public class Unit : WorldEntity, IFactionMember
     {
         public int FactionId { get; private set; }
-        public float SearchRadius = 10.0f;
+        public float SearchRadius = 6.0f;
+        public float ChaseRadius = 7.0f;
         public float AttackRadius = 2.0f;
-        public float AttackTime = 1.2f;
+        public float AttackTime = 1.5f;
+        public Vector3 FixedPosition { get; set; }
         private WorldEntity _closestTarget;
         public WorldEntity AttackTarget;
         public WorldEntity ChaseTarget;
@@ -18,9 +20,11 @@ namespace Aegis.Core
         public bool SelectedByPlayer { get; private set; }
 
         public event Action<bool> WasSelectedByPlayer;
-        public event Action<WorldEntity> PerformedAttack;
+        public event Action ExecutedStopMovement;
+        public event Action<Vector3> AttackBegin;
         public event Action<Vector3> WalkTo;
-        public event Action<WorldEntity> LookedAt;
+        public event Action<Vector3> ChaseTo;
+        public event Action AttackEnd;
         public UnitStateMachine StateMachine { get; private set; }        
         
         public WorldEntity ClosestTarget {
@@ -28,19 +32,21 @@ namespace Aegis.Core
             set {
                 if (_closestTarget != value) {
                     _closestTarget = value;
-                    LookedAt?.Invoke(_closestTarget);
+                    // LookedAt?.Invoke(_closestTarget);
                 }
             }
         }
-        public Unit(int factionId)
+        public Unit(Vector3 position, int factionId)
         {
             FactionId = factionId;
             StateMachine = new UnitStateMachine(this);
+            Position = position;
+            FixedPosition = Position;
         }
         public void MovementComplete(Vector3 position)
         {
-            Debug.Log("Movement complete!");
             Position = position;
+
             StateMachine.SetState(StateMachine.Idle);
         }
         public void Select(bool selected)
@@ -50,20 +56,26 @@ namespace Aegis.Core
         }
         public void PerformWalk(Vector3 destination)
         {
-            StateMachine.SetState(StateMachine.Walk, destination);
+            FixedPosition = destination;
+            StateMachine.Walk.Destination = destination;
+            StateMachine.SetState(StateMachine.Walk);
             WalkTo?.Invoke(destination);
         }
-        public void UpdateChaseTargetPosition(WorldEntity entity)
+        public void PerformChase(WorldEntity entity)
         {
-            WalkTo?.Invoke(entity.Position);            
+            ChaseTo?.Invoke(entity.Position);            
         }
-        public void LookAtEntity(WorldEntity target)
+        public void StopMovement()
         {
-            ClosestTarget = target;
+            ExecutedStopMovement?.Invoke();
         }
-        public void PerformAttack()
+        public void PerformAttack(Vector3 targetPosition)
         {
-            PerformedAttack?.Invoke(ClosestTarget);
+            AttackBegin?.Invoke(targetPosition);
+        }
+        public void StopAttack()
+        {
+            AttackEnd?.Invoke();
         }
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
@@ -83,7 +95,7 @@ namespace Aegis.Core
             }
             ClosestTarget = closest;
 
-            StateMachine.UpdateInteractions(ClosestTarget);
+            StateMachine.UpdateInteractions(closest);
         }
         public bool CanAttack(WorldEntity entity)
         {
@@ -110,5 +122,7 @@ namespace Aegis.Core
         //         PerformAttack();
         //     }
          }
+
+        
     } 
 }

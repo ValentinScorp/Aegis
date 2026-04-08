@@ -17,6 +17,13 @@ namespace Aegis.View
         {
             _entityMovement = GetComponent<EntityMovement>();
             _entityAnimator = GetComponent<EntityAnimator>();
+
+            _entityMovement.MovementCompleted += OnMovementComplete;
+        }
+        private void OnDestroy()
+        {
+            _entityMovement.MovementCompleted -= OnMovementComplete; 
+            Unbind();         
         }
         public void Bind(WorldEntity entity)
         {
@@ -29,9 +36,11 @@ namespace Aegis.View
                 _entityMovement.Bind(unit);
 
                 unit.WasSelectedByPlayer += OnPlayerSelection;
-                unit.WalkTo += _entityMovement.MoveTo;
-                unit.PerformedAttack += _entityAnimator.PlayAttack;
-                unit.LookedAt += OnLookAt;
+                unit.ChaseTo += OnChaseTo;
+                unit.WalkTo += OnWalk;
+                unit.ExecutedStopMovement += _entityMovement.Stop;
+                unit.AttackBegin += OnAttack;
+                unit.AttackEnd += _entityAnimator.StopAttack;
             }
         }
 
@@ -43,11 +52,40 @@ namespace Aegis.View
                 _entityMovement.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
-                unit.WalkTo -= _entityMovement.MoveTo;
-                unit.PerformedAttack -= _entityAnimator.PlayAttack;
-                unit.LookedAt -= OnLookAt;
+                unit.ChaseTo -= OnChaseTo;
+                unit.WalkTo -= OnWalk;
+                unit.ExecutedStopMovement -= _entityMovement.Stop;
+                unit.AttackBegin -= OnAttack;
+                unit.AttackEnd -= _entityAnimator.StopAttack;
             }
             _entity = null;
+        }
+
+        private void OnChaseTo(Vector3 target)
+        {
+            _entityMovement.MoveTo(target);
+            _entityAnimator.StopAttack();
+            _entityAnimator.StopWalk();
+            _entityAnimator.PlayChase();
+        }
+        private void OnWalk(Vector3 destination)
+        {
+            _entityMovement.MoveTo(destination);
+            _entityAnimator.StopAttack();
+            _entityAnimator.StopChase();
+            _entityAnimator.PlayWalk();
+        }
+        private void OnAttack(Vector3 targetPosition)
+        {
+            _entityAnimator.StopChase();
+            _entityAnimator.StopWalk();
+            _entityMovement.LookAt(targetPosition);            
+            _entityAnimator.PlayAttack();
+        }
+        private void OnMovementComplete(Vector3 pos)
+        {
+            _entityAnimator.StopChase();
+            _entityAnimator.StopWalk();
         }
 
         private void OnLookAt(WorldEntity target)
@@ -66,6 +104,5 @@ namespace Aegis.View
                 Debug.LogWarning("<Selectable> not found on <EntityView>!");
         }
 
-        private void OnDestroy() => Unbind();
     }
 }

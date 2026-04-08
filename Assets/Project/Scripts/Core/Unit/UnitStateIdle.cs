@@ -12,30 +12,24 @@ namespace Aegis.Core
         {
             _self = unit;
         }
-        public void Enter(Vector3? destination = null)
+        public void Enter()
         {
-            Debug.Log("Enter Idle");            
-
-            _self.AttackTarget = null;
-            _self.ChaseTarget = null;
+            // Debug.Log("Enter Idle");            
         }
         public void Exit()
         {
-            Debug.Log("Exit Idle");            
+            // Debug.Log("Exit Idle");            
         }
         public void OnInteractionsUpdate(WorldEntity closestTarget)
         {
-            if (closestTarget == null) {
-                Debug.Log("Closest target is null");
-                return;
-            }
+            if (closestTarget == null) return;            
 
             if (_self.CanAttack(closestTarget)) {
-                Debug.Log("Idle state can attack");
+                // Debug.Log("Idle state can attack");
                 _self.AttackTarget = closestTarget;
                 _self.StateMachine.SetState(_self.StateMachine.Attack);
             } else {
-                Debug.Log("Idle state cannot attack");
+                // Debug.Log("Idle state cannot attack");
                 _self.ChaseTarget = closestTarget;
                 _self.StateMachine.SetState(_self.StateMachine.Chase);
             }

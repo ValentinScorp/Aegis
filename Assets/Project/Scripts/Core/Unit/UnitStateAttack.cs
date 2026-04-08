@@ -15,26 +15,40 @@ namespace Aegis.Core
             _attackCooldownTimer = 0f;
             _self = owner;
         }
-        public void Enter(Vector3? destination = null)
+        public void Enter()
         {
-            _self.PerformAttack();
-            Debug.Log("Enter Attack State!");
+            _self.StopMovement();
+            _self.PerformAttack(_self.AttackTarget.Position);
+            // Debug.Log("Enter Attack State!");
         }
         public void Exit()
         {
-            Debug.Log("Exit Attack State!");
-            
+            // Debug.Log("Exit Attack State!");
+            _self.StopAttack();
+            _attackCooldownTimer = 0f;
         }
 
-        public void OnActionsUpdate(float deltTime)
+        public void OnActionsUpdate(float deltaTime)
         {
-            if (!_self.CanAttack(_self.AttackTarget)) {
+            // Debug.Log($"deltaTime: {deltaTime}, timer: {_attackCooldownTimer}");
+
+            if (_self.AttackTarget == null) {
                 _self.StateMachine.SetState(_self.StateMachine.Idle);
                 return;
             }
-            _attackCooldownTimer += deltTime;
-            if (_attackCooldownTimer >= _self.AttackTime)
-                _self.PerformAttack();
+            if (!_self.CanAttack(_self.AttackTarget)) {
+                // Debug.Log("Cant attack! Need chase!");
+                _self.ChaseTarget = _self.AttackTarget;
+                _self.StateMachine.SetState(_self.StateMachine.Chase);
+                return;
+            }
+            _attackCooldownTimer += deltaTime;
+            // Debug.Log($"{_attackCooldownTimer}");
+            if (_attackCooldownTimer >= _self.AttackTime) {
+                // Debug.Log("New Attack!");
+                _self.PerformAttack(_self.AttackTarget.Position);
+                _attackCooldownTimer = 0f;
+            }
         }
 
         public void OnInteractionsUpdate(WorldEntity closestTarget)

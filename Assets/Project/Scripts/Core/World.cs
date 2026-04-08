@@ -23,7 +23,7 @@ namespace Aegis.Core
         }
         public WorldEntity CreateEntity(Vector3 position, int factionId)
         {
-            var entity = new Unit(factionId);
+            var entity = new Unit(position, factionId);
             entity.Position = position;
             _entities.Add(entity);
             EntityCreated?.Invoke(entity);

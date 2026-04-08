@@ -11,15 +11,17 @@ namespace Aegis.Core
         {
             _self = owner;
         }
-        public void Enter(Vector3? destination = null)
+        public void Enter()
         {
+            // Debug.Log("Enter Walk");            
+
             _self.AttackTarget = null;
             _self.ChaseTarget = null;
-            _self.ClosestTarget = null;
         }
-
+       
         public void Exit()
         {
+            // Debug.Log("Exit Walk");
             
         }
 
@@ -32,5 +34,7 @@ namespace Aegis.Core
         {
             
         }
+
+        
     }
 }

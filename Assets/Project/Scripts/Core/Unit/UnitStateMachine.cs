@@ -19,11 +19,11 @@ namespace Aegis.Core
 
             SetState(Idle);
         }
-        public void SetState(IUnitState newState, Vector3? destination = null)
+        public void SetState(IUnitState newState)
         {
             if (_currentState == newState)
                 return;
-            Debug.Log($"Settin new satate {newState}");
+            // Debug.Log($"Settin new satate {newState}");
             _currentState?.Exit();
             _currentState = newState;
             _currentState?.Enter();

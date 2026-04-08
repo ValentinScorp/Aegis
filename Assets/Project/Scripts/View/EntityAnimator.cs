@@ -1,3 +1,4 @@
+using System;
 using Aegis.Core;
 using UnityEngine;
 
@@ -14,34 +15,26 @@ namespace Aegis.View
             if (_animator == null) Debug.LogWarning("Can't find <Animator> in children!");
 
             _movement = GetComponent<EntityMovement>();
-
-            _movement.OnWalkStarted += () => StartWalk();
-            _movement.OnWalkStopped += () => StopWalk();
         }
         private void OnDestroy()
         {
-            if (_movement == null) return;
-            _movement.OnWalkStarted -= StartWalk;
-            _movement.OnWalkStopped -= StopWalk;
         }
 
         private void Update()
         {
-            if (_movement.IsWalking)
+            if (_movement.IsWalking) {
                 _animator.SetFloat("WalkSpeed", _movement.Velocity);
+                _animator.SetFloat("ChaseSpeed", _movement.Velocity);
+            }
         }
 
-        public void PlayAttack(WorldEntity target)
-        {
-            _animator.SetTrigger("PerformAttack");
-        }        
-        private void StartWalk()
-        {
-            _animator.SetBool("PerformWalk", true);
-        }
-        private void StopWalk()
-        {
-            _animator.SetBool("PerformWalk", false);
-        }
+        public void PlayAttack() { _animator.SetTrigger("PerformAttack"); }  
+        public void StopAttack() { _animator.ResetTrigger("PerformAttack"); }  
+        public void PlayWalk() { _animator.SetBool("PerformWalk", true); }
+        public void StopWalk() { _animator.SetBool("PerformWalk", false); }
+    
+
+        public void PlayChase() { _animator.SetBool("PerformChase", true); }
+        public void StopChase()  { _animator.SetBool("PerformChase", false); }
     }
 }

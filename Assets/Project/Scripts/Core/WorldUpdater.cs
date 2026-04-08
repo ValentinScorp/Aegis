@@ -32,7 +32,7 @@ namespace Aegis.Core
 
             if (_actionsTimer >= _actionsIntervalTime) {
                 _actionsTimer = 0f;           
-                UpdateActions(Time.deltaTime);                
+                UpdateActions(_actionsIntervalTime);                
             }
         }
 
