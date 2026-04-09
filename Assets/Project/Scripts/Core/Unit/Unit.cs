@@ -5,13 +5,15 @@ using UnityEngine;
 
 namespace Aegis.Core
 {
-    public class Unit : WorldEntity, IFactionMember
+    public class Unit : WorldEntity, IFactionMember, IDamageable
     {
+        public Health Health { get; private set; }
         public int FactionId { get; private set; }
         public float SearchRadius = 6.0f;
         public float ChaseRadius = 7.0f;
         public float AttackRadius = 2.0f;
         public float AttackTime = 1.5f;
+        public float AttackDamage = 12.0f;
         public Vector3 FixedPosition { get; set; }
         private WorldEntity _closestTarget;
         public WorldEntity AttackTarget;
@@ -25,8 +27,10 @@ namespace Aegis.Core
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
         public event Action AttackEnd;
-        public UnitStateMachine StateMachine { get; private set; }        
-        
+        public event Action Died;
+
+        public UnitStateMachine StateMachine { get; private set; }
+
         public WorldEntity ClosestTarget {
             get => _closestTarget;
             set {
@@ -36,12 +40,32 @@ namespace Aegis.Core
                 }
             }
         }
-        public Unit(Vector3 position, int factionId)
+
+        public Unit(Vector3 position, int factionId, float maxHealth = 100f)
         {
             FactionId = factionId;
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;
+
+            Health = new Health(maxHealth);
+            Health.Depleted += OnHealthDepleted;
+        }
+
+        private void OnHealthDepleted()
+        {
+            PerformDeath();
+        }
+
+        public void TakeDamage(float amount)
+        {
+            if (!Health.IsAlive) return;
+
+            Health.TakeDamage(amount);
+        }
+        public void Heal(float amount)
+        {
+            Health.Heal(amount);
         }
         public void MovementComplete(Vector3 position)
         {
@@ -51,11 +75,15 @@ namespace Aegis.Core
         }
         public void Select(bool selected)
         {
+            if (!Health.IsAlive) return;
+
             SelectedByPlayer = selected;
             WasSelectedByPlayer?.Invoke(selected);
         }
         public void PerformWalk(Vector3 destination)
         {
+            if (!Health.IsAlive) return;
+
             FixedPosition = destination;
             StateMachine.Walk.Destination = destination;
             StateMachine.SetState(StateMachine.Walk);
@@ -63,15 +91,27 @@ namespace Aegis.Core
         }
         public void PerformChase(WorldEntity entity)
         {
-            ChaseTo?.Invoke(entity.Position);            
+            ChaseTo?.Invoke(entity.Position);
         }
         public void StopMovement()
         {
             ExecutedStopMovement?.Invoke();
         }
-        public void PerformAttack(Vector3 targetPosition)
+        public void PerformAttack(WorldEntity entity)
         {
-            AttackBegin?.Invoke(targetPosition);
+            AttackBegin?.Invoke(entity.Position);
+        }
+        public void PerformAttackHit(WorldEntity entity)
+        {
+            if (entity is Unit unit && unit.Health.IsAlive)
+                unit.Health.TakeDamage(AttackDamage);
+        }
+        public void PerformDeath()
+        {
+            StateMachine.SetState(StateMachine.Dead);
+            SelectedByPlayer = false;
+            WasSelectedByPlayer?.Invoke(false);
+            Died?.Invoke();
         }
         public void StopAttack()
         {
@@ -79,12 +119,17 @@ namespace Aegis.Core
         }
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
+            if (!Health.IsAlive) return;
+
             WorldEntity closest = null;
             float closestSqrDist = SearchRadius * SearchRadius;
 
             foreach (var e in allEntities) {
                 if (e is IFactionMember fmEntity) {
-                    if (fmEntity == this || fmEntity.FactionId == FactionId) continue;
+                    if (fmEntity == this || fmEntity.FactionId == FactionId)
+                        continue;
+                    else if (fmEntity is IDamageable damageable && !damageable.Health.IsAlive)
+                        continue;
                 } else continue;
 
                 float sqrDist = (e.Position - Position).sqrMagnitude;
@@ -115,14 +160,14 @@ namespace Aegis.Core
             StateMachine.UpdateActions(deltaTime);
             // todo attack speed implement
             // _attackCooldownTimer -= deltaTime;
-        //     if (CurrentLookTarget == null) return;
+            //     if (CurrentLookTarget == null) return;
 
-        //     float distSqr = (CurrentLookTarget.Position - Position).sqrMagnitude;            
-        //     if (distSqr <= AttackRadius * AttackRadius) {
-        //         PerformAttack();
-        //     }
-         }
+            //     float distSqr = (CurrentLookTarget.Position - Position).sqrMagnitude;            
+            //     if (distSqr <= AttackRadius * AttackRadius) {
+            //         PerformAttack();
+            //     }
+        }
 
-        
-    } 
+
+    }
 }

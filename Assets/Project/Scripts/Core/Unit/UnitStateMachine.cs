@@ -5,10 +5,11 @@ namespace Aegis.Core
     public class UnitStateMachine
     {
         private IUnitState _currentState;
-        public IUnitState Idle;
-        public IUnitState Chase;
-        public IUnitState Attack;
+        public UnitStateIdle Idle;
+        public UnitStateChase Chase;
+        public UnitStateAttack Attack;
         public UnitStateWalk Walk;
+        public UnitStateDead Dead;
 
         public UnitStateMachine(Unit owner)
         {
@@ -16,6 +17,7 @@ namespace Aegis.Core
             Chase = new UnitStateChase(owner);
             Attack = new UnitStateAttack(owner);
             Walk = new UnitStateWalk(owner);
+            Dead = new UnitStateDead(owner);
 
             SetState(Idle);
         }

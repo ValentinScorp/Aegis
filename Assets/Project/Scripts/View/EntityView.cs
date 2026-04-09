@@ -8,17 +8,22 @@ namespace Aegis.View
 {
     public class EntityView : MonoBehaviour
     {
+        [SerializeField] private HealthView _healthView;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
+        private UnitAnimationEvents _unintAnimationEvents;
         private WorldEntity _entity;
         public WorldEntity Entity => _entity;
+        public event Action AttackHit;
 
         private void Awake()
         {
+            _healthView = Utilities.ComponentResolver.ResolveOrFind(this, _healthView);
             _entityMovement = GetComponent<EntityMovement>();
             _entityAnimator = GetComponent<EntityAnimator>();
+            _unintAnimationEvents = Utilities.ComponentResolver.ResolveOrFind(this, _unintAnimationEvents);
 
-            _entityMovement.MovementCompleted += OnMovementComplete;
+            _entityMovement.MovementCompleted += OnMovementComplete;            
         }
         private void OnDestroy()
         {
@@ -41,6 +46,10 @@ namespace Aegis.View
                 unit.ExecutedStopMovement += _entityMovement.Stop;
                 unit.AttackBegin += OnAttack;
                 unit.AttackEnd += _entityAnimator.StopAttack;
+
+                unit.Health.Changed += _healthView.OnHealthChanged;
+                unit.Health.Depleted += _healthView.OnHealthDepleted;
+                _unintAnimationEvents.AttackHit += unit.StateMachine.Attack.OnAttackHit;
             }
         }
 
@@ -57,6 +66,11 @@ namespace Aegis.View
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
                 unit.AttackBegin -= OnAttack;
                 unit.AttackEnd -= _entityAnimator.StopAttack;
+
+                unit.Health.Changed -= _healthView.OnHealthChanged;
+                unit.Health.Depleted -= _healthView.OnHealthDepleted;
+
+                _unintAnimationEvents.AttackHit -= unit.StateMachine.Attack.OnAttackHit;
             }
             _entity = null;
         }

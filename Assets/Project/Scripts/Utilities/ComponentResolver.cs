@@ -12,6 +12,8 @@ namespace Aegis.Utilities
 
             if (context.transform.parent != null) {
                 component = context.transform.parent.GetComponentInChildren<T>();
+            } else {
+                component = context.transform.GetComponentInChildren<T>();                
             }
 
             if (component == null) {

@@ -14,7 +14,7 @@ namespace Aegis.Services
         public event Action<List<RaycastHit>> HitsDetected;
         private void Awake()
         {
-            _playerInputListener = Utilities.ComponentResolver.ResolveOrFind(this, _playerInputListener);            
+            _playerInputListener = Utilities.ComponentResolver.ResolveOrFind(this, _playerInputListener);
         }
         private void Start()
         {

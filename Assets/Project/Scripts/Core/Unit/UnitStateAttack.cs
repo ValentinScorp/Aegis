@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Aegis.Core
         public void Enter()
         {
             _self.StopMovement();
-            _self.PerformAttack(_self.AttackTarget.Position);
+            _self.PerformAttack(_self.AttackTarget);
             // Debug.Log("Enter Attack State!");
         }
         public void Exit()
@@ -36,6 +37,12 @@ namespace Aegis.Core
                 _self.StateMachine.SetState(_self.StateMachine.Idle);
                 return;
             }
+            if (_self.AttackTarget is Unit unit) {
+                if (!unit.Health.IsAlive) {
+                    _self.StateMachine.SetState(_self.StateMachine.Idle);
+                    return;
+                }
+            }
             if (!_self.CanAttack(_self.AttackTarget)) {
                 // Debug.Log("Cant attack! Need chase!");
                 _self.ChaseTarget = _self.AttackTarget;
@@ -43,10 +50,9 @@ namespace Aegis.Core
                 return;
             }
             _attackCooldownTimer += deltaTime;
-            // Debug.Log($"{_attackCooldownTimer}");
             if (_attackCooldownTimer >= _self.AttackTime) {
                 // Debug.Log("New Attack!");
-                _self.PerformAttack(_self.AttackTarget.Position);
+                _self.PerformAttack(_self.AttackTarget);
                 _attackCooldownTimer = 0f;
             }
         }
@@ -54,6 +60,12 @@ namespace Aegis.Core
         public void OnInteractionsUpdate(WorldEntity closestTarget)
         {
 
+        }
+
+        internal void OnAttackHit()
+        {
+            if (_self.AttackTarget == null) return;
+            _self.PerformAttackHit(_self.AttackTarget);
         }
     }
 }
