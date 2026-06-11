@@ -101,7 +101,7 @@ namespace Aegis.Core
         {
             AttackBegin?.Invoke(entity.Position);
         }
-        public void PerformAttackHit(WorldEntity entity)
+        public void PerformAttackDamage(WorldEntity entity)
         {
             if (entity is Unit unit && unit.Health.IsAlive)
                 unit.Health.TakeDamage(AttackDamage);

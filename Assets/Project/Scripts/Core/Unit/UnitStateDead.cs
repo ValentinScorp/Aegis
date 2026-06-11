@@ -14,11 +14,11 @@ namespace Aegis.Core
         }
         public void Enter()
         {
-            Debug.Log("Enter Dead");            
+            // Debug.Log("Enter Dead");            
         }
         public void Exit()
         {
-            // Debug.Log("Exit Idle");            
+            // Debug.Log("Exit Dead");            
         }
         public void OnInteractionsUpdate(WorldEntity closestTarget)
         {

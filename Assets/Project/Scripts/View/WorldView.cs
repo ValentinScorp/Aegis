@@ -42,6 +42,9 @@ namespace Aegis.View
         private void CreateEntityView(WorldEntity entity)
         {
             var view = Instantiate(_entityPrefab, entity.Position, entity.Rotation, transform);
+            if (entity is Unit unit) {
+                view.Initialize(unit.FactionId);
+            }
             view.Bind(entity);
             _views.Add(view);
         }

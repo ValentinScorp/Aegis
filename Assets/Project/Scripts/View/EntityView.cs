@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 using Aegis.Core;
@@ -9,26 +8,39 @@ namespace Aegis.View
     public class EntityView : MonoBehaviour
     {
         [SerializeField] private HealthView _healthView;
+        [SerializeField] private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
-        private UnitAnimationEvents _unintAnimationEvents;
         private WorldEntity _entity;
         public WorldEntity Entity => _entity;
-        public event Action AttackHit;
+
+        private MaterialPropertyBlock _mpb;
 
         private void Awake()
         {
             _healthView = Utilities.ComponentResolver.ResolveOrFind(this, _healthView);
             _entityMovement = GetComponent<EntityMovement>();
             _entityAnimator = GetComponent<EntityAnimator>();
-            _unintAnimationEvents = Utilities.ComponentResolver.ResolveOrFind(this, _unintAnimationEvents);
 
-            _entityMovement.MovementCompleted += OnMovementComplete;            
+            _entityMovement.MovementCompleted += OnMovementComplete;
+
         }
         private void OnDestroy()
         {
             _entityMovement.MovementCompleted -= OnMovementComplete; 
             Unbind();         
+        }
+        public void Initialize(int factionId) 
+        {
+            _mpb = new MaterialPropertyBlock();
+
+            switch (factionId) {
+                case 1: SetFactionColor(Color.red); break;
+                case 2: SetFactionColor(Color.blue); break;
+                case 3: SetFactionColor(Color.green); break;
+                case 4: SetFactionColor(Color.yellow); break;
+                default: break;
+            }
         }
         public void Bind(WorldEntity entity)
         {
@@ -49,7 +61,6 @@ namespace Aegis.View
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
                 unit.Health.Depleted += _healthView.OnHealthDepleted;
-                _unintAnimationEvents.AttackHit += unit.StateMachine.Attack.OnAttackHit;
             }
         }
 
@@ -69,8 +80,6 @@ namespace Aegis.View
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
                 unit.Health.Depleted -= _healthView.OnHealthDepleted;
-
-                _unintAnimationEvents.AttackHit -= unit.StateMachine.Attack.OnAttackHit;
             }
             _entity = null;
         }
@@ -117,6 +126,13 @@ namespace Aegis.View
             else
                 Debug.LogWarning("<Selectable> not found on <EntityView>!");
         }
+        private void SetFactionColor(Color color)
+        {
+            if (_renderer == null) return;
 
+            _renderer.GetPropertyBlock(_mpb);
+            _mpb.SetColor("_FactionColor", color);
+            _renderer.SetPropertyBlock(_mpb);
+        }
     }
 }

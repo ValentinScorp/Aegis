@@ -11,7 +11,7 @@ namespace Aegis.View
         private MaterialPropertyBlock _mpb;
 
         private bool _selected;
-
+        
         private void Reset()
         {
             _objectRenderer = GetComponentInChildren<Renderer>();
@@ -28,13 +28,16 @@ namespace Aegis.View
 
             if (_mpb == null) _mpb = new MaterialPropertyBlock();
 
+            _objectRenderer.GetPropertyBlock(_mpb);
+
             if (_selected) {
                 _mpb.SetColor("_EmissionColor", selectedColor);
             } else {
-                _mpb.Clear();
+                _mpb.SetColor("_EmissionColor", Color.black);
             }
 
             _objectRenderer.SetPropertyBlock(_mpb);
         }
+
     }
 }

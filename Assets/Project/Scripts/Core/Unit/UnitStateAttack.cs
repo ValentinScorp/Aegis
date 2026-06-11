@@ -10,6 +10,7 @@ namespace Aegis.Core
         private Unit _self;
 
         private float _attackCooldownTimer;
+        private bool _damageDealed;
 
         public UnitStateAttack(Unit owner)
         {
@@ -20,6 +21,7 @@ namespace Aegis.Core
         {
             _self.StopMovement();
             _self.PerformAttack(_self.AttackTarget);
+            _damageDealed = false;
             // Debug.Log("Enter Attack State!");
         }
         public void Exit()
@@ -50,10 +52,14 @@ namespace Aegis.Core
                 return;
             }
             _attackCooldownTimer += deltaTime;
+            if (!_damageDealed && _attackCooldownTimer >= _self.AttackTime * 0.25f) {
+                DealDamage();
+            }
             if (_attackCooldownTimer >= _self.AttackTime) {
                 // Debug.Log("New Attack!");
                 _self.PerformAttack(_self.AttackTarget);
                 _attackCooldownTimer = 0f;
+                _damageDealed = false;
             }
         }
 
@@ -62,10 +68,11 @@ namespace Aegis.Core
 
         }
 
-        internal void OnAttackHit()
+        internal void DealDamage()
         {
             if (_self.AttackTarget == null) return;
-            _self.PerformAttackHit(_self.AttackTarget);
+            _self.PerformAttackDamage(_self.AttackTarget);
+            _damageDealed = true;
         }
     }
 }
