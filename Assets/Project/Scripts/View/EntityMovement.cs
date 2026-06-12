@@ -8,7 +8,7 @@ namespace Aegis.View
     [RequireComponent(typeof(NavMeshAgent))]
     public class EntityMovement : MonoBehaviour
     {
-        [SerializeField] private NavMeshAgent _agent;
+        private NavMeshAgent _agent;
 
         private Unit _unit;
         private bool _isMoving;

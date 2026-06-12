@@ -57,7 +57,7 @@ namespace Aegis.View
                 unit.WalkTo += OnWalk;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
                 unit.AttackBegin += OnAttack;
-                unit.AttackEnd += _entityAnimator.StopAttack;
+                unit.AttackEnd += _entityAnimator.PlayIdle;
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
                 unit.Health.Depleted += _healthView.OnHealthDepleted;
@@ -76,7 +76,7 @@ namespace Aegis.View
                 unit.WalkTo -= OnWalk;
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
                 unit.AttackBegin -= OnAttack;
-                unit.AttackEnd -= _entityAnimator.StopAttack;
+                unit.AttackEnd -= _entityAnimator.PlayIdle;
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
                 unit.Health.Depleted -= _healthView.OnHealthDepleted;
@@ -87,28 +87,21 @@ namespace Aegis.View
         private void OnChaseTo(Vector3 target)
         {
             _entityMovement.MoveTo(target);
-            _entityAnimator.StopAttack();
-            _entityAnimator.StopWalk();
-            _entityAnimator.PlayChase();
+            _entityAnimator.PlayWalk();
         }
         private void OnWalk(Vector3 destination)
         {
             _entityMovement.MoveTo(destination);
-            _entityAnimator.StopAttack();
-            _entityAnimator.StopChase();
             _entityAnimator.PlayWalk();
         }
         private void OnAttack(Vector3 targetPosition)
         {
-            _entityAnimator.StopChase();
-            _entityAnimator.StopWalk();
             _entityMovement.LookAt(targetPosition);            
             _entityAnimator.PlayAttack();
         }
         private void OnMovementComplete(Vector3 pos)
         {
-            _entityAnimator.StopChase();
-            _entityAnimator.StopWalk();
+            _entityAnimator.PlayIdle();
         }
 
         private void OnLookAt(WorldEntity target)

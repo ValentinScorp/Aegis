@@ -7,6 +7,11 @@ namespace Aegis.View
     public class EntityAnimator : MonoBehaviour
     {
         [SerializeField] private Animator _animator;
+        private int _currentStateHash;
+
+        private static readonly int IdleHash = Animator.StringToHash("Idle");
+        private static readonly int AttackHash = Animator.StringToHash("Attack");
+        private static readonly int WalkHash = Animator.StringToHash("Walk");
         private EntityMovement _movement;
 
         private void Awake()
@@ -24,17 +29,29 @@ namespace Aegis.View
         {
             if (_movement.IsWalking) {
                 _animator.SetFloat("WalkSpeed", _movement.Velocity);
-                _animator.SetFloat("ChaseSpeed", _movement.Velocity);
             }
+            var info = _animator.GetCurrentAnimatorStateInfo(0);
         }
-
-        public void PlayAttack() { _animator.SetTrigger("PerformAttack"); }  
-        public void StopAttack() { _animator.ResetTrigger("PerformAttack"); }  
-        public void PlayWalk() { _animator.SetBool("PerformWalk", true); }
-        public void StopWalk() { _animator.SetBool("PerformWalk", false); }
-    
-
-        public void PlayChase() { _animator.SetBool("PerformChase", true); }
-        public void StopChase()  { _animator.SetBool("PerformChase", false); }
+        public void PlayIdle() 
+        {
+            Debug.Log("Playing Idle!");
+            Play(IdleHash);
+        }
+        public void PlayAttack() 
+        {
+            Debug.Log("Playing Attack!");
+            Play(AttackHash);
+        }
+        public void PlayWalk() 
+        {
+            Debug.Log("Playing Walk!");
+            Play(WalkHash);
+        }
+        private void Play(int stateHash, int layer = 0, float normalizedTime = 0)
+        {
+            if (_currentStateHash == stateHash) return;
+            _currentStateHash = stateHash;
+            _animator.Play(stateHash, layer, normalizedTime);
+        }
     }
 }
