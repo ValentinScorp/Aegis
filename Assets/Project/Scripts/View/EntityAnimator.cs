@@ -8,7 +8,6 @@ namespace Aegis.View
     {
         [SerializeField] private Animator _animator;
         private int _currentStateHash;
-
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
         private static readonly int WalkHash = Animator.StringToHash("Walk");
@@ -32,26 +31,22 @@ namespace Aegis.View
             }
             var info = _animator.GetCurrentAnimatorStateInfo(0);
         }
-        public void PlayIdle() 
+        public void PlayAttack() => PlayOnce(AttackHash);
+        public void PlayIdle() => PlayLooping(IdleHash);
+        public void PlayWalk() => PlayLooping(WalkHash);
+
+        private void PlayOnce(int stateHash)
         {
-            Debug.Log("Playing Idle!");
-            Play(IdleHash);
+            _currentStateHash = 0;
+            _animator.Play(stateHash, 0, 0f);
+            _currentStateHash = stateHash;
         }
-        public void PlayAttack() 
-        {
-            Debug.Log("Playing Attack!");
-            Play(AttackHash);
-        }
-        public void PlayWalk() 
-        {
-            Debug.Log("Playing Walk!");
-            Play(WalkHash);
-        }
-        private void Play(int stateHash, int layer = 0, float normalizedTime = 0)
+
+        private void PlayLooping(int stateHash)
         {
             if (_currentStateHash == stateHash) return;
             _currentStateHash = stateHash;
-            _animator.Play(stateHash, layer, normalizedTime);
+            _animator.Play(stateHash, 0, float.NegativeInfinity);
         }
     }
 }

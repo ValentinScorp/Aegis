@@ -9,6 +9,7 @@ namespace Aegis.Core
     {
         public Health Health { get; private set; }
         public int FactionId { get; private set; }
+        public EntityType EntityType { get; set; }
         public float SearchRadius = 6.0f;
         public float ChaseRadius = 7.0f;
         public float AttackRadius = 2.0f;
@@ -41,9 +42,10 @@ namespace Aegis.Core
             }
         }
 
-        public Unit(Vector3 position, int factionId, float maxHealth = 100f)
+        public Unit(Vector3 position, int factionId, EntityType type, float maxHealth = 100f)
         {
             FactionId = factionId;
+            EntityType = type;
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;

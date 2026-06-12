@@ -18,18 +18,18 @@ namespace Aegis.Core
 
         private World()
         {
-            CreateEntity(new Vector3(-4f, 0.03f, 11f), factionId: 1);
+            CreateEntity(new Vector3(-4f, 0.03f, 11f), factionId: 1, EntityType.Knight);
            // CreateEntity(new Vector3(-4f, 0.03f, 10f), factionId: 1);
-            CreateEntity(new Vector3(0f, 0.03f, 11f), factionId: 2);
-            // CreateEntity(new Vector3(0f, 0.03f, 10f), factionId: 2);
+            CreateEntity(new Vector3(0f, 0.03f, 11f), factionId: 2, EntityType.Knight);
+            CreateEntity(new Vector3(0f, 0.03f, 10f), factionId: 2, EntityType.Archer);
             // CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3);
             // CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3);
             // CreateEntity(new Vector3(8f, 0.03f, 11f), factionId: 4);
             // CreateEntity(new Vector3(8f, 0.03f, 10f), factionId: 4);
         }
-        public WorldEntity CreateEntity(Vector3 position, int factionId)
+        public WorldEntity CreateEntity(Vector3 position, int factionId, EntityType type)
         {
-            var entity = new Unit(position, factionId);
+            var entity = new Unit(position, factionId, type);
             entity.Position = position;
             _entities.Add(entity);
             EntityCreated?.Invoke(entity);

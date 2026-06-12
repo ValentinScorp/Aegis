@@ -19,6 +19,7 @@ namespace Aegis.View
         }
         public void Select(bool selected)
         {
+            Debug.Log("Selected");
             _selected = selected;
             UpdateVisual();
         }
