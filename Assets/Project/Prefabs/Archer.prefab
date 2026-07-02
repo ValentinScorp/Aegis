@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 215086420609590629}
   - component: {fileID: 7979954394123512346}
   - component: {fileID: 391847212068966660}
-  - component: {fileID: 6627524707073479582}
-  - component: {fileID: 4613289164530619876}
   - component: {fileID: 6023794523833144764}
+  - component: {fileID: 6744078577640128774}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -67,31 +66,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityView
   _healthView: {fileID: 8501964369632210417}
   _renderer: {fileID: 1871568984510870853}
---- !u!114 &6627524707073479582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5009968616239787632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f509dff39b9e32546892c5f11be19b03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityMovement
---- !u!114 &4613289164530619876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5009968616239787632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
-  _animator: {fileID: 0}
 --- !u!195 &6023794523833144764
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -114,6 +88,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
+--- !u!114 &6744078577640128774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f509dff39b9e32546892c5f11be19b03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityMovement
 --- !u!1 &5029112721878601802
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,6 +214,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8785347502328391479}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7344614035453266953}
   m_SourcePrefab: {fileID: 100100000, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
 --- !u!137 &1871568984510870853 stripped
 SkinnedMeshRenderer:
@@ -266,6 +255,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7344614035453266953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5621170275277527458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
+  _animator: {fileID: 8785347502328391479}
+  _movement: {fileID: 6744078577640128774}
 --- !u!1001 &6860376316552560039
 PrefabInstance:
   m_ObjectHideFlags: 0

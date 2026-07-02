@@ -27,10 +27,10 @@ namespace Aegis.View
         }
         private void OnDestroy()
         {
-            _entityMovement.MovementCompleted -= OnMovementComplete; 
-            Unbind();         
+            _entityMovement.MovementCompleted -= OnMovementComplete;
+            Unbind();
         }
-        public void Initialize(int factionId) 
+        public void Initialize(int factionId)
         {
             _mpb = new MaterialPropertyBlock();
 
@@ -61,6 +61,8 @@ namespace Aegis.View
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
                 unit.Health.Depleted += _healthView.OnHealthDepleted;
+
+                _entityAnimator.AttackFrame += OnAttackFrame;
             }
         }
 
@@ -80,6 +82,8 @@ namespace Aegis.View
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
                 unit.Health.Depleted -= _healthView.OnHealthDepleted;
+
+                _entityAnimator.AttackFrame -= OnAttackFrame;
             }
             _entity = null;
         }
@@ -96,8 +100,12 @@ namespace Aegis.View
         }
         private void OnAttack(Vector3 targetPosition)
         {
-            _entityMovement.LookAt(targetPosition);            
-            _entityAnimator.PlayAttack();
+            _entityMovement.LookAt(targetPosition);
+            float attackTime = 1f;
+            if (_entity is Unit unit) {
+                attackTime = unit.AttackTime;
+            }
+            _entityAnimator.PlayAttack(attackTime);
         }
         private void OnMovementComplete(Vector3 pos)
         {
@@ -126,6 +134,12 @@ namespace Aegis.View
             _renderer.GetPropertyBlock(_mpb);
             _mpb.SetColor("_FactionColor", color);
             _renderer.SetPropertyBlock(_mpb);
+        }
+        private void OnAttackFrame()
+        {
+            Debug.Log("Attack frame event triggered!");
+            if (_entity is Unit unit)
+                unit.PerformAttackDamage(unit.AttackTarget);
         }
     }
 }
