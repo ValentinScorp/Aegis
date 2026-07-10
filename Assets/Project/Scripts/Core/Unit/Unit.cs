@@ -15,6 +15,8 @@ namespace Aegis.Core
         public float AttackRadius = 2.0f;
         public float AttackTime = 1.5f;
         public float AttackDamage = 12.0f;
+        public bool CanShoot = false;
+        public float ShootRadius = 10.0f;
         public Vector3 FixedPosition { get; set; }
         private WorldEntity _closestTarget;
         public WorldEntity AttackTarget;
@@ -25,6 +27,7 @@ namespace Aegis.Core
         public event Action<bool> WasSelectedByPlayer;
         public event Action ExecutedStopMovement;
         public event Action<Vector3> AttackBegin;
+        public event Action<Vector3> ShootBegin;
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
         public event Action AttackEnd;
@@ -46,6 +49,9 @@ namespace Aegis.Core
         {
             FactionId = factionId;
             EntityType = type;
+            if (EntityType == EntityType.Archer) {
+                CanShoot = true;
+            }
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;
@@ -102,6 +108,10 @@ namespace Aegis.Core
         public void PerformAttack(WorldEntity entity)
         {
             AttackBegin?.Invoke(entity.Position);
+        }
+        public void PerformShoot(WorldEntity entity)
+        {
+            ShootBegin?.Invoke(entity.Position);
         }
         public void PerformAttackDamage(WorldEntity entity)
         {

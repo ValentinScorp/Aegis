@@ -22,17 +22,22 @@ namespace Aegis.Core
         }
         public void OnInteractionsUpdate(WorldEntity closestTarget)
         {
-            if (closestTarget == null) return;            
+            if (closestTarget == null) return;
 
-            if (_self.CanAttack(closestTarget)) {
-                // Debug.Log("Idle state can attack");
+            float distSqr = (closestTarget.Position - _self.Position).sqrMagnitude;
+            if (distSqr <= _self.AttackRadius * _self.AttackRadius) {
                 _self.AttackTarget = closestTarget;
                 _self.StateMachine.SetState(_self.StateMachine.Attack);
-            } else {
-                // Debug.Log("Idle state cannot attack");
-                _self.ChaseTarget = closestTarget;
-                _self.StateMachine.SetState(_self.StateMachine.Chase);
+                return;
             }
+            if (_self.CanShoot && distSqr <= _self.ShootRadius * _self.ShootRadius) {
+                _self.AttackTarget = closestTarget;
+                _self.StateMachine.SetState(_self.StateMachine.Shoot);
+                return;
+            }
+            _self.ChaseTarget = closestTarget;
+            _self.StateMachine.SetState(_self.StateMachine.Chase);
+
         }
         public void OnActionsUpdate(float deltaTime)
         {

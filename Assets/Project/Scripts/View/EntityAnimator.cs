@@ -8,13 +8,15 @@ namespace Aegis.View
     {
         [SerializeField] private Animator _animator;
         [SerializeField] private EntityMovement _movement;
+        [SerializeField] private AnimationClip _attackClip;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
         private static readonly int WalkHash = Animator.StringToHash("Walk");
 
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
-        
+        private AnimationEventReceiver _receiver;
+
         private float _attackAnimationLength;
         public event Action AttackFrame;
 
@@ -26,11 +28,20 @@ namespace Aegis.View
             // if (_animator == null) Debug.LogWarning("Can't find <Animator> in children!");
 
             // _movement = GetComponent<EntityMovement>();
+            _receiver = GetComponentInChildren<AnimationEventReceiver>();
+            if (_receiver != null) {
+                _receiver.ReleaseArrow += OnAttackFrame;
+                _receiver.SwordHit += OnAttackFrame;
+            }
 
-            _attackAnimationLength = GetClipLength("Attack");
+            _attackAnimationLength = _attackClip != null ? _attackClip.length : 1f;
         }
         private void OnDestroy()
         {
+            if (_receiver != null) {
+                _receiver.ReleaseArrow -= OnAttackFrame;
+                _receiver.SwordHit -= OnAttackFrame;
+            }
         }
 
         private void Update()

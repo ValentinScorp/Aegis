@@ -20,7 +20,7 @@ namespace Aegis.View
         {
             _healthView = Utilities.ComponentResolver.ResolveOrFind(this, _healthView);
             _entityMovement = GetComponent<EntityMovement>();
-            _entityAnimator = GetComponent<EntityAnimator>();
+            _entityAnimator = GetComponentInChildren<EntityAnimator>();
 
             _entityMovement.MovementCompleted += OnMovementComplete;
 
