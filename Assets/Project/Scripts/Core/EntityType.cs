@@ -4,5 +4,6 @@ namespace Aegis.Core
     {
         Knight,
         Archer,
+        Arrow
     }
 }
