@@ -50,8 +50,8 @@ namespace Aegis.View
             transform.position = entity.Position;
 
             if (entity is Unit unit) {
-                _entityMovement.Bind(unit);
 
+                _entityMovement.Bind(unit);
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseTo;
                 unit.WalkTo += OnWalk;

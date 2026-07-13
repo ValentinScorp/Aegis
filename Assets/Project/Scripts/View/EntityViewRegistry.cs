@@ -13,23 +13,37 @@ namespace Aegis.View
         {
             public EntityType Type;
             public EntityView Prefab;
+            public UnitConfig Config;
         }
 
         [SerializeField] private Entry[] _entries;
 
-        private Dictionary<EntityType, EntityView> _map;
+        private Dictionary<EntityType, EntityView> _prefabMap;
+        private Dictionary<EntityType, UnitConfig> _configMap;
 
         private void OnEnable()
         {
-            _map = new();
-            foreach (var e in _entries)
-                _map[e.Type] = e.Prefab;
+            _prefabMap = new();
+            _configMap = new();
+
+            foreach (var e in _entries) {
+                _prefabMap[e.Type] = e.Prefab;
+                if (e.Config != null)
+                    _configMap[e.Type] = e.Config;
+            }
         }
 
         public EntityView GetPrefab(EntityType type)
         {
-            if (_map.TryGetValue(type, out var prefab)) return prefab;
-            Debug.LogWarning($"No prefab registered for EntityType: {type}");
+            if (_prefabMap.TryGetValue(type, out var prefab)) return prefab;
+            Debug.LogWarning($"No prefab for EntityType: {type}");
+            return null;
+        }
+
+        public UnitConfig GetConfig(EntityType type)
+        {
+            if (_configMap.TryGetValue(type, out var config)) return config;
+            Debug.LogWarning($"No config for EntityType: {type}");
             return null;
         }
     }

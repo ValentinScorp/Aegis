@@ -49,8 +49,8 @@ namespace Aegis.Core
 
             _attackCooldownTimer += deltaTime;
 
-            if (!_damageDealed && _attackCooldownTimer >= _self.AttackTime * 0.627f) {
-                _self.PerformAttackDamage(_self.AttackTarget);
+             if (!_damageDealed && _attackCooldownTimer >= _self.AttackEventTime * _self.AttackTime) {
+                _self.PerformShoot(_self.AttackTarget);
                 _damageDealed = true;
             }
 

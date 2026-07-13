@@ -10,13 +10,16 @@ namespace Aegis.Core
         public Health Health { get; private set; }
         public int FactionId { get; private set; }
         public EntityType EntityType { get; set; }
-        public float SearchRadius = 6.0f;
-        public float ChaseRadius = 7.0f;
-        public float AttackRadius = 2.0f;
-        public float AttackTime = 1.5f;
-        public float AttackDamage = 12.0f;
-        public bool CanShoot = false;
-        public float ShootRadius = 10.0f;
+        public UnitConfig Config;
+        public float SearchRadius => Config?.SearchRadius ?? 6.0f;
+        public float ChaseRadius => Config?.ChaseRadius ?? 7.0f;
+        public float AttackRadius => Config?.AttackRadius ?? 2.0f;
+        public float AttackTime => Config?.AttackTime ?? 1.5f;
+        public float AttackDamage => Config?.AttackDamage ?? 12.0f;
+        public float AttackEventTime => Config?.AttackEventTime ?? 0.5f;
+        public bool CanShoot => Config?.CanShoot ?? false;
+        public float ShootRadius => Config?.ShootRadius ?? 10.0f;
+
         public Vector3 FixedPosition { get; set; }
         private WorldEntity _closestTarget;
         public WorldEntity AttackTarget;
@@ -45,19 +48,30 @@ namespace Aegis.Core
             }
         }
 
-        public Unit(Vector3 position, int factionId, EntityType type, float maxHealth = 100f)
+        public Unit(Vector3 position, int factionId, EntityType type)
         {
             FactionId = factionId;
             EntityType = type;
-            if (EntityType == EntityType.Archer) {
-                CanShoot = true;
-            }
+
+            // SearchRadius = config.SearchRadius;
+            // ChaseRadius = config.ChaseRadius;
+            // AttackRadius = config.AttackRadius;
+            // AttackTime = config.AttackTime;
+            // AttackDamage = config.AttackDamage;
+            // AttackEventTime = config.AttackEventTime;
+            // CanShoot = config.CanShoot;
+            // ShootRadius = config.ShootRadius;
+            // Health = new Health(config.MaxHealth);
+
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;
 
-            Health = new Health(maxHealth);
             Health.Depleted += OnHealthDepleted;
+        }
+        public void SetConfig(UnitConfig config)
+        {
+            Config = config;
         }
 
         private void OnHealthDepleted()
@@ -113,9 +127,9 @@ namespace Aegis.Core
         {
             ShootBegin?.Invoke(entity.Position);
         }
-        public void PerformAttackDamage(WorldEntity entity)
+        public void PerformAttackDamage(WorldEntity target)
         {
-            if (entity is Unit unit && unit.Health.IsAlive)
+            if (target is Unit unit && unit.Health.IsAlive)
                 unit.Health.TakeDamage(AttackDamage);
         }
         public void PerformDeath()

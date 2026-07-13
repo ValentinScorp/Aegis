@@ -13,6 +13,7 @@ namespace Aegis.View
         private void Awake()
         {
             _world = World.Instance;
+
         }
         private void Start()
         {
@@ -36,9 +37,15 @@ namespace Aegis.View
         }
         private void OnEntityCreated(WorldEntity entity)
         {
+            SetConfig(entity);
             CreateEntityView(entity);
         }
-
+        private void SetConfig(WorldEntity entity)
+        {
+            if (entity is Unit unit) {
+                unit.SetConfig(entityViewRegistry.GetConfig(unit.EntityType));
+            }
+        }
         private void CreateEntityView(WorldEntity entity)
         {
             EntityView prefab = null;
@@ -49,8 +56,10 @@ namespace Aegis.View
             if (prefab == null) return;
 
             var view = Instantiate(prefab, entity.Position, entity.Rotation, transform);
-            if (entity is Unit u) view.Initialize(u.FactionId);
-            view.Bind(entity);
+            if (entity is Unit u) {
+                view.Initialize(u.FactionId);
+            }
+            view.Bind(entity);            
             _views.Add(view);
         }
     }
