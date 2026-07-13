@@ -18,9 +18,8 @@ namespace Aegis.View
         private AnimationEventReceiver _receiver;
 
         private float _attackAnimationLength;
-        private float _attackEventNormalizedTime = 0.5f;
-        public event Action AttackFrame;
-        public float AttackEventNormalizedTime => _attackEventNormalizedTime;
+        public event Action MeleeHit;
+        public event Action RangedRelease;
 
         private void Awake()
         {
@@ -31,21 +30,12 @@ namespace Aegis.View
 
             // _movement = GetComponent<EntityMovement>();
             _receiver = GetComponentInChildren<AnimationEventReceiver>();
-            if (_receiver != null) {
-                _receiver.ReleaseArrow += OnAttackFrame;
-                _receiver.SwordHit += OnAttackFrame;
-            }
 
             _attackAnimationLength = _attackClip != null ? _attackClip.length : 1f;
-            _attackEventNormalizedTime = GetEventNormalizedTime(_attackClip, "MeleeHitEvent");
-            Debug.Log($"Attack event at: {_attackEventNormalizedTime}");
+            // TODO Remove Animation Events
         }
         private void OnDestroy()
         {
-            if (_receiver != null) {
-                _receiver.ReleaseArrow -= OnAttackFrame;
-                _receiver.SwordHit -= OnAttackFrame;
-            }
         }
 
         private void Update()
@@ -87,19 +77,6 @@ namespace Aegis.View
             Debug.LogWarning($"Clip '{clipName}' not found!");
             return 1f;
         }
-        private float GetEventNormalizedTime(AnimationClip clip, string eventName)
-        {
-            foreach (var evt in clip.events) {
-                if (evt.functionName == eventName)
-                    return evt.time / clip.length;
-            }
 
-            Debug.LogWarning($"Event '{eventName}' not found in '{clip.name}'!");
-            return 0.5f;
-        }
-        void OnAttackFrame()
-        {
-            AttackFrame?.Invoke();
-        }
     }
 }

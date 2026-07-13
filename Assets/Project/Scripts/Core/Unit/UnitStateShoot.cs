@@ -16,7 +16,7 @@ namespace Aegis.Core
         public void Enter()
         {
             _self.StopMovement();
-            _self.PerformShoot(_self.AttackTarget);
+            _self.PerformAttack(_self.AttackTarget);
             _attackCooldownTimer = 0f;
             _damageDealed = false;
         }

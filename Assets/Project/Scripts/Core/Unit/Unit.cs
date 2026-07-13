@@ -7,7 +7,15 @@ namespace Aegis.Core
 {
     public class Unit : WorldEntity, IFactionMember, IDamageable
     {
-        public Health Health { get; private set; }
+        private Health _health;
+        public Health Health {
+            get {
+                if (_health == null)
+                    Debug.LogWarning($"[Unit] Спроба звернутись до Health до того, як він створений ({EntityType}). Викличте SetConfig() раніше.");
+                return _health;
+            }
+            private set => _health = value;
+        }
         public int FactionId { get; private set; }
         public EntityType EntityType { get; set; }
         public UnitConfig Config;
@@ -48,30 +56,26 @@ namespace Aegis.Core
             }
         }
 
-        public Unit(Vector3 position, int factionId, EntityType type)
+        public Unit(Vector3 position, int factionId, EntityType type, UnitConfig config)
         {
             FactionId = factionId;
             EntityType = type;
 
-            // SearchRadius = config.SearchRadius;
-            // ChaseRadius = config.ChaseRadius;
-            // AttackRadius = config.AttackRadius;
-            // AttackTime = config.AttackTime;
-            // AttackDamage = config.AttackDamage;
-            // AttackEventTime = config.AttackEventTime;
-            // CanShoot = config.CanShoot;
-            // ShootRadius = config.ShootRadius;
-            // Health = new Health(config.MaxHealth);
+            Config = config;
+
+            Health = new Health(config.MaxHealth);
 
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;
-
-            Health.Depleted += OnHealthDepleted;
         }
         public void SetConfig(UnitConfig config)
         {
             Config = config;
+            if (Health == null) {
+                Health = new Health(config.MaxHealth);
+                Health.Depleted += OnHealthDepleted;
+            }
         }
 
         private void OnHealthDepleted()

@@ -17,6 +17,10 @@ namespace Aegis.Core
             Max = max;
             Current = max;
         }
+        public void SetMax(float maxHealth)
+        {
+            Max = maxHealth;
+        }
 
         public void TakeDamage(float amount)
         {

@@ -13,14 +13,11 @@ namespace Aegis.View
         private void Awake()
         {
             _world = World.Instance;
-
+            _world.EntityCreated += OnEntityCreated;
         }
         private void Start()
         {
-            foreach (var entity in _world.Entities) {
-                CreateEntityView(entity);
-            }
-            _world.EntityCreated += OnEntityCreated;
+            _world.SpawnUnits(entityViewRegistry);
         }
         private void OnDisable()
         {

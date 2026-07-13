@@ -9,6 +9,8 @@ namespace Aegis.View
     {
         [SerializeField] private HealthView _healthView;
         [SerializeField] private Renderer _renderer;
+        [SerializeField] private Transform _arrowSpawnPoint;
+        [SerializeField] private Arrow _arrowPrefab;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
         private WorldEntity _entity;
@@ -23,11 +25,16 @@ namespace Aegis.View
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
 
             _entityMovement.MovementCompleted += OnMovementComplete;
+            _entityAnimator.MeleeHit += OnMeleeHit;
+            _entityAnimator.RangedRelease += OnRangedRelease;
 
         }
         private void OnDestroy()
         {
             _entityMovement.MovementCompleted -= OnMovementComplete;
+            _entityAnimator.MeleeHit -= OnMeleeHit;
+            _entityAnimator.RangedRelease -= OnRangedRelease;
+
             Unbind();
         }
         public void Initialize(int factionId)
@@ -57,12 +64,11 @@ namespace Aegis.View
                 unit.WalkTo += OnWalk;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
                 unit.AttackBegin += OnAttack;
+                unit.ShootBegin += OnShoot;
                 unit.AttackEnd += _entityAnimator.PlayIdle;
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
                 unit.Health.Depleted += _healthView.OnHealthDepleted;
-
-                _entityAnimator.AttackFrame += OnAttackFrame;
             }
         }
 
@@ -78,12 +84,11 @@ namespace Aegis.View
                 unit.WalkTo -= OnWalk;
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
                 unit.AttackBegin -= OnAttack;
+                unit.ShootBegin -= OnShoot;
                 unit.AttackEnd -= _entityAnimator.PlayIdle;
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
                 unit.Health.Depleted -= _healthView.OnHealthDepleted;
-
-                _entityAnimator.AttackFrame -= OnAttackFrame;
             }
             _entity = null;
         }
@@ -107,11 +112,33 @@ namespace Aegis.View
             }
             _entityAnimator.PlayAttack(attackTime);
         }
+        private void OnShoot(Vector3 targetPosition)
+        {
+            if (_entity is not Unit unit || unit.AttackTarget == null) return;
+            if (_arrowPrefab == null) return;
+
+            Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
+            var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
+            arrow.Launch(unit, unit.AttackTarget);
+        }
         private void OnMovementComplete(Vector3 pos)
         {
             _entityAnimator.PlayIdle();
         }
+        private void OnMeleeHit()
+        {
+            if (_entity is Unit unit)
+                unit.PerformAttackDamage(unit.AttackTarget);
+        }
+        private void OnRangedRelease()
+        {
+            if (_entity is not Unit unit || unit.AttackTarget == null) return;
+            if (_arrowPrefab == null) return;
 
+            Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
+            var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
+            arrow.Launch(unit, unit.AttackTarget);
+        }
         private void OnLookAt(WorldEntity target)
         {
             if (target == null) return;
@@ -134,12 +161,6 @@ namespace Aegis.View
             _renderer.GetPropertyBlock(_mpb);
             _mpb.SetColor("_FactionColor", color);
             _renderer.SetPropertyBlock(_mpb);
-        }
-        private void OnAttackFrame()
-        {
-            Debug.Log("Attack frame event triggered!");
-            if (_entity is Unit unit)
-                unit.PerformAttackDamage(unit.AttackTarget);
         }
     }
 }
