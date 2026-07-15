@@ -117,6 +117,9 @@ namespace Aegis.View
             if (_entity is not Unit unit || unit.AttackTarget == null) return;
             if (_arrowPrefab == null) return;
 
+            _entityMovement.LookAt(targetPosition);
+            _entityAnimator.PlayShoot(unit.ShootTime);
+
             Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
             var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
             arrow.Launch(unit, unit.AttackTarget);

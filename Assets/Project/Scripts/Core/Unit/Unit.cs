@@ -22,10 +22,11 @@ namespace Aegis.Core
         public float SearchRadius => Config?.SearchRadius ?? 6.0f;
         public float ChaseRadius => Config?.ChaseRadius ?? 7.0f;
         public float AttackRadius => Config?.AttackRadius ?? 2.0f;
-        public float AttackTime => Config?.AttackTime ?? 1.5f;
+        public float AttackTime => Config?.AttackTime ?? 1f;
         public float AttackDamage => Config?.AttackDamage ?? 12.0f;
         public float AttackEventTime => Config?.AttackEventTime ?? 0.5f;
         public bool CanShoot => Config?.CanShoot ?? false;
+        public float ShootTime => Config?.ShootTime ?? 1f;
         public float ShootRadius => Config?.ShootRadius ?? 10.0f;
 
         public Vector3 FixedPosition { get; set; }

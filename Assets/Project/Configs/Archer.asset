@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38ca9cf98599c9f4596a1ebc612d7da2, type: 3}
-  m_Name: KnightConfig
+  m_Name: Archer
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.UnitConfig
   AttackTime: 1.5
   AttackDamage: 12

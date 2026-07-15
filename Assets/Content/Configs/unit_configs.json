@@ -1,0 +1,36 @@
+{
+  "units": [
+    {
+      "unit_type": "Knight",
+      "max_health": 100,
+	  "attack_damage": 12,	  
+	  "attack_time": 1.5,
+	  "attack_distance": 2.0,
+	  "attack_event_time": 0.35,
+      "can_shoot": false,
+	  "shoot_damage": 5,
+	  "shoot_time": 1.0,
+	  "shoot_distance": 12.0,
+	  "shoot_event_time": 0.5,
+      "search_radius": 6.0,
+	  "chase_radius": 7.0,
+      "move_speed": 3.5
+    },
+    {
+      "unit_type": "Archer",
+      "max_health": 70,
+	  "attack_damage": 12,	  
+	  "attack_time": 1.5,
+	  "attack_distance": 2.0,
+	  "attack_event_time": 0.627,
+      "can_shoot": true,
+	  "shoot_damage": 5,
+	  "shoot_time": 1.0,
+	  "shoot_distance": 12.0,
+	  "shoot_event_time": 0.5,
+      "search_radius": 6.0,
+	  "chase_radius": 7.0,
+      "move_speed": 3.5
+    }
+  ]
+}

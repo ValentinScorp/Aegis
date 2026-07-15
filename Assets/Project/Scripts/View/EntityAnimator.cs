@@ -9,15 +9,18 @@ namespace Aegis.View
         [SerializeField] private Animator _animator;
         [SerializeField] private EntityMovement _movement;
         [SerializeField] private AnimationClip _attackClip;
+        [SerializeField] private AnimationClip _shootClip;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
+        private static readonly int ShootHash = Animator.StringToHash("Shoot");
         private static readonly int WalkHash = Animator.StringToHash("Walk");
 
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
-        private AnimationEventReceiver _receiver;
+        private static readonly int ShootSpeedHash = Animator.StringToHash("ShootSpeed");
 
         private float _attackAnimationLength;
+        private float _shootAnimationLength;
         public event Action MeleeHit;
         public event Action RangedRelease;
 
@@ -29,9 +32,8 @@ namespace Aegis.View
             // if (_animator == null) Debug.LogWarning("Can't find <Animator> in children!");
 
             // _movement = GetComponent<EntityMovement>();
-            _receiver = GetComponentInChildren<AnimationEventReceiver>();
-
             _attackAnimationLength = _attackClip != null ? _attackClip.length : 1f;
+            _shootAnimationLength = _shootClip != null ? _shootClip.length : 1f;
             // TODO Remove Animation Events
         }
         private void OnDestroy()
@@ -49,6 +51,12 @@ namespace Aegis.View
         {
             float speed = _attackAnimationLength / attackTime;
             _animator.SetFloat(AttackSpeedHash, speed);
+            PlayOnce(AttackHash);
+        }
+        public void PlayShoot(float shootTime)
+        {
+            float speed = _shootAnimationLength / shootTime;
+            _animator.SetFloat(ShootSpeedHash, speed);
             PlayOnce(AttackHash);
         }
         public void PlayIdle() => PlayLooping(IdleHash);

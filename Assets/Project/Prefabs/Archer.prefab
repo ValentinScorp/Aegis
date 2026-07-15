@@ -96,6 +96,7 @@ MonoBehaviour:
   _animator: {fileID: 8785347502328391479}
   _movement: {fileID: 6744078577640128774}
   _attackClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+  _shootClip: {fileID: 0}
 --- !u!195 &6023794523833144764
 NavMeshAgent:
   m_ObjectHideFlags: 0
