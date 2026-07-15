@@ -25,7 +25,7 @@ namespace Aegis.Core
             CreateEntity(new Vector3(-4f, 0.03f, 11f), factionId: 1, EntityType.Knight, entityViewRegistry.GetConfig(EntityType.Knight));
             // CreateEntity(new Vector3(-4f, 0.03f, 10f), factionId: 1);
             CreateEntity(new Vector3(0f, 0.03f, 11f), factionId: 2, EntityType.Knight, entityViewRegistry.GetConfig(EntityType.Knight));
-            CreateEntity(new Vector3(0f, 0.03f, 10f), factionId: 2, EntityType.Archer, entityViewRegistry.GetConfig(EntityType.Archer));
+            CreateEntity(new Vector3(5f, 0.03f, 10f), factionId: 2, EntityType.Archer, entityViewRegistry.GetConfig(EntityType.Archer));
             // CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3);
             // CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3);
             // CreateEntity(new Vector3(8f, 0.03f, 11f), factionId: 4);

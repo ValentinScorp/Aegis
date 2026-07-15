@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b507313cea8fc043b79dc55cd5c7736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.Selectable
-  _objectRenderer: {fileID: 1871568984510870853}
+  _objectRenderer: {fileID: 0}
   selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &391847212068966660
 MonoBehaviour:
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityView
   _healthView: {fileID: 8501964369632210417}
-  _renderer: {fileID: 1871568984510870853}
+  _renderer: {fileID: 0}
   _arrowSpawnPoint: {fileID: 0}
   _arrowPrefab: {fileID: 5590828222096021662, guid: a11f408a9c06a2e4aacf4ae82cabc521, type: 3}
 --- !u!114 &6744078577640128774
@@ -173,6 +173,68 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!1001 &1091278496464409083
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3543769326126190904}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+      propertyPath: m_Name
+      value: Archer_Bow
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+--- !u!4 &625922831602284048 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 22879f212a3017c42a3a2ab428293054, type: 3}
+  m_PrefabInstance: {fileID: 1091278496464409083}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4810690221281371379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,7 +289,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8353893813185852875, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 625922831602284048}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
       insertIndex: -1
@@ -236,9 +301,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4962927403954404760}
   m_SourcePrefab: {fileID: 100100000, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
---- !u!137 &1871568984510870853 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -2649762172153671242, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+--- !u!4 &3543769326126190904 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8353893813185852875, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
   m_PrefabInstance: {fileID: 4810690221281371379}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4992724220582986520 stripped
