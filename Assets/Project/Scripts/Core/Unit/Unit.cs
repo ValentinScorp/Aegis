@@ -40,6 +40,7 @@ namespace Aegis.Core
         public event Action ExecutedStopMovement;
         public event Action<Vector3> AttackBegin;
         public event Action<Vector3> ShootBegin;
+        public event Action<Vector3> ProjectileLaunched;
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
         public event Action AttackEnd;
@@ -78,12 +79,10 @@ namespace Aegis.Core
                 Health.Depleted += OnHealthDepleted;
             }
         }
-
         private void OnHealthDepleted()
         {
             PerformDeath();
         }
-
         public void TakeDamage(float amount)
         {
             if (!Health.IsAlive) return;
@@ -131,6 +130,11 @@ namespace Aegis.Core
         public void PerformShoot(WorldEntity entity)
         {
             ShootBegin?.Invoke(entity.Position);
+        }
+        public void PerformProjectileLaunch()
+        {
+            if (AttackTarget == null) return;
+            ProjectileLaunched?.Invoke(AttackTarget.Position);
         }
         public void PerformAttackDamage(WorldEntity target)
         {

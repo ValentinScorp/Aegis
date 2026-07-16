@@ -1,15 +1,13 @@
 using System;
-using Aegis.Core;
 using UnityEngine;
 
 namespace Aegis.View
 {
     public class EntityAnimator : MonoBehaviour
     {
-        [SerializeField] private Animator _animator;
-        [SerializeField] private EntityMovement _movement;
         [SerializeField] private AnimationClip _attackClip;
         [SerializeField] private AnimationClip _shootClip;
+        private Animator _animator;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
@@ -21,17 +19,12 @@ namespace Aegis.View
 
         private float _attackAnimationLength;
         private float _shootAnimationLength;
-        public event Action MeleeHit;
-        public event Action RangedRelease;
 
         private void Awake()
         {
-            if (_animator == null) Debug.Log("No animator attached!");
-            if (_movement is null) Debug.Log("No movement script attached!");
-            // _animator = GetComponentInChildren<Animator>();
-            // if (_animator == null) Debug.LogWarning("Can't find <Animator> in children!");
+            if ((_animator = GetComponentInChildren<Animator>()) == null)
+                Debug.LogWarning("No <Animator> found in prefab!");
 
-            // _movement = GetComponent<EntityMovement>();
             _attackAnimationLength = _attackClip != null ? _attackClip.length : 1f;
             _shootAnimationLength = _shootClip != null ? _shootClip.length : 1f;
             // TODO Remove Animation Events
@@ -42,10 +35,6 @@ namespace Aegis.View
 
         private void Update()
         {
-            if (_movement.IsWalking) {
-                _animator.SetFloat("WalkSpeed", _movement.Velocity);
-            }
-            var info = _animator.GetCurrentAnimatorStateInfo(0);
         }
         public void PlayAttack(float attackTime)
         {
@@ -53,15 +42,17 @@ namespace Aegis.View
             _animator.SetFloat(AttackSpeedHash, speed);
             PlayOnce(AttackHash);
         }
-        public void PlayShoot(float shootTime)
+        public void PlayShoot(float animSpeed)
         {
-            float speed = _shootAnimationLength / shootTime;
-            _animator.SetFloat(ShootSpeedHash, speed);
+            _animator.SetFloat(ShootSpeedHash, animSpeed);
             PlayOnce(AttackHash);
         }
         public void PlayIdle() => PlayLooping(IdleHash);
-        public void PlayWalk() => PlayLooping(WalkHash);
-
+        public void PlayWalk(float speed) 
+        {
+            _animator.SetFloat("WalkSpeed", speed);
+            PlayLooping(WalkHash);
+        }
         private void PlayOnce(int stateHash)
         {
             _currentStateHash = 0;

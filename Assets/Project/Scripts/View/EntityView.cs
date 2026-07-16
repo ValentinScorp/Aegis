@@ -1,16 +1,17 @@
 using UnityEngine;
-using UnityEngine.AI;
 using Aegis.Core;
-using System.Collections;
 
 namespace Aegis.View
 {
     public class EntityView : MonoBehaviour
     {
         [SerializeField] private HealthView _healthView;
-        [SerializeField] private Renderer _renderer;
         [SerializeField] private Transform _arrowSpawnPoint;
         [SerializeField] private Arrow _arrowPrefab;
+
+        private ICombatView[] _combatViews;
+
+        private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
         private WorldEntity _entity;
@@ -23,17 +24,16 @@ namespace Aegis.View
             _healthView = Utilities.ComponentResolver.ResolveOrFind(this, _healthView);
             _entityMovement = GetComponent<EntityMovement>();
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
+            _combatViews = GetComponents<ICombatView>();
+
+            if ((_renderer = GetComponentInChildren<Renderer>()) == null)
+                Debug.LogWarning($"No <Renderer> found in prefab: {name}!", this);
 
             _entityMovement.MovementCompleted += OnMovementComplete;
-            _entityAnimator.MeleeHit += OnMeleeHit;
-            _entityAnimator.RangedRelease += OnRangedRelease;
-
         }
         private void OnDestroy()
         {
             _entityMovement.MovementCompleted -= OnMovementComplete;
-            _entityAnimator.MeleeHit -= OnMeleeHit;
-            _entityAnimator.RangedRelease -= OnRangedRelease;
 
             Unbind();
         }
@@ -57,7 +57,6 @@ namespace Aegis.View
             transform.position = entity.Position;
 
             if (entity is Unit unit) {
-
                 _entityMovement.Bind(unit);
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseTo;
@@ -69,6 +68,9 @@ namespace Aegis.View
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
                 unit.Health.Depleted += _healthView.OnHealthDepleted;
+
+                foreach (var combat in _combatViews)
+                    combat.Bind(unit);
             }
         }
 
@@ -89,6 +91,9 @@ namespace Aegis.View
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
                 unit.Health.Depleted -= _healthView.OnHealthDepleted;
+
+                foreach (var combat in _combatViews)
+                    combat.Unbind();
             }
             _entity = null;
         }
@@ -96,12 +101,12 @@ namespace Aegis.View
         private void OnChaseTo(Vector3 target)
         {
             _entityMovement.MoveTo(target);
-            _entityAnimator.PlayWalk();
+            _entityAnimator.PlayWalk(_entityMovement.Velocity);
         }
         private void OnWalk(Vector3 destination)
         {
             _entityMovement.MoveTo(destination);
-            _entityAnimator.PlayWalk();
+            _entityAnimator.PlayWalk(_entityMovement.Velocity);
         }
         private void OnAttack(Vector3 targetPosition)
         {
@@ -128,20 +133,20 @@ namespace Aegis.View
         {
             _entityAnimator.PlayIdle();
         }
-        private void OnMeleeHit()
-        {
-            if (_entity is Unit unit)
-                unit.PerformAttackDamage(unit.AttackTarget);
-        }
-        private void OnRangedRelease()
-        {
-            if (_entity is not Unit unit || unit.AttackTarget == null) return;
-            if (_arrowPrefab == null) return;
+        // private void OnMeleeHit()
+        // {
+        //     if (_entity is Unit unit)
+        //         unit.PerformAttackDamage(unit.AttackTarget);
+        // }
+        // private void OnRangedRelease()
+        // {
+        //     if (_entity is not Unit unit || unit.AttackTarget == null) return;
+        //     if (_arrowPrefab == null) return;
 
-            Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
-            var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
-            arrow.Launch(unit, unit.AttackTarget);
-        }
+        //     Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
+        //     var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
+        //     arrow.Launch(unit, unit.AttackTarget);
+        // }
         private void OnLookAt(WorldEntity target)
         {
             if (target == null) return;

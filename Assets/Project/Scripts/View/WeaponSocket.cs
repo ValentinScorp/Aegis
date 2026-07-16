@@ -1,0 +1,31 @@
+using UnityEngine;
+
+namespace Aegis.View
+{
+    public class WeaponSocket : MonoBehaviour
+    {
+        [SerializeField] private Transform handSocket;
+        private GameObject _currentWeaponInstance;
+        private Animator _weaponAnimator;
+        private void Awake()
+        {
+        }
+        public void EquipWeapon(GameObject weaponPrefab)
+        {
+            if (_currentWeaponInstance != null)
+                Destroy(_currentWeaponInstance);
+
+            _currentWeaponInstance = Instantiate(weaponPrefab, handSocket);
+            _currentWeaponInstance.transform.localPosition = Vector3.zero;
+            _currentWeaponInstance.transform.localRotation = Quaternion.identity;
+
+            _weaponAnimator = _currentWeaponInstance.GetComponent<Animator>();
+        }
+
+        public void PlayShoot()
+        {
+            if (_weaponAnimator != null)
+                _weaponAnimator.Play("Shoot", 0, 0f);
+        }
+    }
+}

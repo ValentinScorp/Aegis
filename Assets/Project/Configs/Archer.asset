@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ca9cf98599c9f4596a1ebc612d7da2, type: 3}
   m_Name: Archer
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.UnitConfig
+  UnitType: 1
   AttackTime: 1.5
   AttackDamage: 12
   AttackRadius: 2
-  ShootRadius: 8
+  CanShoot: 1
+  ShootTime: 1
+  ShootRadius: 12
   AttackEventTime: 0.627
+  ShootEventTime: 0.5
   SearchRadius: 6
   ChaseRadius: 7
-  MaxHealth: 100
+  MaxHealth: 70
