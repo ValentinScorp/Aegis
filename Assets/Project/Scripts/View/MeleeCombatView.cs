@@ -28,7 +28,7 @@ namespace Aegis.View
         public void Bind(Unit unit)
         {
             _unit = unit;
-            unit.ShootBegin += OnAttack;
+            unit.AttackBegin += OnAttack;
         }
         public void Unbind()
         {

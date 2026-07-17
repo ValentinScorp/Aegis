@@ -11,6 +11,10 @@ namespace Aegis.View
         private MaterialPropertyBlock _mpb;
 
         private bool _selected;
+        private void Awake()
+        {
+            Reset();
+        }
 
         private void Reset()
         {
