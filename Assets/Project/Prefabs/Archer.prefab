@@ -95,8 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
-  _attackClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
-  _shootClip: {fileID: 0}
 --- !u!114 &6732715348411497767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cad89809146b104187d7949486c3bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.MeleeCombatView
+  _aminationClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
 --- !u!114 &88756551761820582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,8 +133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a428b246c23153448b39a436d37b285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.RangedCombatView
-  _arrowSpawnPoint: {fileID: 0}
-  _arrowPrefab: {fileID: 0}
+  _arrowSpawnPoint: {fileID: 3543769326126190904}
+  _arrowPrefab: {fileID: 5590828222096021662, guid: a11f408a9c06a2e4aacf4ae82cabc521, type: 3}
+  _shootClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
 --- !u!195 &6023794523833144764
 NavMeshAgent:
   m_ObjectHideFlags: 0

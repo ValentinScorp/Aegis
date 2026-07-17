@@ -4,32 +4,31 @@ namespace Aegis.View
 {
     public class Selectable : MonoBehaviour
     {
-        [SerializeField] private Renderer _objectRenderer;
-
         [SerializeField] private Color selectedColor = Color.yellow;
+
+        private Renderer _renderer;
 
         private MaterialPropertyBlock _mpb;
 
         private bool _selected;
-        
+
         private void Reset()
         {
-            _objectRenderer = GetComponentInChildren<Renderer>();
-            if (_objectRenderer == null) Debug.LogWarning("Didn't get Renderer in Prefab!");
+            _renderer = GetComponentInChildren<Renderer>();
+            if (_renderer == null) Debug.LogWarning($"Didn't get <Renderer> in Prefab: {name}!", this);
         }
         public void Select(bool selected)
         {
-            Debug.Log("Selected");
             _selected = selected;
             UpdateVisual();
         }
         private void UpdateVisual()
         {
-            if (_objectRenderer == null) return;
+            if (_renderer == null) return;
 
             if (_mpb == null) _mpb = new MaterialPropertyBlock();
 
-            _objectRenderer.GetPropertyBlock(_mpb);
+            _renderer.GetPropertyBlock(_mpb);
 
             if (_selected) {
                 _mpb.SetColor("_EmissionColor", selectedColor);
@@ -37,8 +36,7 @@ namespace Aegis.View
                 _mpb.SetColor("_EmissionColor", Color.black);
             }
 
-            _objectRenderer.SetPropertyBlock(_mpb);
+            _renderer.SetPropertyBlock(_mpb);
         }
-
     }
 }

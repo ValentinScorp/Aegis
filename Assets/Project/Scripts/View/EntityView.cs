@@ -6,9 +6,6 @@ namespace Aegis.View
     public class EntityView : MonoBehaviour
     {
         [SerializeField] private HealthView _healthView;
-        [SerializeField] private Transform _arrowSpawnPoint;
-        [SerializeField] private Arrow _arrowPrefab;
-
         private ICombatView[] _combatViews;
 
         private Renderer _renderer;
@@ -62,8 +59,6 @@ namespace Aegis.View
                 unit.ChaseTo += OnChaseTo;
                 unit.WalkTo += OnWalk;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
-                unit.AttackBegin += OnAttack;
-                unit.ShootBegin += OnShoot;
                 unit.AttackEnd += _entityAnimator.PlayIdle;
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
@@ -85,8 +80,6 @@ namespace Aegis.View
                 unit.ChaseTo -= OnChaseTo;
                 unit.WalkTo -= OnWalk;
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
-                unit.AttackBegin -= OnAttack;
-                unit.ShootBegin -= OnShoot;
                 unit.AttackEnd -= _entityAnimator.PlayIdle;
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
@@ -117,36 +110,10 @@ namespace Aegis.View
             }
             _entityAnimator.PlayAttack(attackTime);
         }
-        private void OnShoot(Vector3 targetPosition)
-        {
-            if (_entity is not Unit unit || unit.AttackTarget == null) return;
-            if (_arrowPrefab == null) return;
-
-            _entityMovement.LookAt(targetPosition);
-            _entityAnimator.PlayShoot(unit.ShootTime);
-
-            Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
-            var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
-            arrow.Launch(unit, unit.AttackTarget);
-        }
         private void OnMovementComplete(Vector3 pos)
         {
             _entityAnimator.PlayIdle();
         }
-        // private void OnMeleeHit()
-        // {
-        //     if (_entity is Unit unit)
-        //         unit.PerformAttackDamage(unit.AttackTarget);
-        // }
-        // private void OnRangedRelease()
-        // {
-        //     if (_entity is not Unit unit || unit.AttackTarget == null) return;
-        //     if (_arrowPrefab == null) return;
-
-        //     Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
-        //     var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
-        //     arrow.Launch(unit, unit.AttackTarget);
-        // }
         private void OnLookAt(WorldEntity target)
         {
             if (target == null) return;

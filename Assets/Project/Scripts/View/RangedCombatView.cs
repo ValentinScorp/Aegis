@@ -16,7 +16,7 @@ namespace Aegis.View
 
         private void Awake()
         {
-            if ((_entityAnimator = GetComponent<EntityAnimator>()) == null)
+            if ((_entityAnimator = GetComponentInChildren<EntityAnimator>()) == null)
                 Debug.LogWarning($"No <EntityAnimator> found in component <RangedCombatView> of prefab: {name}!", this);
 
             if ((_entityMovement = GetComponent<EntityMovement>()) == null)
@@ -38,6 +38,8 @@ namespace Aegis.View
         {
             if (_unit == null) return;
             _unit.ShootBegin -= OnShoot;
+            _unit.ProjectileLaunched -= OnProjectileLaunched;
+
             _unit = null;
         }
 

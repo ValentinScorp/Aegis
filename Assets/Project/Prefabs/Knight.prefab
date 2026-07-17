@@ -67,6 +67,7 @@ GameObject:
   - component: {fileID: 3136518124250224216}
   - component: {fileID: 5636412888896548542}
   - component: {fileID: 4515276628455807906}
+  - component: {fileID: 7325200048801248841}
   - component: {fileID: 1882656771278156442}
   - component: {fileID: 9018675436902733164}
   m_Layer: 0
@@ -107,7 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b507313cea8fc043b79dc55cd5c7736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectableObject
-  _objectRenderer: {fileID: 8691110030767548739}
   selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &5636412888896548542
 MonoBehaviour:
@@ -122,7 +122,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.EntityView
   _healthView: {fileID: 3519317419377865720}
-  _renderer: {fileID: 8691110030767548739}
 --- !u!114 &4515276628455807906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +134,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f509dff39b9e32546892c5f11be19b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityMovement
+--- !u!114 &7325200048801248841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358281500524856689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cad89809146b104187d7949486c3bb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.MeleeCombatView
+  _aminationClip: {fileID: 7400000, guid: 0932505f83189174e9405ca64f635505, type: 3}
 --- !u!114 &1882656771278156442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,9 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
-  _animator: {fileID: 8518566337199706308}
-  _movement: {fileID: 4515276628455807906}
-  _attackClip: {fileID: 7400000, guid: 0932505f83189174e9405ca64f635505, type: 3}
 --- !u!195 &9018675436902733164
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -484,10 +493,5 @@ MonoBehaviour:
 --- !u!4 &8691110030762375249 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400050, guid: ba24e610e0a338545b447ff44a3cf1cc, type: 3}
-  m_PrefabInstance: {fileID: 8691110030762238691}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &8691110030767548739 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 13700000, guid: ba24e610e0a338545b447ff44a3cf1cc, type: 3}
   m_PrefabInstance: {fileID: 8691110030762238691}
   m_PrefabAsset: {fileID: 0}

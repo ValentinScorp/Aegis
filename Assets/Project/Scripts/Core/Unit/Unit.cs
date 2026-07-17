@@ -113,10 +113,13 @@ namespace Aegis.Core
             FixedPosition = destination;
             StateMachine.Walk.Destination = destination;
             StateMachine.SetState(StateMachine.Walk);
+            Debug.Log("Performing walk!");
             WalkTo?.Invoke(destination);
         }
         public void PerformChase(WorldEntity entity)
         {
+            Debug.Log("Performing chase!");
+
             ChaseTo?.Invoke(entity.Position);
         }
         public void StopMovement()
@@ -125,6 +128,8 @@ namespace Aegis.Core
         }
         public void PerformAttack(WorldEntity entity)
         {
+            Debug.Log("Performing attack!");
+
             AttackBegin?.Invoke(entity.Position);
         }
         public void PerformShoot(WorldEntity entity)
