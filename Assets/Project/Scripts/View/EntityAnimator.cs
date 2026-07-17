@@ -25,7 +25,6 @@ namespace Aegis.View
         private void OnDestroy()
         {
         }
-
         private void Update()
         {
         }
@@ -54,7 +53,6 @@ namespace Aegis.View
             _animator.Play(stateHash, 0, 0f);
             _currentStateHash = stateHash;
         }
-
         private void PlayLooping(int stateHash)
         {
             if (_currentStateHash == stateHash) return;

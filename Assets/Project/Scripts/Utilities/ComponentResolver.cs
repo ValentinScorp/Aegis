@@ -13,7 +13,7 @@ namespace Aegis.Utilities
             if (context.transform.parent != null) {
                 component = context.transform.parent.GetComponentInChildren<T>();
             } else {
-                component = context.transform.GetComponentInChildren<T>();                
+                component = context.transform.GetComponentInChildren<T>();
             }
 
             if (component == null) {
@@ -21,6 +21,13 @@ namespace Aegis.Utilities
             } else {
                 Debug.Log($"[{context.GetType().Name}] Found {typeof(T).Name}: {component.gameObject.name}", context);
             }
+
+            return component;
+        }
+        public static T Require<T>(MonoBehaviour context, T component) where T : Component
+        {
+            if (component == null)
+                Debug.LogWarning($"[{context.GetType().Name}] Missing required <{typeof(T).Name}> on \"{context.name}\".", context);
 
             return component;
         }

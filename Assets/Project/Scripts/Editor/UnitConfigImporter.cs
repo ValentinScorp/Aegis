@@ -56,6 +56,9 @@ namespace Aegis.Core
                 config.ShootRadius = entry.shoot_distance;
                 config.AttackEventTime = entry.attack_event_time;
                 config.ShootEventTime = entry.shoot_event_time;
+                config.MovementSpeed = entry.move_speed;
+                config.SearchRadius = entry.search_radius; 
+                config.ChaseRadius = entry.chase_radius;
 
                 EditorUtility.SetDirty(config);
             }

@@ -18,6 +18,7 @@ namespace Aegis.Core
         public float ShootEventTime = 0.5f;
 
         [Header("Movement")]
+        public float MovementSpeed = 5f;
         public float SearchRadius = 6f;
         public float ChaseRadius = 7f;
 

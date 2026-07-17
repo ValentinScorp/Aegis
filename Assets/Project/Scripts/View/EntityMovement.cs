@@ -2,6 +2,7 @@ using System;
 using Aegis.Core;
 using UnityEngine;
 using UnityEngine.AI;
+using Aegis.Utilities;
 
 namespace Aegis.View
 {
@@ -22,8 +23,7 @@ namespace Aegis.View
 
         private void Awake()
         {
-            _agent = GetComponent<NavMeshAgent>();
-            if (_agent == null) Debug.LogError("NavMeshAgent not found on EntityMovement!");
+            _agent = ComponentResolver.Require(this, GetComponent<NavMeshAgent>());     
         }
 
         private void Update()
@@ -51,6 +51,7 @@ namespace Aegis.View
         {
             if (unit is null) return;
             _unit = unit;
+            _agent.speed = unit.Config.MovementSpeed;
             MovementCompleted += _unit.MovementComplete;
         }
 
