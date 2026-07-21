@@ -55,8 +55,8 @@ namespace Aegis.View
 
             if (entity is Unit unit) {
                 _entityMovement.Bind(unit);
-                _entityAnimator.SetWalkAnimSpeedMultiplier(unit.Config.WalkAnimationSpeedMultiplier);
-                
+                _entityAnimator.Bind(unit);
+
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseTo;
                 unit.WalkTo += OnWalk;
@@ -79,6 +79,7 @@ namespace Aegis.View
 
             if (_entity is Unit unit) {
                 _entityMovement.Unbind();
+                _entityAnimator.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
                 unit.ChaseTo -= OnChaseTo;

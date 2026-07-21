@@ -1,4 +1,5 @@
 using System;
+using Aegis.Core;
 using Aegis.Utilities;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Aegis.View
     public class EntityAnimator : MonoBehaviour
     {
         private Animator _animator;
+        private Unit _unit;
         private EntityMovement _movement;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
@@ -14,9 +16,9 @@ namespace Aegis.View
         private static readonly int ShootHash = Animator.StringToHash("Shoot");
         private static readonly int WalkHash = Animator.StringToHash("Walk");
 
+        private static readonly int WalkSpeedHash = Animator.StringToHash("WalkSpeed");
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
         private static readonly int ShootSpeedHash = Animator.StringToHash("ShootSpeed");
-        private float _walkAnimSpeedMultiplier;
 
         private void Awake()
         {
@@ -26,14 +28,20 @@ namespace Aegis.View
         private void OnDestroy()
         {
         }
+        public void Bind(Unit unit)
+        {
+            _unit = unit;
+        }
+        public void Unbind()
+        {
+            _unit = null;
+        }
         private void Update()
         {
-            if (_currentStateHash == WalkHash && _movement != null)
-                _animator.SetFloat("WalkSpeed",_movement.NormalizedSpeed * _walkAnimSpeedMultiplier);
-        }
-        public void SetWalkAnimSpeedMultiplier(float speed)
-        {
-            _walkAnimSpeedMultiplier = speed;
+            if (_currentStateHash != WalkHash || _unit?.Config == null || _movement == null) return;
+
+            float multiplier = _unit.Config.WalkAnimationSpeedMultiplier;
+            _animator.SetFloat(WalkSpeedHash, _movement.NormalizedSpeed * multiplier);
         }
         public void PlayAttack(float animSpeed)
         {
