@@ -1,10 +1,13 @@
 using UnityEngine;
 using Aegis.Core;
+using Aegis.Utilities;
 
 namespace Aegis.View
 {
     public class EntityView : MonoBehaviour
     {
+        [SerializeField] private WeaponSocket _weaponSocket;
+        [SerializeField] private GameObject _bowPrefab;
         [SerializeField] private HealthView _healthView;
         private ICombatView[] _combatViews;
 
@@ -13,7 +16,7 @@ namespace Aegis.View
         private EntityAnimator _entityAnimator;
         private WorldEntity _entity;
         public WorldEntity Entity => _entity;
-
+        public Unit GetUnit() => _entity as Unit;
         private MaterialPropertyBlock _mpb;
 
         private void Awake()
@@ -67,6 +70,11 @@ namespace Aegis.View
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
+                
+                _weaponSocket = ComponentResolver.Require(this, GetComponent<WeaponSocket>());
+                if (unit.CanShoot && _weaponSocket != null && _bowPrefab != null) {
+                    _weaponSocket.EquipWeapon(_bowPrefab);
+                }
 
                 foreach (var combat in _combatViews)
                     combat.Bind(unit);
@@ -135,7 +143,7 @@ namespace Aegis.View
             var selectable = GetComponent<Selectable>();
             if (selectable) selectable.Select(false);
 
-            _entityAnimator.PlayDeath();  
+            _entityAnimator.PlayDeath();
         }
 
         private void OnPlayerSelection(bool selected)

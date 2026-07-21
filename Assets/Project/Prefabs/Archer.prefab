@@ -54,7 +54,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b507313cea8fc043b79dc55cd5c7736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.Selectable
-  _objectRenderer: {fileID: 0}
   selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &391847212068966660
 MonoBehaviour:
@@ -68,9 +67,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e67d3b8c23a9041a3ef344d3e1d582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityView
+  _weaponSocket: {fileID: 0}
+  _bowPrefab: {fileID: 6204959886361044491, guid: 2af3da8a2711c824c95b50d930e5494b, type: 3}
   _healthView: {fileID: 8501964369632210417}
-  _arrowSpawnPoint: {fileID: 0}
-  _arrowPrefab: {fileID: 5590828222096021662, guid: a11f408a9c06a2e4aacf4ae82cabc521, type: 3}
 --- !u!114 &6744078577640128774
 MonoBehaviour:
   m_ObjectHideFlags: 0

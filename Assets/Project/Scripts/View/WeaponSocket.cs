@@ -7,6 +7,9 @@ namespace Aegis.View
         [SerializeField] private Transform handSocket;
         private GameObject _currentWeaponInstance;
         private Animator _weaponAnimator;
+
+        private static readonly Quaternion BowRotationOffset = Quaternion.Euler(90f, 0f, 0f);
+
         private void Awake()
         {
         }
@@ -17,7 +20,7 @@ namespace Aegis.View
 
             _currentWeaponInstance = Instantiate(weaponPrefab, handSocket);
             _currentWeaponInstance.transform.localPosition = Vector3.zero;
-            _currentWeaponInstance.transform.localRotation = Quaternion.identity;
+            _currentWeaponInstance.transform.localRotation = BowRotationOffset;
 
             _weaponAnimator = _currentWeaponInstance.GetComponent<Animator>();
         }

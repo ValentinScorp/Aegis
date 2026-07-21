@@ -197,6 +197,20 @@ namespace Aegis.Core
             }
             return false;
         }
+        public bool CanShootTarget(WorldEntity entity)
+        {
+            if (!CanShoot) return false;
+
+            if (entity is Unit unit) {
+                if (unit.FactionId != FactionId) {
+                    float distSqr = (entity.Position - Position).sqrMagnitude;
+                    if (distSqr <= (ShootRadius * ShootRadius)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         internal void UpdateActions(float deltaTime)
         {

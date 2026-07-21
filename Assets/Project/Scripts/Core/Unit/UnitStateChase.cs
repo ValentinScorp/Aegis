@@ -33,16 +33,23 @@ namespace Aegis.Core
         public void OnActionsUpdate(float deltTime)
         {
             if (_self.CanAttack(_self.ChaseTarget)) {
-                _self.AttackTarget = _self.ChaseTarget;                
+                _self.AttackTarget = _self.ChaseTarget;
                 _self.StateMachine.SetState(_self.StateMachine.Attack);
+                return;
+            }
+
+            if (_self.CanShootTarget(_self.ChaseTarget)) {
+                _self.AttackTarget = _self.ChaseTarget;
+                _self.StateMachine.SetState(_self.StateMachine.Shoot);
+                return;
             }
         }
 
         public void OnInteractionsUpdate(WorldEntity closestTarget)
         {
             if ((_self.Position - _self.FixedPosition).sqrMagnitude > (_self.ChaseRadius * _self.ChaseRadius)) {
-                _self.PerformWalk(_self.FixedPosition); 
-                return;        
+                _self.PerformWalk(_self.FixedPosition);
+                return;
             }
 
             if (_lastPosition != _self.ChaseTarget.Position) {

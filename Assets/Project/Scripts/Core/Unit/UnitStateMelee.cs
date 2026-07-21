@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace Aegis.Core
 {
-    public class UnitStateAttack : IUnitState
+    public class UnitStateMelee : IUnitState
     {
         private Unit _self;
 
         private float _attackCooldownTimer;
         private bool _damageDealed;
 
-        public UnitStateAttack(Unit owner)
+        public UnitStateMelee(Unit owner)
         {
             _attackCooldownTimer = 0f;
             _self = owner;
