@@ -52,7 +52,7 @@ namespace Aegis.Core
                 return;
             }
             _attackCooldownTimer += deltaTime;
-            if (!_damageDealed && _attackCooldownTimer >= _self.AttackTime * 0.25f) {
+            if (!_damageDealed && _attackCooldownTimer >= _self.AttackTime * _self.AttackEventTime) {
                 DealDamage();
             }
             if (_attackCooldownTimer >= _self.AttackTime) {

@@ -5,8 +5,8 @@ namespace Aegis.Core
     public class UnitStateShoot : IUnitState
     {
         private Unit _self;
-        private float _attackCooldownTimer;
-        private bool _damageDealed;
+        private float _shootCooldownTimer;
+        private bool _projectileLaunched;
 
         public UnitStateShoot(Unit owner)
         {
@@ -16,15 +16,15 @@ namespace Aegis.Core
         public void Enter()
         {
             _self.StopMovement();
-            _self.PerformAttack(_self.AttackTarget);
-            _attackCooldownTimer = 0f;
-            _damageDealed = false;
+            _self.PerformShoot(_self.AttackTarget);
+            _shootCooldownTimer = 0f;
+            _projectileLaunched = false;
         }
 
         public void Exit()
         {
-            _self.StopAttack();
-            _attackCooldownTimer = 0f;
+            _self.StopShoot();
+            _shootCooldownTimer = 0f;
         }
 
         public void OnActionsUpdate(float deltaTime)
@@ -47,17 +47,17 @@ namespace Aegis.Core
                 return;
             }
 
-            _attackCooldownTimer += deltaTime;
+            _shootCooldownTimer += deltaTime;
 
-             if (!_damageDealed && _attackCooldownTimer >= _self.AttackEventTime * _self.AttackTime) {
-                _self.PerformShoot(_self.AttackTarget);
-                _damageDealed = true;
+             if (!_projectileLaunched && _shootCooldownTimer >= _self.ShootTime * _self.ShootEventTime) {
+                _self.PerformProjectileLaunch(_self.AttackTarget);
+                _projectileLaunched = true;
             }
 
-            if (_attackCooldownTimer >= _self.AttackTime) {
-                _self.PerformAttack(_self.AttackTarget);
-                _attackCooldownTimer = 0f;
-                _damageDealed = false;
+            if (_shootCooldownTimer >= _self.ShootTime) {
+                _shootCooldownTimer = 0f;
+                _self.PerformShoot(_self.AttackTarget);                
+                _projectileLaunched = false;
             }
         }
 

@@ -60,6 +60,7 @@ namespace Aegis.View
                 unit.WalkTo += OnWalk;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
                 unit.AttackEnd += _entityAnimator.PlayIdle;
+                unit.ShootEnd += _entityAnimator.PlayIdle;
 
                 unit.Health.Changed += _healthView.OnHealthChanged;
                 unit.Health.Depleted += _healthView.OnHealthDepleted;
@@ -81,6 +82,7 @@ namespace Aegis.View
                 unit.WalkTo -= OnWalk;
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
                 unit.AttackEnd -= _entityAnimator.PlayIdle;
+                unit.ShootEnd -= _entityAnimator.PlayIdle;
 
                 unit.Health.Changed -= _healthView.OnHealthChanged;
                 unit.Health.Depleted -= _healthView.OnHealthDepleted;

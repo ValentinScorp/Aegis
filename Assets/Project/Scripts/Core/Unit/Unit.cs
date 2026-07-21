@@ -27,6 +27,7 @@ namespace Aegis.Core
         public float AttackEventTime => Config?.AttackEventTime ?? 0.5f;
         public bool CanShoot => Config?.CanShoot ?? false;
         public float ShootTime => Config?.ShootTime ?? 1f;
+        public float ShootEventTime => Config?.ShootEventTime ?? 0.5f;
         public float ShootRadius => Config?.ShootRadius ?? 10.0f;
 
         public Vector3 FixedPosition { get; set; }
@@ -44,6 +45,7 @@ namespace Aegis.Core
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
         public event Action AttackEnd;
+        public event Action ShootEnd;
         public event Action Died;
 
         public UnitStateMachine StateMachine { get; private set; }
@@ -136,10 +138,10 @@ namespace Aegis.Core
         {
             ShootBegin?.Invoke(entity.Position);
         }
-        public void PerformProjectileLaunch()
+        public void PerformProjectileLaunch(WorldEntity target)
         {
             if (AttackTarget == null) return;
-            ProjectileLaunched?.Invoke(AttackTarget.Position);
+            ProjectileLaunched?.Invoke(target.Position);
         }
         public void PerformAttackDamage(WorldEntity target)
         {
@@ -156,6 +158,10 @@ namespace Aegis.Core
         public void StopAttack()
         {
             AttackEnd?.Invoke();
+        }
+        public void StopShoot()
+        {
+            ShootEnd?.Invoke();
         }
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
