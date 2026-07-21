@@ -55,15 +55,18 @@ namespace Aegis.View
 
             if (entity is Unit unit) {
                 _entityMovement.Bind(unit);
+                _entityAnimator.SetWalkAnimSpeedMultiplier(unit.Config.WalkAnimationSpeedMultiplier);
+                
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseTo;
                 unit.WalkTo += OnWalk;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
                 unit.AttackEnd += _entityAnimator.PlayIdle;
                 unit.ShootEnd += _entityAnimator.PlayIdle;
+                unit.Died += OnDied;
 
-                unit.Health.Changed += _healthView.OnHealthChanged;
-                unit.Health.Depleted += _healthView.OnHealthDepleted;
+                unit.HealthChanged += _healthView.OnHealthChanged;
+                unit.Died += _healthView.OnHealthDepleted;
 
                 foreach (var combat in _combatViews)
                     combat.Bind(unit);
@@ -83,9 +86,10 @@ namespace Aegis.View
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
                 unit.AttackEnd -= _entityAnimator.PlayIdle;
                 unit.ShootEnd -= _entityAnimator.PlayIdle;
+                unit.Died -= OnDied;
 
-                unit.Health.Changed -= _healthView.OnHealthChanged;
-                unit.Health.Depleted -= _healthView.OnHealthDepleted;
+                unit.HealthChanged -= _healthView.OnHealthChanged;
+                unit.Died -= _healthView.OnHealthDepleted;
 
                 foreach (var combat in _combatViews)
                     combat.Unbind();
@@ -121,6 +125,16 @@ namespace Aegis.View
             if (target == null) return;
 
             _entityMovement.LookAt(target.Position);
+        }
+        private void OnDied()
+        {
+            _entityMovement.Stop();
+            _entityMovement.DisableAgent();
+
+            var selectable = GetComponent<Selectable>();
+            if (selectable) selectable.Select(false);
+
+            _entityAnimator.PlayDeath();  
         }
 
         private void OnPlayerSelection(bool selected)

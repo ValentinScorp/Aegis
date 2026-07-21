@@ -29,8 +29,10 @@ namespace Aegis.Core
             Current = Mathf.Max(0f, Current - amount);
             Changed?.Invoke(Current, Max);
 
-            if (Current == 0f)
+            if (Current <= 0.01f) {
+                Current = 0f;
                 Depleted?.Invoke();
+            }
         }
 
         public void Heal(float amount)
@@ -41,7 +43,7 @@ namespace Aegis.Core
             Changed?.Invoke(Current, Max);
         }
 
-        public void Reset() 
+        public void Reset()
         {
             Current = Max;
             Changed?.Invoke(Current, Max);

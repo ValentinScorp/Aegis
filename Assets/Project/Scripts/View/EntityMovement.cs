@@ -17,13 +17,15 @@ namespace Aegis.View
         private Vector3 _lastSyncedPosition;
 
         public float Velocity => _agent.velocity.magnitude;
+        // EntityMovement.cs
+        public float NormalizedSpeed => _agent.speed > 0f ? _agent.velocity.magnitude / _agent.speed : 0f; // 0..1
         public bool IsWalking => _isMoving;
 
         public event Action<Vector3> MovementCompleted;
 
         private void Awake()
         {
-            _agent = ComponentResolver.Require(this, GetComponent<NavMeshAgent>());     
+            _agent = ComponentResolver.Require(this, GetComponent<NavMeshAgent>());
         }
 
         private void Update()
@@ -90,7 +92,11 @@ namespace Aegis.View
 
             if (_agent != null && _agent.isActiveAndEnabled)
                 _agent.ResetPath();
-        }        
+        }
+        public void DisableAgent()
+        {
+            _agent.enabled = false;
+        }
 
         private void OnWalkFinished()
         {

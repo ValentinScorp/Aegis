@@ -14,7 +14,8 @@
 	  "shoot_event_time": 0.5,
       "search_radius": 6.0,
 	  "chase_radius": 7.0,
-      "move_speed": 3.5
+      "move_speed": 3.5,
+	  "walk_animation_speed_multiplier": 1.0
     },
     {
       "unit_type": "Archer",
@@ -30,7 +31,8 @@
 	  "shoot_event_time": 0.5,
       "search_radius": 20.0,
 	  "chase_radius": 7.0,
-      "move_speed": 3.5
+      "move_speed": 3.5,
+	  "walk_animation_speed_multiplier": 1.0	  
     }
   ]
 }

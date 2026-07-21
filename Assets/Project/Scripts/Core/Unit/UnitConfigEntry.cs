@@ -15,6 +15,7 @@ public class UnitConfigEntry
     public float search_radius;
     public float chase_radius;
     public float move_speed;
+    public float walk_animation_speed_multiplier;
 }
 
 [System.Serializable]

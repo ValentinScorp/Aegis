@@ -1,4 +1,5 @@
 using System;
+using Aegis.Utilities;
 using UnityEngine;
 
 namespace Aegis.View
@@ -6,6 +7,7 @@ namespace Aegis.View
     public class EntityAnimator : MonoBehaviour
     {
         private Animator _animator;
+        private EntityMovement _movement;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
@@ -14,19 +16,24 @@ namespace Aegis.View
 
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
         private static readonly int ShootSpeedHash = Animator.StringToHash("ShootSpeed");
+        private float _walkAnimSpeedMultiplier;
 
         private void Awake()
         {
-            if ((_animator = GetComponentInChildren<Animator>()) == null)
-                Debug.LogWarning("No <Animator> found in prefab!");
-
-            // TODO Remove Animation Events
+            _animator = ComponentResolver.Require(this, GetComponentInChildren<Animator>());            
+            _movement = ComponentResolver.Require(this, GetComponent<EntityMovement>());
         }
         private void OnDestroy()
         {
         }
         private void Update()
         {
+            if (_currentStateHash == WalkHash && _movement != null)
+                _animator.SetFloat("WalkSpeed",_movement.NormalizedSpeed * _walkAnimSpeedMultiplier);
+        }
+        public void SetWalkAnimSpeedMultiplier(float speed)
+        {
+            _walkAnimSpeedMultiplier = speed;
         }
         public void PlayAttack(float animSpeed)
         {
@@ -46,6 +53,11 @@ namespace Aegis.View
         {
             _animator.SetFloat("WalkSpeed", speed);
             PlayLooping(WalkHash);
+        }
+        public void PlayDeath()
+        {
+            Debug.Log("Death animation!");
+            // todo death animation
         }
         private void PlayOnce(int stateHash)
         {

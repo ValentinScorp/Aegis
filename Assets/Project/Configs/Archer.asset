@@ -21,7 +21,8 @@ MonoBehaviour:
   ShootRadius: 12
   AttackEventTime: 0.627
   ShootEventTime: 0.5
-  MovementSpeed: 20.5
+  MovementSpeed: 3.5
+  WalkAnimationSpeedMultiplier: 1
   SearchRadius: 20
   ChaseRadius: 7
   MaxHealth: 70

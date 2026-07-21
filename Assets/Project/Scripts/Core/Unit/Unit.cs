@@ -39,6 +39,7 @@ namespace Aegis.Core
 
         public event Action<bool> WasSelectedByPlayer;
         public event Action ExecutedStopMovement;
+        public event Action<float, float> HealthChanged;
         public event Action<Vector3> AttackBegin;
         public event Action<Vector3> ShootBegin;
         public event Action<Vector3> ProjectileLaunched;
@@ -68,19 +69,14 @@ namespace Aegis.Core
             Config = config;
 
             Health = new Health(config.MaxHealth);
+            Health.Changed += (current, max) => HealthChanged?.Invoke(current, max);
+            Health.Depleted += OnHealthDepleted;
 
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;
         }
-        public void SetConfig(UnitConfig config)
-        {
-            Config = config;
-            if (Health == null) {
-                Health = new Health(config.MaxHealth);
-                Health.Depleted += OnHealthDepleted;
-            }
-        }
+
         private void OnHealthDepleted()
         {
             PerformDeath();
@@ -90,6 +86,7 @@ namespace Aegis.Core
             if (!Health.IsAlive) return;
 
             Health.TakeDamage(amount);
+
         }
         public void Heal(float amount)
         {

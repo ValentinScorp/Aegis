@@ -34,15 +34,15 @@ namespace Aegis.View
         }
         private void OnEntityCreated(WorldEntity entity)
         {
-            SetConfig(entity);
+            // SetConfig(entity);
             CreateEntityView(entity);
         }
-        private void SetConfig(WorldEntity entity)
-        {
-            if (entity is Unit unit) {
-                unit.SetConfig(entityViewRegistry.GetConfig(unit.EntityType));
-            }
-        }
+        // private void SetConfig(WorldEntity entity)
+        // {
+        //     if (entity is Unit unit) {
+        //         unit.SetConfig(entityViewRegistry.GetConfig(unit.EntityType));
+        //     }
+        // }
         private void CreateEntityView(WorldEntity entity)
         {
             EntityView prefab = null;
