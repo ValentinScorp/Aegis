@@ -27,10 +27,10 @@ namespace Aegis.View
             _weaponAnimator = _currentWeaponInstance.GetComponent<EntityAnimator>();
         }
 
-        public void PlayBowShoot()
+        public void PlayBowShoot(float animSpeed = 1f)
         {
             if (_weaponAnimator != null)
-                _weaponAnimator.PlayShoot(1.0f);
+                _weaponAnimator.PlayShoot(animSpeed);
         }
     }
 }

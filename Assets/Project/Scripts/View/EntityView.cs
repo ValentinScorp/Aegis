@@ -13,7 +13,7 @@ namespace Aegis.View
         private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
-        private EquipmentSlotView _equipmentSlot;
+        private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
@@ -24,6 +24,7 @@ namespace Aegis.View
             _healthView = ComponentResolver.Require(this, GetComponentInChildren<HealthView>());
             _entityMovement = GetComponent<EntityMovement>();
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
+            _unitAnimationSync = ComponentResolver.Require(this, GetComponent<UnitAnimationSync>());
             _combatViews = GetComponents<ICombatView>();
 
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
@@ -59,6 +60,7 @@ namespace Aegis.View
             if (entity is Unit unit) {
                 _entityMovement.Bind(unit);
                 _entityAnimator.Bind(unit);
+                _unitAnimationSync.Bind(unit);
 
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseTo;
@@ -70,10 +72,12 @@ namespace Aegis.View
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
-                
-                var weaponSlot = ComponentResolver.Require(this, GetComponent<EquipmentSlotView>());
-                if (unit.CanShoot && weaponSlot != null && weaponSlot.Type == EquipmentSlotType.HandLeft && _bowPrefab != null) {
-                    weaponSlot.EquipWeapon(_bowPrefab);
+
+                if (unit.CanShoot) {
+                    var weaponSlot = ComponentResolver.Require(this, GetComponent<EquipmentSlotView>());
+                    if (unit.CanShoot && weaponSlot != null && weaponSlot.Type == EquipmentSlotType.HandLeft && _bowPrefab != null) {
+                        weaponSlot.EquipWeapon(_bowPrefab);
+                    }
                 }
 
                 foreach (var combat in _combatViews)
@@ -88,6 +92,7 @@ namespace Aegis.View
             if (_entity is Unit unit) {
                 _entityMovement.Unbind();
                 _entityAnimator.Unbind();
+                _unitAnimationSync.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
                 unit.ChaseTo -= OnChaseTo;

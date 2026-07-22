@@ -1,5 +1,6 @@
 using UnityEngine;
 using Aegis.Core;
+using Aegis.Utilities;
 
 namespace Aegis.View
 {
@@ -11,6 +12,7 @@ namespace Aegis.View
 
         private EntityAnimator _entityAnimator;
         private EntityMovement _entityMovement;
+        private EquipmentSlotView _weaponSlot;
         private Unit _unit;
         private float _clipLength;
 
@@ -21,6 +23,9 @@ namespace Aegis.View
 
             if ((_entityMovement = GetComponent<EntityMovement>()) == null)
                 Debug.LogWarning($"No <EntityMovement> found in component <RangedCombatView> of prefab: {name}!", this);
+
+            //_weaponSlot = System.Array.Find(GetComponents<EquipmentSlotView>(), s => s.Type == EquipmentSlotType.HandLeft);
+             _weaponSlot = ComponentResolver.Require(this, GetComponent<EquipmentSlotView>());
 
             if (_shootClip == null)
                 Debug.LogWarning($"No <AnimationClip> set in component <RangedCombatView> of prefab: {name}!", this);
@@ -49,6 +54,7 @@ namespace Aegis.View
             if (_clipLength > 0 && _unit.ShootTime > 0) {
                 float animSpeed = _clipLength / _unit.ShootTime;
                 _entityAnimator.PlayShoot(animSpeed);
+                _weaponSlot?.PlayBowShoot(animSpeed);
             }
         }
         private void OnProjectileLaunched(Vector3 targetPosition)

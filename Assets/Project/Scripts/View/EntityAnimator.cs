@@ -9,7 +9,6 @@ namespace Aegis.View
     {
         private Animator _animator;
         private Unit _unit;
-        private EntityMovement _movement;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
@@ -20,10 +19,12 @@ namespace Aegis.View
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
         private static readonly int ShootSpeedHash = Animator.StringToHash("ShootSpeed");
 
+        public bool IsWalking => _currentStateHash == WalkHash;
+        public void SetWalkSpeed(float speed) => _animator.SetFloat(WalkSpeedHash, speed);
+
         private void Awake()
         {
             _animator = ComponentResolver.Require(this, GetComponentInChildren<Animator>());            
-            _movement = ComponentResolver.Require(this, GetComponent<EntityMovement>());
         }
         private void OnDestroy()
         {
@@ -36,13 +37,13 @@ namespace Aegis.View
         {
             _unit = null;
         }
-        private void Update()
-        {
-            if (_currentStateHash != WalkHash || _unit?.Config == null || _movement == null) return;
+        // private void Update()
+        // {
+        //     if (_currentStateHash != WalkHash || _unit?.Config == null || _movement == null) return;
 
-            float multiplier = _unit.Config.WalkAnimationSpeedMultiplier;
-            _animator.SetFloat(WalkSpeedHash, _movement.NormalizedSpeed * multiplier);
-        }
+        //     float multiplier = _unit.Config.WalkAnimationSpeedMultiplier;
+        //     _animator.SetFloat(WalkSpeedHash, _movement.NormalizedSpeed * multiplier);
+        // }
         public void PlayAttack(float animSpeed)
         {
             _animator.SetFloat(AttackSpeedHash, animSpeed);
@@ -59,7 +60,7 @@ namespace Aegis.View
         }
         public void PlayWalk(float speed)
         {
-            _animator.SetFloat("WalkSpeed", speed);
+            SetWalkSpeed(speed);
             PlayLooping(WalkHash);
         }
         public void PlayDeath()

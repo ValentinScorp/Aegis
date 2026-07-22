@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6732715348411497767}
   - component: {fileID: 4234089474222971668}
   - component: {fileID: 88756551761820582}
+  - component: {fileID: 360421993291956606}
   - component: {fileID: 6023794523833144764}
   m_Layer: 0
   m_Name: Archer
@@ -67,7 +68,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e67d3b8c23a9041a3ef344d3e1d582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityView
-  _weaponSocket: {fileID: 0}
   _bowPrefab: {fileID: 6204959886361044491, guid: 2af3da8a2711c824c95b50d930e5494b, type: 3}
   _healthView: {fileID: 8501964369632210417}
 --- !u!114 &6744078577640128774
@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9f93b27ad2a70f44b0c9717592c3ca7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.WeaponSocket
+  Type: 0
   handSocket: {fileID: 3543769326126190904}
 --- !u!114 &4234089474222971668
 MonoBehaviour:
@@ -135,6 +136,18 @@ MonoBehaviour:
   _arrowSpawnPoint: {fileID: 3543769326126190904}
   _arrowPrefab: {fileID: 5590828222096021662, guid: a11f408a9c06a2e4aacf4ae82cabc521, type: 3}
   _shootClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+--- !u!114 &360421993291956606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dad6599e4ec2c42b88c32f8857e5e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.UnitAnimationSync
 --- !u!195 &6023794523833144764
 NavMeshAgent:
   m_ObjectHideFlags: 0

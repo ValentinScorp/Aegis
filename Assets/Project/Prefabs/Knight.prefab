@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 4515276628455807906}
   - component: {fileID: 7325200048801248841}
   - component: {fileID: 1882656771278156442}
+  - component: {fileID: 549671470960210753}
   - component: {fileID: 9018675436902733164}
   m_Layer: 0
   m_Name: Knight
@@ -121,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e67d3b8c23a9041a3ef344d3e1d582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.EntityView
+  _bowPrefab: {fileID: 0}
   _healthView: {fileID: 3519317419377865720}
 --- !u!114 &4515276628455807906
 MonoBehaviour:
@@ -159,6 +161,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
+--- !u!114 &549671470960210753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8358281500524856689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dad6599e4ec2c42b88c32f8857e5e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.UnitAnimationSync
 --- !u!195 &9018675436902733164
 NavMeshAgent:
   m_ObjectHideFlags: 0
