@@ -27,12 +27,12 @@ namespace Aegis.Core
             float distSqr = (closestTarget.Position - _self.Position).sqrMagnitude;
             if (distSqr <= _self.AttackRadius * _self.AttackRadius) {
                 _self.AttackTarget = closestTarget;
-                _self.StateMachine.SetState(_self.StateMachine.Attack);
+                _self.StateMachine.SetState(_self.StateMachine.MeleeAttack);
                 return;
             }
             if (_self.CanShoot && distSqr <= _self.ShootRadius * _self.ShootRadius) {
                 _self.AttackTarget = closestTarget;
-                _self.StateMachine.SetState(_self.StateMachine.Shoot);
+                _self.StateMachine.SetState(_self.StateMachine.RangedAttack);
                 return;
             }
             _self.ChaseTarget = closestTarget;

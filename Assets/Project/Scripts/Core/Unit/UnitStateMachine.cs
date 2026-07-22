@@ -8,8 +8,8 @@ namespace Aegis.Core
         public IUnitState Current => _currentState;
         public UnitStateIdle Idle;
         public UnitStateChase Chase;
-        public UnitStateMelee Attack;
-        public UnitStateShoot Shoot;
+        public UnitStateMeleeAttack MeleeAttack;
+        public UnitStateRangedAttack RangedAttack;
         public UnitStateWalk Walk;
         public UnitStateDead Dead;
 
@@ -17,8 +17,8 @@ namespace Aegis.Core
         {
             Idle = new UnitStateIdle(owner);
             Chase = new UnitStateChase(owner);
-            Attack = new UnitStateMelee(owner);
-            Shoot = new UnitStateShoot(owner);
+            MeleeAttack = new UnitStateMeleeAttack(owner);
+            RangedAttack = new UnitStateRangedAttack(owner);
             Walk = new UnitStateWalk(owner);
             Dead = new UnitStateDead(owner);
 

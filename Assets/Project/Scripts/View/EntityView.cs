@@ -6,7 +6,6 @@ namespace Aegis.View
 {
     public class EntityView : MonoBehaviour
     {
-        [SerializeField] private WeaponSocket _weaponSocket;
         [SerializeField] private GameObject _bowPrefab;
         [SerializeField] private HealthView _healthView;
         private ICombatView[] _combatViews;
@@ -14,6 +13,7 @@ namespace Aegis.View
         private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
+        private EquipmentSlotView _equipmentSlot;
         private WorldEntity _entity;
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
@@ -21,7 +21,7 @@ namespace Aegis.View
 
         private void Awake()
         {
-            _healthView = Utilities.ComponentResolver.ResolveOrFind(this, _healthView);
+            _healthView = ComponentResolver.Require(this, GetComponentInChildren<HealthView>());
             _entityMovement = GetComponent<EntityMovement>();
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
             _combatViews = GetComponents<ICombatView>();
@@ -71,9 +71,9 @@ namespace Aegis.View
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
                 
-                _weaponSocket = ComponentResolver.Require(this, GetComponent<WeaponSocket>());
-                if (unit.CanShoot && _weaponSocket != null && _bowPrefab != null) {
-                    _weaponSocket.EquipWeapon(_bowPrefab);
+                var weaponSlot = ComponentResolver.Require(this, GetComponent<EquipmentSlotView>());
+                if (unit.CanShoot && weaponSlot != null && weaponSlot.Type == EquipmentSlotType.HandLeft && _bowPrefab != null) {
+                    weaponSlot.EquipWeapon(_bowPrefab);
                 }
 
                 foreach (var combat in _combatViews)

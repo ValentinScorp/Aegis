@@ -17,10 +17,10 @@ MonoBehaviour:
   AttackDamage: 12
   AttackRadius: 2
   CanShoot: 1
-  ShootTime: 1
+  ShootTime: 2
   ShootRadius: 12
   AttackEventTime: 0.627
-  ShootEventTime: 0.5
+  ShootEventTime: 0.6
   MovementSpeed: 3.5
   WalkAnimationSpeedMultiplier: 2
   SearchRadius: 20

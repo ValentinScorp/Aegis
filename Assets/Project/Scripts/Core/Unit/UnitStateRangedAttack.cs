@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace Aegis.Core
 {
-    public class UnitStateShoot : IUnitState
+    public class UnitStateRangedAttack : IUnitState
     {
         private Unit _self;
         private float _shootCooldownTimer;
         private bool _projectileLaunched;
 
-        public UnitStateShoot(Unit owner)
+        public UnitStateRangedAttack(Unit owner)
         {
             _self = owner;
         }

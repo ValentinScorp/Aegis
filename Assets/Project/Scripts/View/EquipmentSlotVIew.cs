@@ -1,12 +1,14 @@
+
 using UnityEngine;
 
 namespace Aegis.View
 {
-    public class WeaponSocket : MonoBehaviour
+    public class EquipmentSlotView : MonoBehaviour
     {
+        [SerializeField] public EquipmentSlotType Type;
         [SerializeField] private Transform handSocket;
         private GameObject _currentWeaponInstance;
-        private Animator _weaponAnimator;
+        private EntityAnimator _weaponAnimator;
 
         private static readonly Quaternion BowRotationOffset = Quaternion.Euler(90f, 0f, 0f);
 
@@ -22,13 +24,13 @@ namespace Aegis.View
             _currentWeaponInstance.transform.localPosition = Vector3.zero;
             _currentWeaponInstance.transform.localRotation = BowRotationOffset;
 
-            _weaponAnimator = _currentWeaponInstance.GetComponent<Animator>();
+            _weaponAnimator = _currentWeaponInstance.GetComponent<EntityAnimator>();
         }
 
-        public void PlayShoot()
+        public void PlayBowShoot()
         {
             if (_weaponAnimator != null)
-                _weaponAnimator.Play("Shoot", 0, 0f);
+                _weaponAnimator.PlayShoot(1.0f);
         }
     }
 }
