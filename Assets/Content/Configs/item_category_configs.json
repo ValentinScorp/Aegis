@@ -1,0 +1,19 @@
+{
+  "items_configs": [
+    {
+      "id": "single_hand_melee",
+      "equip_slot": ["hand_left", "hand_right"],
+      "rest_slot": ["hip_left", "hip_right", "back_left", "back_right"]
+	},
+	{
+      "id": "double_hand_melee",
+      "equip_slot": ["both_hands"],
+      "rest_slot": ["back_left", "back_right"]
+	},
+    {
+      "id": "consumable_bottle",
+      "equip_slot": ["hand_left"],
+      "rest_slot": ["belt_pouch"]
+    }
+  ]
+}
