@@ -20,6 +20,8 @@ namespace Aegis.Core
         public void Enter()
         {
             _self.StopMovement();
+
+            // 
             _self.PerformAttack(_self.AttackTarget);
             _damageDealed = false;
             // Debug.Log("Enter Attack State!");

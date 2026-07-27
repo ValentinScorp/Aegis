@@ -1840,7 +1840,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6d4482688d1134987518a770aa4ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.World
-  entityViewRegistry: {fileID: 11400000, guid: 8978229b900aace45bc06b0941b4de24, type: 2}
+  _entityViewRegistry: {fileID: 11400000, guid: 8978229b900aace45bc06b0941b4de24, type: 2}
+  _unitCommonConfig: {fileID: 11400000, guid: 4d3f893b45b2fe746adf852026291343, type: 2}
 --- !u!1 &2028579077
 GameObject:
   m_ObjectHideFlags: 0

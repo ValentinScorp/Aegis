@@ -30,7 +30,10 @@ namespace Aegis.Core
         public float AttackDamage => Weaponry.Active.MainHand != null ? Weaponry.Active.MainHand.Damage : _common.UnarmedDamage;
 
         public bool CanShoot => Weaponry.HasAnyRanged;
-        public float AttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
+        // public float MeleeAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
+        // public float RangedAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
+        public float AttackRadius => Weaponry.GetLongestAttackDistance();
+        
         public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedDamage;
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
         public float AttackEventTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackEventTime : 0.5f;
