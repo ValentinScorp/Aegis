@@ -25,19 +25,15 @@ namespace Aegis.Core
             if (closestTarget == null) return;
 
             float distSqr = (closestTarget.Position - _self.Position).sqrMagnitude;
-            if (distSqr <= _self.AttackRadius * _self.AttackRadius) {
-                _self.AttackTarget = closestTarget;
-                _self.StateMachine.SetState(_self.StateMachine.MeleeAttack);
-                return;
-            }
-            if (_self.CanShoot && distSqr <= _self.AttackRadius * _self.AttackRadius) {
-                _self.AttackTarget = closestTarget;
-                _self.StateMachine.SetState(_self.StateMachine.RangedAttack);
-                return;
-            }
-            _self.ChaseTarget = closestTarget;
-            _self.StateMachine.SetState(_self.StateMachine.Chase);
 
+            if (distSqr > _self.AttackRange * _self.AttackRange) {
+                _self.ChaseTarget = closestTarget;
+                _self.StateMachine.SetState(_self.StateMachine.Chase);
+                return;
+            }
+
+            _self.AttackTarget = closestTarget;
+            _self.StateMachine.SetState(_self.CanShoot ? _self.StateMachine.RangedAttack : _self.StateMachine.MeleeAttack);
         }
         public void OnActionsUpdate(float deltaTime)
         {

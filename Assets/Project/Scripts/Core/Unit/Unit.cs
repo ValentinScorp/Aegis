@@ -32,8 +32,8 @@ namespace Aegis.Core
         public bool CanShoot => Weaponry.HasAnyRanged;
         // public float MeleeAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
         // public float RangedAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
-        public float AttackRadius => Weaponry.GetLongestAttackDistance();
-        
+        public float AttackRange => Weaponry.GetLongestAttackRange();
+
         public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedDamage;
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
         public float AttackEventTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackEventTime : 0.5f;
@@ -56,6 +56,7 @@ namespace Aegis.Core
         public event Action AttackEnd;
         public event Action ShootEnd;
         public event Action Died;
+        public event Action<UnitActionEvent> ActionPerformed;
 
         public UnitStateMachine StateMachine { get; private set; }
 
@@ -100,7 +101,6 @@ namespace Aegis.Core
             if (!Health.IsAlive) return;
 
             Health.TakeDamage(amount);
-
         }
         public void Heal(float amount)
         {
@@ -142,9 +142,18 @@ namespace Aegis.Core
         public void PerformAttack(WorldEntity entity)
         {
             // Debug.Log("Performing attack!");
+            string weaponAnim = Weaponry.Active.MainHand?.Animation ?? "unarmed";
+            ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.MeleeAttack, entity.Position, AnimSpeedFor(AttackTime), weaponAnim));
 
             AttackBegin?.Invoke(entity.Position);
         }
+        public void PerformAttackAction(WorldEntity target)
+        {
+            var action = Weaponry.Active.IsRanged ? UnitAction.RangedAttack : UnitAction.MeleeAttack;
+            string weaponAnim = Weaponry.Active.MainHand?.Animation ?? "unarmed";
+            ActionPerformed?.Invoke(new UnitActionEvent(action, target.Position, AnimSpeedFor(AttackTime), weaponAnim));
+        }
+        public void StopAttackAnimation() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Position, 1f, string.Empty));
         public void PerformShoot(WorldEntity entity)
         {
             ShootBegin?.Invoke(entity.Position);
@@ -205,7 +214,7 @@ namespace Aegis.Core
             if (entity is Unit unit) {
                 if (unit.FactionId != FactionId) {
                     float distSqr = (entity.Position - Position).sqrMagnitude;
-                    if (distSqr < (AttackRadius * AttackRadius)) {
+                    if (distSqr < (AttackRange * AttackRange)) {
                         return true;
                     }
                 }
@@ -219,7 +228,7 @@ namespace Aegis.Core
             if (entity is Unit unit) {
                 if (unit.FactionId != FactionId) {
                     float distSqr = (entity.Position - Position).sqrMagnitude;
-                    if (distSqr <= (unit.AttackRadius * unit.AttackRadius)) {
+                    if (distSqr <= (unit.AttackRange * unit.AttackRange)) {
                         return true;
                     }
                 }

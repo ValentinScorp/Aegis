@@ -52,7 +52,7 @@ namespace Aegis.View
         {
             _entityMovement.LookAt(targetPosition);
             if (_clipLength > 0 && _unit.AttackTime > 0) {
-                float animSpeed = _clipLength / _unit.AttackRadius;
+                float animSpeed = _clipLength / _unit.AttackRange;
                 _entityAnimator.PlayShoot(animSpeed);
                 _weaponSlot?.PlayBowShoot(animSpeed);
             }

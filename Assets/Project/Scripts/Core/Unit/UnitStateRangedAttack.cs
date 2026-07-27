@@ -41,7 +41,7 @@ namespace Aegis.Core
 
             float distSqr = (_self.AttackTarget.Position - _self.Position).sqrMagnitude;
 
-            if (distSqr > _self.AttackRadius * _self.AttackRadius) {
+            if (distSqr > _self.AttackRange * _self.AttackRange) {
                 _self.ChaseTarget = _self.AttackTarget;
                 _self.StateMachine.SetState(_self.StateMachine.Chase);
                 return;

@@ -18,7 +18,7 @@ namespace Aegis.Core
         public void SetActive(WeaponSet set) => Active = set;
 
         public bool HasAnyRanged => Primary.IsRanged || Secondary.IsRanged;
-        public WeaponSet GetClosestWeaponSet(float distance)
+        public WeaponSet GetClosestWeaponSet()
         {
             float primary = Primary.GetLongestMeleeAttackRange();
             float secondary = Secondary.GetLongestMeleeAttackRange();
@@ -27,7 +27,7 @@ namespace Aegis.Core
             }
             return Primary;
         }
-        public float GetLongestAttackDistance()
+        public float GetLongestAttackRange()
         {
             float primary = Primary.GetLongestMeleeAttackRange();
             float secondary = Secondary.GetLongestMeleeAttackRange();
