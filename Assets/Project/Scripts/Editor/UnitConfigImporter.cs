@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Aegis.Core
 {
@@ -24,7 +25,8 @@ namespace Aegis.Core
             }
 
             string json = File.ReadAllText(JsonPath);
-            UnitConfigCollection data = JsonUtility.FromJson<UnitConfigCollection>(json);
+            UnitConfigCollection data = JsonConvert.DeserializeObject<UnitConfigCollection>(json);
+            // UnitConfigCollection data = JsonUtility.FromJson<UnitConfigCollection>(json);
 
             int created = 0, updated = 0;
 

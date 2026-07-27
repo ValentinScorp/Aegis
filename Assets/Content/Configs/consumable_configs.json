@@ -1,0 +1,17 @@
+{
+	"items": [
+		{
+			"id": "elixir_life_01",
+			"display_name": "Weak Elixir of Life",
+			"category": "consumable",
+			"effects": ["heal_instant_01"]
+		},
+		{
+			"id": "nectar_of_life_01",
+			"display_name": "Nectar of Life",
+			"category": "consumable",
+			"effects": ["heal_instant_01", "heal_over_time_01"]
+		}
+	]
+}
+

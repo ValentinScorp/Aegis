@@ -1,0 +1,11 @@
+
+{
+  "unarmed_damage": 2.5,
+  "unarmed_cooldown": 1.0,
+  "base_health": 50,
+  "health_per_strength": 5,
+  "search_radius": 20.0,
+  "chase_radius": 12.0,
+  "move_speed": 3.5,
+  "walk_animation_speed_multiplier": 1.2
+}

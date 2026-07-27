@@ -1,38 +1,34 @@
 {
   "units": [
-    {
-      "unit_type": "Knight",
-      "max_health": 100,
-	  "attack_damage": 12,	  
-	  "attack_time": 1.5,
-	  "attack_distance": 2.0,
-	  "attack_event_time": 0.35,
-      "can_shoot": false,
-	  "shoot_damage": 5,
-	  "shoot_time": 1.0,
-	  "shoot_distance": 12.0,
-	  "shoot_event_time": 0.5,
-      "search_radius": 20.0,
-	  "chase_radius": 12.0,
-      "move_speed": 3.5,
-	  "walk_animation_speed_multiplier": 3.2
-    },
-    {
-      "unit_type": "Archer",
-      "max_health": 70,
-	  "attack_damage": 12,	  
-	  "attack_time": 1.5,
-	  "attack_distance": 2.0,
-	  "attack_event_time": 0.627,
-      "can_shoot": true,
-	  "shoot_damage": 5,
-	  "shoot_time": 2.0,
-	  "shoot_distance": 12.0,
-	  "shoot_event_time": 0.6,
-      "search_radius": 20.0,
-	  "chase_radius": 7.0,
-      "move_speed": 3.5,
-	  "walk_animation_speed_multiplier": 2.0	  
-    }
-  ]
+		{
+			"unit_type": "Knight",
+			"base_strength": 10,
+			"base_speed": 4,
+			"base_spirit": 7,
+			"main_hand_primary": "sword_iron",
+			"off_hand_primary": "shield_iron",
+			"main_hand_secondary": "none",
+			"off_hand_secondary": "none"
+		},
+		{
+			"unit_type": "Hoplite",
+			"base_strength": 12,
+			"base_speed": 5,
+			"base_spirit": 4,
+			"main_hand_primary": "dory_bronze",
+			"off_hand_primary": "aspis_bronze",
+			"main_hand_secondary": "none",
+			"off_hand_secondary": "none"
+		},
+		{
+			"unit_type": "Archer",
+			"base_strength": 5,
+			"base_speed": 12,
+			"base_spirit": 3,
+			"main_hand_primary": "bow_hunter",
+			"off_hand_primary": "none",
+			"main_hand_secondary": "dagger_iron",
+			"off_hand_secondary": "none"
+		}
+	]
 }

@@ -1,0 +1,32 @@
+{
+  "effects": [
+    {
+		"id": "heal_instant_01",
+		"action": "restore_health_instant",
+		"target": "self",
+		"description": "Instant restore X health",
+		"damage_type": "magical",  
+		"value": 35,
+		"duration": 0
+    },
+	{
+		"id": "heal_over_time_01",
+		"action": "restore_health_over_time",
+		"target": "self",
+		"description": "Restore X health over Y seconds",
+		"damage_type": "magical",
+		"value": 50,
+		"duration": 20
+    },
+	{
+		"id": "bleed",
+		"action": "damage_health_over_time",		
+		"target": "enemy",
+		"description": "Take X damage over Y seconds",
+		"damage_type": "physical",
+		"value": 20,
+		"duration": 15
+    },
+  ]
+}
+
