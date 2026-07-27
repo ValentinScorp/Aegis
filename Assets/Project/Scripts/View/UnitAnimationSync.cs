@@ -22,7 +22,7 @@ namespace Aegis.View
         private void Update()
         {
             if (!_animator.IsWalking || _unit?.Config == null) return;
-            _animator.SetWalkSpeed(_movement.NormalizedSpeed * _unit.Config.WalkAnimationSpeedMultiplier);
+            _animator.SetWalkSpeed(_movement.NormalizedSpeed * _unit.WalkAnimationSpeedMultiplier);
         }
     }
 }

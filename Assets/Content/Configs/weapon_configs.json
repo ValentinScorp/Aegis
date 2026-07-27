@@ -7,7 +7,6 @@
 	  "weapon_type": "one_hand_sword",
       "damage": 8,
 	  "attack_range": 1.2,
-      "attack_speed": 1.5,
       "weight": 3.2
 	},
 	{
@@ -17,7 +16,6 @@
 	  "weapon_type": "one_hand_sword",
       "damage": 12,
 	  "attack_range": 1.2,
-      "attack_speed": 1.3,
       "weight": 3.5
 	},
     {
@@ -27,7 +25,6 @@
 	  "weapon_type": "one_hand_sword",
       "damage": 22,
 	  "attack_range": 1.2,
-      "attack_speed": 1.0,
       "weight": 4.0,
       "effects": ["effect_self_damage_on_hit"]
     },
@@ -38,7 +35,6 @@
 	  "weapon_type": "one_hand_dagger",
       "damage": 5,
 	  "attack_range": 0.8,
-      "attack_speed": 0.7,
       "weight": 0.8
     },
 	{
@@ -48,7 +44,6 @@
 	  "weapon_type": "one_hand_spear",
       "damage": 10,
 	  "attack_range": 1.7,
-      "attack_speed": 1.5,
       "weight": 1.5
     },
 	{
@@ -58,7 +53,6 @@
 	  "weapon_type": "bow",
       "damage": 14,
 	  "attack_range": 12,
-      "attack_speed": 1.5,
       "weight": 2.0,
       "effects": ["bleed"]
     },

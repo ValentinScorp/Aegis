@@ -51,8 +51,8 @@ namespace Aegis.View
         private void OnShoot(Vector3 targetPosition)
         {
             _entityMovement.LookAt(targetPosition);
-            if (_clipLength > 0 && _unit.ShootTime > 0) {
-                float animSpeed = _clipLength / _unit.ShootTime;
+            if (_clipLength > 0 && _unit.AttackTime > 0) {
+                float animSpeed = _clipLength / _unit.AttackRadius;
                 _entityAnimator.PlayShoot(animSpeed);
                 _weaponSlot?.PlayBowShoot(animSpeed);
             }
@@ -60,7 +60,7 @@ namespace Aegis.View
         private void OnProjectileLaunched(Vector3 targetPosition)
         {
             if (_unit?.AttackTarget == null || _arrowPrefab == null) return;
-
+Debug.Log("Launch");
             Transform spawn = _arrowSpawnPoint != null ? _arrowSpawnPoint : transform;
             var arrow = Instantiate(_arrowPrefab, spawn.position, spawn.rotation);
             arrow.Launch(_unit, _unit.AttackTarget);

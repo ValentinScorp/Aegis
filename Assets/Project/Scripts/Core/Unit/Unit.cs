@@ -7,6 +7,10 @@ namespace Aegis.Core
 {
     public class Unit : WorldEntity, IFactionMember, IDamageable
     {
+        public UnitStats Stats { get; }
+        public UnitWeaponry Weaponry { get; }
+        private readonly UnitCommonConfig _common;
+
         private Health _health;
         public Health Health {
             get {
@@ -19,16 +23,17 @@ namespace Aegis.Core
         public int FactionId { get; private set; }
         public EntityType EntityType { get; set; }
         public UnitConfig Config;
-        public float SearchRadius => Config?.SearchRadius ?? 6.0f;
-        public float ChaseRadius => Config?.ChaseRadius ?? 7.0f;
-        public float AttackRadius => Config?.AttackRadius ?? 2.0f;
-        public float AttackTime => Config?.AttackTime ?? 1f;
-        public float AttackDamage => Config?.AttackDamage ?? 12.0f;
-        public float AttackEventTime => Config?.AttackEventTime ?? 0.5f;
-        public bool CanShoot => Config?.CanShoot ?? false;
-        public float ShootTime => Config?.ShootTime ?? 1f;
-        public float ShootEventTime => Config?.ShootEventTime ?? 0.5f;
-        public float ShootRadius => Config?.ShootRadius ?? 10.0f;
+        public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
+        public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
+        public float SearchRadius => _common.SearchRadius;
+        public float ChaseRadius => _common.ChaseRadius;
+        public float AttackDamage => Weaponry.Active.MainHand != null ? Weaponry.Active.MainHand.Damage : _common.UnarmedDamage;
+
+        public bool CanShoot => Weaponry.HasAnyRanged;
+        public float AttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
+        public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedDamage;
+        public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
+        public float AttackEventTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackEventTime : 0.5f;
 
         public Vector3 FixedPosition { get; set; }
         private WorldEntity _closestTarget;
@@ -61,14 +66,20 @@ namespace Aegis.Core
             }
         }
 
-        public Unit(Vector3 position, int factionId, EntityType type, UnitConfig config)
+        public Unit(Vector3 position, int factionId, EntityType type, UnitConfig config, UnitCommonConfig common)
         {
             FactionId = factionId;
             EntityType = type;
-
             Config = config;
+            _common = common;
 
-            Health = new Health(config.MaxHealth);
+            Stats = new UnitStats(config.BaseStrength, config.BaseSpeed, config.BaseSpirit);
+
+            var primary = new WeaponSet(config.MainHandPrimary, config.OffHandPrimary);
+            var secondary = new WeaponSet(config.MainHandSecondary, config.OffHandSecondary);
+            Weaponry = new UnitWeaponry(primary, secondary);
+
+            Health = new Health(MaxHealth);
             Health.Changed += (current, max) => HealthChanged?.Invoke(current, max);
             Health.Depleted += OnHealthDepleted;
 
@@ -138,6 +149,7 @@ namespace Aegis.Core
         public void PerformProjectileLaunch(WorldEntity target)
         {
             if (AttackTarget == null) return;
+            Debug.Log("Launch 1");
             ProjectileLaunched?.Invoke(target.Position);
         }
         public void PerformAttackDamage(WorldEntity target)
@@ -204,7 +216,7 @@ namespace Aegis.Core
             if (entity is Unit unit) {
                 if (unit.FactionId != FactionId) {
                     float distSqr = (entity.Position - Position).sqrMagnitude;
-                    if (distSqr <= (ShootRadius * ShootRadius)) {
+                    if (distSqr <= (unit.AttackRadius * unit.AttackRadius)) {
                         return true;
                     }
                 }

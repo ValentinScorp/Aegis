@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10f47e9d7c6aac4e84514ad9f4ceb9a, type: 3}
+  m_Name: heal_over_time_01
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.EffectConfig
+  Id: heal_over_time_01
+  Action: 1
+  Target: 0
+  Nature: 1
+  Description: Restore X health over Y seconds
+  Value: 50
+  Duration: 20

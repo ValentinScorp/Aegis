@@ -13,16 +13,10 @@ MonoBehaviour:
   m_Name: Archer
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.UnitConfig
   UnitType: 1
-  AttackTime: 1.5
-  AttackDamage: 12
-  AttackRadius: 2
-  CanShoot: 1
-  ShootTime: 2
-  ShootRadius: 12
-  AttackEventTime: 0.627
-  ShootEventTime: 0.6
-  MovementSpeed: 3.5
-  WalkAnimationSpeedMultiplier: 2
-  SearchRadius: 20
-  ChaseRadius: 7
-  MaxHealth: 70
+  BaseStrength: 5
+  BaseSpeed: 12
+  BaseSpirit: 3
+  MainHandPrimary: {fileID: 11400000, guid: f13c71e24e76ab245b0e3f1526c0fecc, type: 2}
+  OffHandPrimary: {fileID: 0}
+  MainHandSecondary: {fileID: 11400000, guid: 2d3a6fa183c7a8e4ba41b138c4d02cfa, type: 2}
+  OffHandSecondary: {fileID: 0}

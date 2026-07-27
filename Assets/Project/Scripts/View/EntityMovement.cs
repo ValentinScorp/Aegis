@@ -53,7 +53,7 @@ namespace Aegis.View
         {
             if (unit is null) return;
             _unit = unit;
-            _agent.speed = unit.Config.MovementSpeed;
+            _agent.speed = unit.MoveSpeed;
             MovementCompleted += _unit.MovementComplete;
         }
 

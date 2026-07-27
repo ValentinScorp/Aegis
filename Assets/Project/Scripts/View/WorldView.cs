@@ -6,7 +6,8 @@ namespace Aegis.View
 {
     public class WorldView : MonoBehaviour
     {
-        [SerializeField] private EntityViewRegistry entityViewRegistry;
+        [SerializeField] private EntityViewRegistry _entityViewRegistry;
+        [SerializeField] private UnitCommonConfig _unitCommonConfig;
 
         private List<EntityView> _views = new();
         private World _world;
@@ -17,7 +18,7 @@ namespace Aegis.View
         }
         private void Start()
         {
-            _world.SpawnUnits(entityViewRegistry);
+            _world.SpawnUnits(_entityViewRegistry, _unitCommonConfig);
         }
         private void OnDisable()
         {
@@ -42,7 +43,7 @@ namespace Aegis.View
             EntityView prefab = null;
 
             if (entity is Unit unit)
-                prefab = entityViewRegistry.GetPrefab(unit.EntityType);
+                prefab = _entityViewRegistry.GetPrefab(unit.EntityType);
 
             if (prefab == null) return;
 

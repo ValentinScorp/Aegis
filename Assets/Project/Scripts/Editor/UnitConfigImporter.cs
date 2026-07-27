@@ -9,7 +9,8 @@ namespace Aegis.Core
     public static class UnitConfigImporter
     {
         private const string JsonPath = "Assets/Content/Configs/unit_configs.json";
-        private const string SOFolder = "Assets/Project/Configs/";
+        private const string SOFolder = "Assets/Project/Configs/Units/";
+        private const string WeaponSOFolder = "Assets/Project/Configs/Weapons/";
 
         [MenuItem("Aegis/Import Unit Configs From JSON")]
         public static void ImportFromJson()
@@ -19,14 +20,8 @@ namespace Aegis.Core
                 return;
             }
 
-            if (!AssetDatabase.IsValidFolder(SOFolder)) {
-                Directory.CreateDirectory(SOFolder);
-                AssetDatabase.Refresh();
-            }
-
             string json = File.ReadAllText(JsonPath);
-            UnitConfigCollection data = JsonConvert.DeserializeObject<UnitConfigCollection>(json);
-            // UnitConfigCollection data = JsonUtility.FromJson<UnitConfigCollection>(json);
+            var data = JsonConvert.DeserializeObject<UnitConfigCollection>(json);
 
             int created = 0, updated = 0;
 
@@ -49,18 +44,14 @@ namespace Aegis.Core
                 }
 
                 config.UnitType = parsedType;
-                config.MaxHealth = entry.max_health;
-                config.AttackTime = entry.attack_time;
-                config.AttackDamage = entry.attack_damage;
-                config.AttackRadius = entry.attack_distance;
-                config.CanShoot = entry.can_shoot;
-                config.ShootTime = entry.shoot_time;
-                config.ShootRadius = entry.shoot_distance;
-                config.AttackEventTime = entry.attack_event_time;
-                config.ShootEventTime = entry.shoot_event_time;
-                config.MovementSpeed = entry.move_speed;
-                config.SearchRadius = entry.search_radius; 
-                config.ChaseRadius = entry.chase_radius;
+                config.BaseStrength = entry.base_strength;
+                config.BaseSpeed = entry.base_speed;
+                config.BaseSpirit = entry.base_spirit;
+
+                config.MainHandPrimary = ResolveWeapon(entry.main_hand_primary);
+                config.OffHandPrimary = ResolveWeapon(entry.off_hand_primary);
+                config.MainHandSecondary = ResolveWeapon(entry.main_hand_secondary);
+                config.OffHandSecondary = ResolveWeapon(entry.off_hand_secondary);
 
                 EditorUtility.SetDirty(config);
             }
@@ -68,6 +59,17 @@ namespace Aegis.Core
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"Import done: {created} created, {updated} updated.");
+        }
+
+        private static WeaponConfig ResolveWeapon(string id)
+        {
+            if (string.IsNullOrEmpty(id) || id == "none") return null;
+
+            string path = $"{WeaponSOFolder}{id}.asset";
+            var weapon = AssetDatabase.LoadAssetAtPath<WeaponConfig>(path);
+            if (weapon == null)
+                Debug.LogWarning($"WeaponConfig '{id}' not found at {path} — did you run 'Import Weapon Configs' first?");
+            return weapon;
         }
     }
 }

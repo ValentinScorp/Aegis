@@ -1,29 +1,22 @@
+// Core/Unit/UnitConfig.cs
 using UnityEngine;
 
 namespace Aegis.Core
 {
-    [CreateAssetMenu(fileName = "UnitConfig", 
-        menuName = "Aegis/Unit Config")]
+    [CreateAssetMenu(fileName = "UnitConfig", menuName = "Aegis/Unit Config")]
     public class UnitConfig : ScriptableObject
     {
         public EntityType UnitType;
-        [Header("Combat")]
-        public float AttackTime = 1.5f;
-        public float AttackDamage = 12f;
-        public float AttackRadius = 2f;
-        public bool CanShoot = false;
-        public float ShootTime = 1.5f;
-        public float ShootRadius = 8f;
-        public float AttackEventTime = 0.5f;
-        public float ShootEventTime = 0.5f;
 
-        [Header("Movement")]
-        public float MovementSpeed = 5f;
-        public float WalkAnimationSpeedMultiplier = 1f;
-        public float SearchRadius = 6f;
-        public float ChaseRadius = 7f;
+        [Header("Base Stats")]
+        public float BaseStrength;
+        public float BaseSpeed;
+        public float BaseSpirit;
 
-        [Header("Health")]
-        public float MaxHealth = 100f;
+        [Header("Weaponry")]
+        public WeaponConfig MainHandPrimary;
+        public WeaponConfig OffHandPrimary;
+        public WeaponConfig MainHandSecondary;
+        public WeaponConfig OffHandSecondary;
     }
 }

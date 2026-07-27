@@ -4,7 +4,8 @@ public enum EquipmentSlotType
 {
     HandLeft,
     HandRight,
-    Back,
+    BackRight,
+    BackLeft,
     HipRight,
     HipLeft,
     ShoulderLeft,

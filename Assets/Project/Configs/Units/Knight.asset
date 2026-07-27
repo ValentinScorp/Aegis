@@ -13,16 +13,10 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.UnitConfig
   UnitType: 0
-  AttackTime: 1.5
-  AttackDamage: 12
-  AttackRadius: 2
-  CanShoot: 0
-  ShootTime: 1
-  ShootRadius: 12
-  AttackEventTime: 0.35
-  ShootEventTime: 0.5
-  MovementSpeed: 3.5
-  WalkAnimationSpeedMultiplier: 3.22
-  SearchRadius: 20
-  ChaseRadius: 12
-  MaxHealth: 100
+  BaseStrength: 10
+  BaseSpeed: 4
+  BaseSpirit: 7
+  MainHandPrimary: {fileID: 11400000, guid: f7acf47c8e508a94782385c5a96c4cda, type: 2}
+  OffHandPrimary: {fileID: 11400000, guid: 8fe8d105cdb377343953ef59b7502c95, type: 2}
+  MainHandSecondary: {fileID: 0}
+  OffHandSecondary: {fileID: 0}

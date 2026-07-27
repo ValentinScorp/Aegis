@@ -30,7 +30,7 @@ namespace Aegis.Core
                 _self.StateMachine.SetState(_self.StateMachine.MeleeAttack);
                 return;
             }
-            if (_self.CanShoot && distSqr <= _self.ShootRadius * _self.ShootRadius) {
+            if (_self.CanShoot && distSqr <= _self.AttackRadius * _self.AttackRadius) {
                 _self.AttackTarget = closestTarget;
                 _self.StateMachine.SetState(_self.StateMachine.RangedAttack);
                 return;
