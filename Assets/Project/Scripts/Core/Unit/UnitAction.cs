@@ -4,9 +4,7 @@ namespace Aegis.Core
     {
         Idle,
         Walk,
-        AttackSword,
-        AttackDagger,
-        ShootBow,
+        Attack,
         Died
     }
 }

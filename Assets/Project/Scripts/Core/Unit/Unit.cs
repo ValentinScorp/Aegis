@@ -32,7 +32,7 @@ namespace Aegis.Core
         public bool CanShoot => Weaponry.HasAnyRanged;
         // public float MeleeAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
         // public float RangedAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
-        public float AttackRange => Weaponry.GetLongestAttackRange();
+        public float AttackRange => Weaponry.GetAttackRange();
 
         public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedDamage;
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
@@ -49,7 +49,6 @@ namespace Aegis.Core
         public event Action ExecutedStopMovement;
         public event Action<float, float> HealthChanged;
         public event Action<Vector3> AttackBegin;
-        public event Action<Vector3> ShootBegin;
         public event Action<Vector3> ProjectileLaunched;
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
@@ -139,25 +138,11 @@ namespace Aegis.Core
         {
             ExecutedStopMovement?.Invoke();
         }
-        public void PerformAttack(WorldEntity entity)
-        {
-            // Debug.Log("Performing attack!");
-            string weaponAnim = Weaponry.Active.MainHand?.Animation ?? "unarmed";
-            ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.MeleeAttack, entity.Position, AnimSpeedFor(AttackTime), weaponAnim));
-
-            AttackBegin?.Invoke(entity.Position);
-        }
         public void PerformAttackAction(WorldEntity target)
         {
-            var action = Weaponry.Active.IsRanged ? UnitAction.RangedAttack : UnitAction.MeleeAttack;
-            string weaponAnim = Weaponry.Active.MainHand?.Animation ?? "unarmed";
-            ActionPerformed?.Invoke(new UnitActionEvent(action, target.Position, AnimSpeedFor(AttackTime), weaponAnim));
+            ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Attack, target.Position));
         }
-        public void StopAttackAnimation() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Position, 1f, string.Empty));
-        public void PerformShoot(WorldEntity entity)
-        {
-            ShootBegin?.Invoke(entity.Position);
-        }
+        public void StopAttackAction() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Position));
         public void PerformProjectileLaunch(WorldEntity target)
         {
             if (AttackTarget == null) return;
@@ -167,7 +152,7 @@ namespace Aegis.Core
         public void PerformAttackDamage(WorldEntity target)
         {
             if (target is Unit unit && unit.Health.IsAlive)
-                unit.Health.TakeDamage(AttackDamage);
+                unit.TakeDamage(AttackDamage);
         }
         public void PerformDeath()
         {

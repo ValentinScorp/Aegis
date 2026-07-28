@@ -63,8 +63,8 @@ namespace Aegis.View
                 _unitAnimationSync.Bind(unit);
 
                 unit.WasSelectedByPlayer += OnPlayerSelection;
-                unit.ChaseTo += OnChaseTo;
-                unit.WalkTo += OnWalk;
+                unit.ChaseTo += OnChaseToAction;
+                unit.WalkTo += OnWalkAction;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
                 unit.AttackEnd += _entityAnimator.PlayIdle;
                 unit.ShootEnd += _entityAnimator.PlayIdle;
@@ -95,8 +95,8 @@ namespace Aegis.View
                 _unitAnimationSync.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
-                unit.ChaseTo -= OnChaseTo;
-                unit.WalkTo -= OnWalk;
+                unit.ChaseTo -= OnChaseToAction;
+                unit.WalkTo -= OnWalkAction;
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
                 unit.AttackEnd -= _entityAnimator.PlayIdle;
                 unit.ShootEnd -= _entityAnimator.PlayIdle;
@@ -111,12 +111,12 @@ namespace Aegis.View
             _entity = null;
         }
 
-        private void OnChaseTo(Vector3 target)
+        private void OnChaseToAction(Vector3 target)
         {
             _entityMovement.MoveTo(target);
             _entityAnimator.PlayWalk(_entityMovement.Velocity);
         }
-        private void OnWalk(Vector3 destination)
+        private void OnWalkAction(Vector3 destination)
         {
             _entityMovement.MoveTo(destination);
             _entityAnimator.PlayWalk(_entityMovement.Velocity);

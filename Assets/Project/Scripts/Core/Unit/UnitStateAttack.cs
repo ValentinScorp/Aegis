@@ -5,7 +5,7 @@ namespace Aegis.Core
     {
         private readonly Unit _self;
         private float _cooldownTimer;
-        private bool _eventFired;
+        private bool _damageDone;
 
         public UnitStateAttack(Unit owner) => _self = owner;
 
@@ -14,12 +14,12 @@ namespace Aegis.Core
             _self.StopMovement();
             _self.PerformAttackAction(_self.AttackTarget);
             _cooldownTimer = 0f;
-            _eventFired = false;
+            _damageDone = false;
         }
 
         public void Exit()
         {
-            _self.StopAttackAnimation();
+            _self.StopAttackAction();
             _cooldownTimer = 0f;
         }
 
@@ -35,22 +35,22 @@ namespace Aegis.Core
             }
 
             float distSqr = (_self.AttackTarget.Position - _self.Position).sqrMagnitude;
-            if (distSqr > _self.AttackRadius * _self.AttackRadius) {
+            if (distSqr > _self.AttackRange * _self.AttackRange) {
                 _self.ChaseTarget = _self.AttackTarget;
                 _self.StateMachine.SetState(_self.StateMachine.Chase);
                 return;
             }
 
             _cooldownTimer += deltaTime;
-            if (!_eventFired && _cooldownTimer >= _self.AttackTime * _self.AttackEventTime) {
-                _self.PerformAttackEffect(_self.AttackTarget);
-                _eventFired = true;
+            if (!_damageDone && _cooldownTimer >= _self.AttackTime * _self.AttackEventTime) {
+                _self.PerformAttackDamage(_self.AttackTarget);
+                _damageDone = true;
             }
 
             if (_cooldownTimer >= _self.AttackTime) {
                 _cooldownTimer = 0f;
                 _self.PerformAttackAction(_self.AttackTarget);
-                _eventFired = false;
+                _damageDone = false;
             }
         }
 

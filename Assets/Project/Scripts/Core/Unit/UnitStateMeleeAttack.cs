@@ -22,7 +22,7 @@ namespace Aegis.Core
             _self.StopMovement();
 
             // 
-            _self.PerformAttack(_self.AttackTarget);
+            _self.PerformAttackHit(_self.AttackTarget);
             _damageDealed = false;
             // Debug.Log("Enter Attack State!");
         }
@@ -59,7 +59,7 @@ namespace Aegis.Core
             }
             if (_attackCooldownTimer >= _self.AttackTime) {
                 // Debug.Log("New Attack!");
-                _self.PerformAttack(_self.AttackTarget);
+                _self.PerformAttackHit(_self.AttackTarget);
                 _attackCooldownTimer = 0f;
                 _damageDealed = false;
             }
