@@ -6,6 +6,7 @@ namespace Aegis.Core
 {
     public class UnitStateIdle : IUnitState
     {
+        public UnitState State => UnitState.Idle;
         private Unit _self;
 
         public UnitStateIdle(Unit unit)
@@ -13,31 +14,14 @@ namespace Aegis.Core
             _self = unit;
         }
         public void Enter()
-        {
-            // Debug.Log("Enter Idle");            
+        {           
         }
         public void Exit()
-        {
-            // Debug.Log("Exit Idle");            
+        {            
         }
         public void OnInteractionsUpdate(WorldEntity closestTarget)
-        {
-            if (closestTarget == null) return;
-
-            float distSqr = (closestTarget.Position - _self.Position).sqrMagnitude;
-
-            if (distSqr > _self.AttackRange * _self.AttackRange) {
-                _self.ChaseTarget = closestTarget;
-                _self.StateMachine.SetState(_self.StateMachine.Chase);
-                return;
-            }
-
-            _self.AttackTarget = closestTarget;
-            _self.StateMachine.SetState(_self.StateMachine.Attack);
-        }
+        {}
         public void OnActionsUpdate(float deltaTime)
-        {
-        }
-
+        {}
     }
 }

@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using Aegis.Core;
 using Aegis.Utilities;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 namespace Aegis.View
 {
     public class EntityAnimator : MonoBehaviour
     {
+        [SerializeField] private ClipAction _swordHitClip;
         private Animator _animator;
         private Unit _unit;
         private int _currentStateHash;
@@ -19,6 +22,7 @@ namespace Aegis.View
         private static readonly int WalkSpeedHash = Animator.StringToHash("WalkSpeed");
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
 
+        private readonly Dictionary<int, float> _clipLengths = new();
 
         public bool IsWalking => _currentStateHash == WalkHash;
         public void SetWalkSpeed(float speed) => _animator.SetFloat(WalkSpeedHash, speed);
@@ -26,6 +30,7 @@ namespace Aegis.View
         private void Awake()
         {
             _animator = ComponentResolver.Require(this, GetComponentInChildren<Animator>());
+            CacheClipLengths();
         }
         private void OnDestroy()
         {
@@ -38,30 +43,41 @@ namespace Aegis.View
         {
             _unit = null;
         }
-        // private void Update()
-        // {
-        //     if (_currentStateHash != WalkHash || _unit?.Config == null || _movement == null) return;
 
-        //     float multiplier = _unit.Config.WalkAnimationSpeedMultiplier;
-        //     _animator.SetFloat(WalkSpeedHash, _movement.NormalizedSpeed * multiplier);
-        // }
-        public void PlayAttack(WeaponType weaponType, float animSpeed)
+        private void CacheClipLengths()
         {
-            int attackHash = Animator.StringToHash("SwordAttack");
-            switch (weaponType) {
-                case WeaponType.OneHandSword:
-                    attackHash = Animator.StringToHash("SwordAttack");
-                    break;
-                case WeaponType.Bow:
-                    attackHash = Animator.StringToHash("BowShoot");
-                    break;
-                default:
-                    Debug.LogWarning("[EntityAnimator] Undefined attack animation hash!");
-                    break;
+            foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+                _clipLengths[Animator.StringToHash(clip.name)] = clip.length;
+        }
 
-            }
+        public void PlayAttack(WeaponType weaponType, float attackTime)
+        {
+            int attackHash = weaponType switch {
+                WeaponType.Bow => BowShootHash,
+                _ => SwordAttackHash, // TODO: додати гілки для Dagger/Spear, коли з'являться свої кліпи
+            };
+
+            // float clipLength = _clipLengths.TryGetValue(attackHash, out var len) ? len : 1f;
+            float clipLength = GetClipLength("Human_HitSword");
+            // Debug.Log(clipLength);
+
+            float animSpeed = attackTime > 0f ? clipLength / attackTime : 1f;
+            // Debug.Log(animSpeed);
             _animator.SetFloat(AttackSpeedHash, animSpeed);
             PlayOnce(attackHash);
+        }
+        public float GetClipLength(string clipName)
+        {
+            RuntimeAnimatorController controller = _animator.runtimeAnimatorController;
+
+            foreach (AnimationClip clip in controller.animationClips) {
+                // Debug.Log($"Кліп: \"{clip.name}\"  |  Довжина: {clip.length}");
+                if (clip.name == clipName) {
+                    return clip.length;
+                }
+            }
+            Debug.LogWarning($"No clip {clipName} found!");
+            return 1.0f;
         }
         public void PlayIdle()
         {

@@ -19,6 +19,6 @@ MonoBehaviour:
   SearchRadius: 20
   ChaseRadius: 12
   MoveSpeed: 3.5
-  MeleeAttackSpeed: 0
-  RangedAttackSpeed: 0
+  MeleeAttackSpeed: 1
+  RangedAttackSpeed: 1.5
   WalkAnimationSpeedMultiplier: 2.5

@@ -4,6 +4,7 @@ namespace Aegis.Core
 {
     public class UnitStateWalk : IUnitState
     {
+        public UnitState State => UnitState.Walk;
         private Unit _self;
         public Vector3 Destination { get; set; }
 

@@ -105,7 +105,7 @@ namespace Aegis.Core
         {
             Position = position;
 
-            StateMachine.SetState(StateMachine.Idle);
+            StateMachine.SetState(UnitState.Idle);
         }
         public void Select(bool selected)
         {
@@ -119,8 +119,12 @@ namespace Aegis.Core
             if (!Health.IsAlive) return;
 
             FixedPosition = destination;
-            StateMachine.Walk.Destination = destination;
-            StateMachine.SetState(StateMachine.Walk);
+
+            var walk = StateMachine.GetState<UnitStateWalk>();
+            if (walk != null)
+                walk.Destination = destination;
+                
+            StateMachine.SetState(UnitState.Walk);
             // Debug.Log("Performing walk!");
             WalkTo?.Invoke(destination);
         }
@@ -162,7 +166,7 @@ namespace Aegis.Core
         }
         public void PerformDeath()
         {
-            StateMachine.SetState(StateMachine.Dead);
+            StateMachine.SetState(UnitState.Dead);
             SelectedByPlayer = false;
             WasSelectedByPlayer?.Invoke(false);
             Died?.Invoke();

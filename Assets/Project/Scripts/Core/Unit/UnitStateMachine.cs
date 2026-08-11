@@ -1,44 +1,65 @@
-using System;
+using System.Collections.Generic;
 
 namespace Aegis.Core
 {
     public class UnitStateMachine
     {
+        private readonly Dictionary<UnitState, IUnitState> _states = new();
         private IUnitState _currentState;
+        private UnitState _currentType;
         public IUnitState Current => _currentState;
-        public UnitStateIdle Idle;
-        public UnitStateChase Chase;
-        public UnitStateAttack Attack;
-        public UnitStateWalk Walk;
-        public UnitStateDead Dead;
+        public UnitState CurrentType => _currentType;
+        private readonly UnitStateTransition _transitions;
 
         public UnitStateMachine(Unit owner)
         {
-            Idle = new UnitStateIdle(owner);
-            Chase = new UnitStateChase(owner);
-            Attack = new UnitStateAttack(owner);
-            Walk = new UnitStateWalk(owner);
-            Dead = new UnitStateDead(owner);
+            Register(new UnitStateIdle(owner));
+            Register(new UnitStateWalk(owner));
+            Register(new UnitStateChase(owner));
+            Register(new UnitStateAttack(owner));
+            Register(new UnitStateDead(owner));
 
-            SetState(Idle);
+            _transitions = new UnitStateTransition(owner, this);
+
+            SetState(UnitState.Idle);
         }
-        public void SetState(IUnitState newState)
+        private void Register(IUnitState state)
         {
-            if (_currentState == newState)
+            _states[state.State] = state;
+        }
+        public void SetState(UnitState type)
+        {
+            if (_currentType == type)
                 return;
 
-            // Debug.Log($"Settin new satate {newState}");
+            if (!_states.TryGetValue(type, out var newState))
+            {
+                UnityEngine.Debug.LogWarning($"[UnitStateMachine] State {type} not registered");
+                return;
+            }
+
             _currentState?.Exit();
             _currentState = newState;
-            _currentState?.Enter();
+            _currentType = type;
+            _currentState.Enter();
+        }
+        public T GetState<T>() where T : class, IUnitState
+        {
+            foreach (var state in _states.Values)
+            {
+                if (state is T typed)
+                    return typed;
+            }
+            return null;
         }
         public void UpdateActions(float deltaTime)
         {
             _currentState?.OnActionsUpdate(deltaTime);
         }
-        public void UpdateInteractions(WorldEntity closestUnit)
+        public void UpdateInteractions(WorldEntity closestTarget)
         {
-            _currentState?.OnInteractionsUpdate(closestUnit);
+            _currentState?.OnInteractionsUpdate(closestTarget);
+            _transitions.Evaluate(closestTarget);
         }
     }
 }

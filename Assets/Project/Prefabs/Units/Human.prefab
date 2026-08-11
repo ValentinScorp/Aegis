@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6732715348411497767}
   - component: {fileID: 360421993291956606}
   - component: {fileID: 6023794523833144764}
+  - component: {fileID: 1244903504320578063}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -71,6 +72,7 @@ MonoBehaviour:
   _healthView: {fileID: 8501964369632210417}
   _projectileCatalog: {fileID: 11400000, guid: dba6814a3839e6241bd2fda0635eb230, type: 2}
   _projectileSpawnPoint: {fileID: 124546060268151181}
+  _swordPrefab: {fileID: 7030230649132785133, guid: e47b25270eee6c14b9db87f9201e4f09, type: 3}
 --- !u!114 &6744078577640128774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,8 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
-  _swordAttackAminationClip: {fileID: 8542385353397604771, guid: e9ebcf73689431840bcb559f31a2e2fd, type: 3}
-  _bowAttackAminationClip: {fileID: -5648425166442214076, guid: 210d7be8c2de4bd4d9d3a9fc0c9a4e32, type: 3}
 --- !u!114 &6732715348411497767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.WeaponSocket
   Type: 0
-  handSocket: {fileID: 0}
+  handSocket: {fileID: 6719966984637461431}
 --- !u!114 &360421993291956606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +145,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
+--- !u!114 &1244903504320578063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f93b27ad2a70f44b0c9717592c3ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EquipmentSlotView
+  Type: 1
+  handSocket: {fileID: 4827874010229883009}
 --- !u!1 &5029112721878601802
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +371,16 @@ Animator:
 --- !u!4 &4448496099563693979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4827874010229883009 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -489046236115058447, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6719966984637461431 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7454755361139078087, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
   m_PrefabInstance: {fileID: 4194683998733664368}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6860376316552560039

@@ -3,6 +3,7 @@ namespace Aegis.Core
 {
     public class UnitStateAttack : IUnitState
     {
+        public UnitState State => UnitState.Attack;
         private readonly Unit _self;
         private float _cooldownTimer;
         private bool _damageDone;
@@ -25,32 +26,22 @@ namespace Aegis.Core
 
         public void OnActionsUpdate(float deltaTime)
         {
-            if (_self.AttackTarget == null) {
-                _self.StateMachine.SetState(_self.StateMachine.Idle);
+            if (_self.AttackTarget == null)
                 return;
-            }
-            if (_self.AttackTarget is Unit unit && !unit.Health.IsAlive) {
-                _self.StateMachine.SetState(_self.StateMachine.Idle);
-                return;
-            }
-
-            float distSqr = (_self.AttackTarget.Position - _self.Position).sqrMagnitude;
-            if (distSqr > _self.AttackRange * _self.AttackRange) {
-                _self.ChaseTarget = _self.AttackTarget;
-                _self.StateMachine.SetState(_self.StateMachine.Chase);
-                return;
-            }
 
             _cooldownTimer += deltaTime;
-            if (!_damageDone && _cooldownTimer >= _self.AttackTime * _self.AttackEventTime) {
+
+            if (!_damageDone && _cooldownTimer >= _self.AttackTime * _self.AttackEventTime)
+            {
                 _self.PerformAttackImpact(_self.AttackTarget);
                 _damageDone = true;
             }
 
-            if (_cooldownTimer >= _self.AttackTime) {
+            if (_cooldownTimer >= _self.AttackTime)
+            {
                 _cooldownTimer = 0f;
-                _self.PerformAttackAction(_self.AttackTarget);
                 _damageDone = false;
+                _self.PerformAttackAction(_self.AttackTarget);
             }
         }
 

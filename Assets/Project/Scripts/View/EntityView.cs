@@ -2,6 +2,8 @@ using UnityEngine;
 using Aegis.Core;
 using Aegis.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Aegis.View
 {
@@ -11,7 +13,9 @@ namespace Aegis.View
         [SerializeField] private HealthView _healthView;
         [SerializeField] private ProjectileCatalog _projectileCatalog;
         [SerializeField] private Transform _projectileSpawnPoint;
+        [SerializeField] private GameObject _swordPrefab;
         private ICombatView[] _combatViews;
+        private Dictionary<EquipmentSlotType, EquipmentSlotView> _equipmentSlots;
 
         private Renderer _renderer;
         private EntityMovement _entityMovement;
@@ -31,6 +35,8 @@ namespace Aegis.View
             _combatViews = GetComponents<ICombatView>();
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
             if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
+
+            _equipmentSlots = GetComponents<EquipmentSlotView>().ToDictionary(s => s.Type);
 
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
                 Debug.LogWarning($"No <Renderer> found in prefab: {name}!", this);
@@ -123,10 +129,17 @@ namespace Aegis.View
                 case UnitAction.Attack:
                     _entityMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.Active.MainHand?.WeaponType ?? WeaponType.OneHandSword;
-                    _entityAnimator.PlayAttack(weaponAnim, /* animSpeed */ 1f);
+                    if (!unit.CanShoot
+                        && _equipmentSlots.TryGetValue(EquipmentSlotType.HandRight, out var mainHandSlot)
+                        && _swordPrefab != null) {
+                        mainHandSlot.EquipWeapon(_swordPrefab);
+                    }
+                    _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
                     break;
                 case UnitAction.Idle:
                     _entityAnimator.PlayIdle();
+                    if (_equipmentSlots.TryGetValue(EquipmentSlotType.HandRight, out var slot))
+                        slot.UnequipWeapon();
                     break;
             }
         }

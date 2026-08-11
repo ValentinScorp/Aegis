@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Aegis.Core
 {
     public class UnitStateDead : IUnitState
     {
+        public UnitState State => UnitState.Dead;
+
         private Unit _self;
 
         public UnitStateDead(Unit unit)

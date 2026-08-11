@@ -18,8 +18,6 @@ namespace Aegis.Core
         public float SearchRadius;
         public float ChaseRadius;
         public float MoveSpeed;
-        public float MeleeAttackSpeed;
-        public float RangedAttackSpeed;
         public float WalkAnimationSpeedMultiplier;
     }
 }
