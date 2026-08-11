@@ -43,7 +43,7 @@ namespace Aegis.Core
 
             _cooldownTimer += deltaTime;
             if (!_damageDone && _cooldownTimer >= _self.AttackTime * _self.AttackEventTime) {
-                _self.PerformAttackDamage(_self.AttackTarget);
+                _self.PerformAttackImpact(_self.AttackTarget);
                 _damageDone = true;
             }
 

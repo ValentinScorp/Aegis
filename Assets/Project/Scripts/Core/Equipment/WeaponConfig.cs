@@ -10,7 +10,7 @@ namespace Aegis.Core
         public string Animation;
         public WeaponType WeaponType;
         public bool IsRanged => WeaponType == WeaponType.Bow;
-
+        public string ProjectileId;
         [Header("Combat")]
         public float Damage;
         public float AttackRange;

@@ -6,7 +6,7 @@ namespace Aegis.Core
     [CreateAssetMenu(fileName = "UnitConfig", menuName = "Aegis/Unit Config")]
     public class UnitConfig : ScriptableObject
     {
-        public EntityType UnitType;
+        public UnitType UnitType;
 
         [Header("Base Stats")]
         public float BaseStrength;

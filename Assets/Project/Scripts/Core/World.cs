@@ -20,18 +20,18 @@ namespace Aegis.Core
         private World()
         {
         }
-        public void SpawnUnits(EntityViewRegistry entityViewRegistry, UnitCommonConfig unitCommonConfig)
+        public void SpawnUnits(UnitConfigRegistry unitConfigs, UnitCommonConfig unitCommonConfig)
         {
-            CreateEntity(new Vector3(-4f, 0.03f, 11f), factionId: 1, EntityType.Knight, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Knight));
-            CreateEntity(new Vector3(-4f, 0.03f, 10f), factionId: 1, EntityType.Archer, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Archer));
-            CreateEntity(new Vector3(0f, 0.03f, 11f), factionId: 2, EntityType.Knight, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Knight));
-            CreateEntity(new Vector3(5f, 0.03f, 10f), factionId: 2, EntityType.Archer, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Archer));
-            CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3, EntityType.Knight, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Knight));
-            CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3, EntityType.Knight, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Knight));
-            CreateEntity(new Vector3(8f, 0.03f, 11f), factionId: 4, EntityType.Archer, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Archer));
-            CreateEntity(new Vector3(8f, 0.03f, 10f), factionId: 4, EntityType.Archer, unitCommonConfig, entityViewRegistry.GetConfig(EntityType.Archer));
+            // CreateEntity(new Vector3(-4f, 0.03f, 11f), factionId: 1, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
+            CreateEntity(new Vector3(-4f, 0.03f, 10f), factionId: 1, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
+            // CreateEntity(new Vector3(0f, 0.03f, 11f), factionId: 2, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
+            // CreateEntity(new Vector3(5f, 0.03f, 10f), factionId: 2, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
+            // CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
+            CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
+            // CreateEntity(new Vector3(8f, 0.03f, 11f), factionId: 4, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
+            // CreateEntity(new Vector3(8f, 0.03f, 10f), factionId: 4, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
         }
-        public WorldEntity CreateEntity(Vector3 position, int factionId, EntityType type, UnitCommonConfig unitCommonConfig, UnitConfig config)
+        public WorldEntity CreateEntity(Vector3 position, int factionId, UnitType type, UnitCommonConfig unitCommonConfig, UnitConfig config)
         {
             var entity = new Unit(position, factionId, type, config, unitCommonConfig);
             entity.Position = position;
@@ -55,6 +55,5 @@ namespace Aegis.Core
                 if (entity is Unit unit) unit.UpdateActions(deltaTime);
             }
         }
-
     }
 }

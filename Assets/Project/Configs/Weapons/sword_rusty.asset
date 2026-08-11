@@ -16,6 +16,7 @@ MonoBehaviour:
   DisplayName: Rusty Sword
   Animation: sword
   WeaponType: 0
+  ProjectileId: 
   Damage: 8
   AttackRange: 1.2
   Weight: 3.2

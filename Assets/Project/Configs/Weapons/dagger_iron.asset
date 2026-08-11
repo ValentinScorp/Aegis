@@ -16,6 +16,7 @@ MonoBehaviour:
   DisplayName: Iron Dagger
   Animation: dagger
   WeaponType: 1
+  ProjectileId: 
   Damage: 5
   AttackRange: 0.8
   Weight: 0.8

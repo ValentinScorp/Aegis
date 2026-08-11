@@ -33,7 +33,7 @@ namespace Aegis.Core
             }
 
             _self.AttackTarget = closestTarget;
-            _self.StateMachine.SetState(_self.CanShoot ? _self.StateMachine.RangedAttack : _self.StateMachine.MeleeAttack);
+            _self.StateMachine.SetState(_self.StateMachine.Attack);
         }
         public void OnActionsUpdate(float deltaTime)
         {

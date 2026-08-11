@@ -51,8 +51,9 @@
       "display_name": "Hunter Bow",
 	  "animation": "bow",
 	  "weapon_type": "bow",
+	  "projectile": "arrow",
       "damage": 14,
-	  "attack_range": 12,
+	  "attack_range": 12,	  
       "weight": 2.0,
       "effects": ["bleed"]
     },

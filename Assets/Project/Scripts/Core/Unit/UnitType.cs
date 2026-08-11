@@ -1,9 +1,8 @@
 namespace Aegis.Core
 {
-    public enum EntityType
+    public enum UnitType
     {
         Knight,
         Archer,
-        Arrow
     }
 }

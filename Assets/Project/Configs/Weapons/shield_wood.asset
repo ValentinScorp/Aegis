@@ -16,6 +16,7 @@ MonoBehaviour:
   DisplayName: Wooden Shield
   Animation: shield
   WeaponType: 4
+  ProjectileId: 
   Damage: 0
   AttackRange: 0
   Weight: 3

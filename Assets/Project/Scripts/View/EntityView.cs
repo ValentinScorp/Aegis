@@ -1,6 +1,7 @@
 using UnityEngine;
 using Aegis.Core;
 using Aegis.Utilities;
+using System;
 
 namespace Aegis.View
 {
@@ -8,6 +9,8 @@ namespace Aegis.View
     {
         [SerializeField] private GameObject _bowPrefab;
         [SerializeField] private HealthView _healthView;
+        [SerializeField] private ProjectileCatalog _projectileCatalog;
+        [SerializeField] private Transform _projectileSpawnPoint;
         private ICombatView[] _combatViews;
 
         private Renderer _renderer;
@@ -26,6 +29,8 @@ namespace Aegis.View
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
             _unitAnimationSync = ComponentResolver.Require(this, GetComponent<UnitAnimationSync>());
             _combatViews = GetComponents<ICombatView>();
+            if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
+            if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
 
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
                 Debug.LogWarning($"No <Renderer> found in prefab: {name}!", this);
@@ -66,9 +71,9 @@ namespace Aegis.View
                 unit.ChaseTo += OnChaseToAction;
                 unit.WalkTo += OnWalkAction;
                 unit.ExecutedStopMovement += _entityMovement.Stop;
-                unit.AttackEnd += _entityAnimator.PlayIdle;
-                unit.ShootEnd += _entityAnimator.PlayIdle;
+                unit.ActionPerformed += OnActionPerformed;
                 unit.Died += OnDied;
+                unit.ProjectileLaunched += OnProjectileLaunched;
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
@@ -98,9 +103,8 @@ namespace Aegis.View
                 unit.ChaseTo -= OnChaseToAction;
                 unit.WalkTo -= OnWalkAction;
                 unit.ExecutedStopMovement -= _entityMovement.Stop;
-                unit.AttackEnd -= _entityAnimator.PlayIdle;
-                unit.ShootEnd -= _entityAnimator.PlayIdle;
                 unit.Died -= OnDied;
+                unit.ProjectileLaunched -= OnProjectileLaunched;
 
                 unit.HealthChanged -= _healthView.OnHealthChanged;
                 unit.Died -= _healthView.OnHealthDepleted;
@@ -110,6 +114,11 @@ namespace Aegis.View
             }
             _entity = null;
         }
+        private void OnActionPerformed(UnitActionEvent actionEvent)
+        {
+
+        }
+
 
         private void OnChaseToAction(Vector3 target)
         {
@@ -121,14 +130,20 @@ namespace Aegis.View
             _entityMovement.MoveTo(destination);
             _entityAnimator.PlayWalk(_entityMovement.Velocity);
         }
-        private void OnAttack(Vector3 targetPosition)
+        private void PlayAttackAnimation(Vector3 target, WeaponAnimationType weaponType, float animSpeed)
         {
-            _entityMovement.LookAt(targetPosition);
-            float attackTime = 1f;
+            _entityMovement.LookAt(target);
+            
+        }
+        private void OnProjectileLaunched(Vector3 targetPosition)
+        {
             if (_entity is Unit unit) {
-                attackTime = unit.AttackTime;
+                string projecitleId = unit.Weaponry.Active.ProjectileId;
+                var arrowPrefab = _projectileCatalog.GetPrefab(projecitleId);
+                if (unit?.AttackTarget == null || arrowPrefab == null || _projectileSpawnPoint == null) return;                
+                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+                arrow.Launch(unit, unit.AttackTarget);
             }
-            _entityAnimator.PlayAttack(attackTime);
         }
         private void OnMovementComplete(Vector3 pos)
         {

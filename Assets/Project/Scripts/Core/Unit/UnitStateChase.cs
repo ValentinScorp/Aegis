@@ -34,14 +34,7 @@ namespace Aegis.Core
         {
             if (_self.CanAttack(_self.ChaseTarget)) {
                 _self.AttackTarget = _self.ChaseTarget;
-                _self.StateMachine.SetState(_self.StateMachine.MeleeAttack);
-                return;
-            }
-
-            if (_self.CanShootTarget(_self.ChaseTarget)) {
-                _self.AttackTarget = _self.ChaseTarget;
-                _self.StateMachine.SetState(_self.StateMachine.RangedAttack);
-                return;
+                _self.StateMachine.SetState(_self.StateMachine.Attack);
             }
         }
 

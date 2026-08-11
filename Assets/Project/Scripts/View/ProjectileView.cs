@@ -3,7 +3,7 @@ using Aegis.Core;
 
 namespace Aegis.View
 {
-    public class Arrow : MonoBehaviour
+    public class ProjectileView : MonoBehaviour
     {
         [SerializeField] private float _speed = 20f;
         [SerializeField] private float _hitDistance = 0.1f;
@@ -42,7 +42,7 @@ namespace Aegis.View
         private void Hit()
         {
             _hasHit = true;
-            _owner?.PerformAttackDamage(_target);
+            _owner?.PerformAttackImpact(_target);
             Destroy(gameObject);
         }
     }

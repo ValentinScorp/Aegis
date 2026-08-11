@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Aegis.Core
@@ -21,7 +22,7 @@ namespace Aegis.Core
             private set => _health = value;
         }
         public int FactionId { get; private set; }
-        public EntityType EntityType { get; set; }
+        public UnitType EntityType { get; set; }
         public UnitConfig Config;
         public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
         public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
@@ -29,12 +30,10 @@ namespace Aegis.Core
         public float ChaseRadius => _common.ChaseRadius;
         public float AttackDamage => Weaponry.Active.MainHand != null ? Weaponry.Active.MainHand.Damage : _common.UnarmedDamage;
 
-        public bool CanShoot => Weaponry.HasAnyRanged;
-        // public float MeleeAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
-        // public float RangedAttackRadius => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackRange : 1.0f;
+        public bool CanShoot => Weaponry.Active.IsRanged;
         public float AttackRange => Weaponry.GetAttackRange();
 
-        public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedDamage;
+        public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedCooldown;
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
         public float AttackEventTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackEventTime : 0.5f;
 
@@ -48,14 +47,11 @@ namespace Aegis.Core
         public event Action<bool> WasSelectedByPlayer;
         public event Action ExecutedStopMovement;
         public event Action<float, float> HealthChanged;
-        public event Action<Vector3> AttackBegin;
-        public event Action<Vector3> ProjectileLaunched;
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
-        public event Action AttackEnd;
-        public event Action ShootEnd;
         public event Action Died;
         public event Action<UnitActionEvent> ActionPerformed;
+        public event Action<Vector3> ProjectileLaunched;
 
         public UnitStateMachine StateMachine { get; private set; }
 
@@ -69,7 +65,7 @@ namespace Aegis.Core
             }
         }
 
-        public Unit(Vector3 position, int factionId, EntityType type, UnitConfig config, UnitCommonConfig common)
+        public Unit(Vector3 position, int factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
             FactionId = factionId;
             EntityType = type;
@@ -142,17 +138,27 @@ namespace Aegis.Core
         {
             ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Attack, target.Position));
         }
-        public void StopAttackAction() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Position));
+        public void StopAttackAction() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Vector3.zero));
         public void PerformProjectileLaunch(WorldEntity target)
         {
             if (AttackTarget == null) return;
-            Debug.Log("Launch 1");
             ProjectileLaunched?.Invoke(target.Position);
         }
-        public void PerformAttackDamage(WorldEntity target)
+        public void PerformAttackImpact(WorldEntity target)
         {
-            if (target is Unit unit && unit.Health.IsAlive)
-                unit.TakeDamage(AttackDamage);
+            if (target == null) return;
+
+            if (Weaponry.Active.IsRanged)
+                PerformProjectileLaunch(target);
+            else {
+                ApplyDamage(target, Weaponry.Active.MainHand.Damage);
+            }
+        }
+        private void ApplyDamage(WorldEntity target, float damage)
+        {
+            if (target != null && target is Unit unit) {
+                unit.TakeDamage(damage);
+            }
         }
         public void PerformDeath()
         {
@@ -160,14 +166,6 @@ namespace Aegis.Core
             SelectedByPlayer = false;
             WasSelectedByPlayer?.Invoke(false);
             Died?.Invoke();
-        }
-        public void StopAttack()
-        {
-            AttackEnd?.Invoke();
-        }
-        public void StopShoot()
-        {
-            ShootEnd?.Invoke();
         }
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
@@ -206,34 +204,10 @@ namespace Aegis.Core
             }
             return false;
         }
-        public bool CanShootTarget(WorldEntity entity)
-        {
-            if (!CanShoot) return false;
-
-            if (entity is Unit unit) {
-                if (unit.FactionId != FactionId) {
-                    float distSqr = (entity.Position - Position).sqrMagnitude;
-                    if (distSqr <= (unit.AttackRange * unit.AttackRange)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
 
         internal void UpdateActions(float deltaTime)
         {
             StateMachine.UpdateActions(deltaTime);
-            // todo attack speed implement
-            // _attackCooldownTimer -= deltaTime;
-            //     if (CurrentLookTarget == null) return;
-
-            //     float distSqr = (CurrentLookTarget.Position - Position).sqrMagnitude;            
-            //     if (distSqr <= AttackRadius * AttackRadius) {
-            //         PerformAttack();
-            //     }
         }
-
-
     }
 }

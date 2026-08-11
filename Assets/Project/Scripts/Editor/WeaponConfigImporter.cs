@@ -52,6 +52,7 @@ namespace Aegis.Core
                 config.DisplayName = entry.display_name;
                 config.Animation = entry.animation;
                 config.WeaponType = parsedType;
+                config.ProjectileId = entry.projectile;
                 config.Damage = entry.damage;
                 config.AttackRange = entry.attack_range;
                 config.Weight = entry.weight;

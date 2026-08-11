@@ -15,6 +15,7 @@ namespace Aegis.Core
         public bool IsEmpty => MainHand == null && OffHand == null;
         public float AttackTime => MainHand != null ? WeaponAttackTimes.Get(MainHand.WeaponType) : 5.0f;
         public float AttackEventTime => MainHand != null ? WeaponAttackEventTimes.Get(MainHand.WeaponType) : 5.0f;
+        public string ProjectileId => MainHand.ProjectileId;
         public float GetAttackRange()
         {
             if (MainHand != null) return MainHand.AttackRange;

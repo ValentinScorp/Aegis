@@ -26,7 +26,7 @@ namespace Aegis.Core
             int created = 0, updated = 0;
 
             foreach (var entry in data.units) {
-                if (!System.Enum.TryParse(entry.unit_type, out EntityType parsedType)) {
+                if (!System.Enum.TryParse(entry.unit_type, out UnitType parsedType)) {
                     Debug.LogWarning($"Unknown EntityType '{entry.unit_type}', skipped.");
                     continue;
                 }

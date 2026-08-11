@@ -10,6 +10,7 @@ namespace Aegis.Core
         public string display_name;
         public string animation;
         public string weapon_type;
+        public string  projectile;
         public float damage;
         public float attack_range;
         public float weight;

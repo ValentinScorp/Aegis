@@ -16,6 +16,7 @@ MonoBehaviour:
   DisplayName: Iron Sword
   Animation: sword
   WeaponType: 0
+  ProjectileId: 
   Damage: 12
   AttackRange: 1.2
   Weight: 3.5
