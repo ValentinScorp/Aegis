@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
-  _swordAttackAminationClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
-  _bowAttackAminationClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+  _swordAttackAminationClip: {fileID: 8542385353397604771, guid: e9ebcf73689431840bcb559f31a2e2fd, type: 3}
+  _bowAttackAminationClip: {fileID: -5648425166442214076, guid: 210d7be8c2de4bd4d9d3a9fc0c9a4e32, type: 3}
 --- !u!114 &6732715348411497767
 MonoBehaviour:
   m_ObjectHideFlags: 0

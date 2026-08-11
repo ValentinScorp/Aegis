@@ -116,7 +116,19 @@ namespace Aegis.View
         }
         private void OnActionPerformed(UnitActionEvent actionEvent)
         {
+            var unit = GetUnit();
+            if (unit == null) return;
 
+            switch (actionEvent.Action) {
+                case UnitAction.Attack:
+                    _entityMovement.LookAt(actionEvent.TargetPosition);
+                    var weaponAnim = unit.Weaponry.Active.MainHand?.WeaponType ?? WeaponType.OneHandSword;
+                    _entityAnimator.PlayAttack(weaponAnim, /* animSpeed */ 1f);
+                    break;
+                case UnitAction.Idle:
+                    _entityAnimator.PlayIdle();
+                    break;
+            }
         }
 
 
@@ -130,17 +142,12 @@ namespace Aegis.View
             _entityMovement.MoveTo(destination);
             _entityAnimator.PlayWalk(_entityMovement.Velocity);
         }
-        private void PlayAttackAnimation(Vector3 target, WeaponAnimationType weaponType, float animSpeed)
-        {
-            _entityMovement.LookAt(target);
-            
-        }
         private void OnProjectileLaunched(Vector3 targetPosition)
         {
             if (_entity is Unit unit) {
                 string projecitleId = unit.Weaponry.Active.ProjectileId;
                 var arrowPrefab = _projectileCatalog.GetPrefab(projecitleId);
-                if (unit?.AttackTarget == null || arrowPrefab == null || _projectileSpawnPoint == null) return;                
+                if (unit?.AttackTarget == null || arrowPrefab == null || _projectileSpawnPoint == null) return;
                 var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
                 arrow.Launch(unit, unit.AttackTarget);
             }

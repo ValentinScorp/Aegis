@@ -7,12 +7,11 @@ namespace Aegis.View
 {
     public class EntityAnimator : MonoBehaviour
     {
-        [SerializeField] private AnimationClip _swordAttackAminationClip;
-        [SerializeField] private AnimationClip _bowAttackAminationClip;
         private Animator _animator;
         private Unit _unit;
         private int _currentStateHash;
         private static readonly int IdleHash = Animator.StringToHash("Idle");
+        private static readonly int DeathHash = Animator.StringToHash("Death");
         private static readonly int SwordAttackHash = Animator.StringToHash("SwordAttack");
         private static readonly int BowShootHash = Animator.StringToHash("BowShoot");
         private static readonly int WalkHash = Animator.StringToHash("Walk");
@@ -46,35 +45,14 @@ namespace Aegis.View
         //     float multiplier = _unit.Config.WalkAnimationSpeedMultiplier;
         //     _animator.SetFloat(WalkSpeedHash, _movement.NormalizedSpeed * multiplier);
         // }
-        public void PlayAttack(WeaponAnimationType weaponType)
-        {
-            float _clipLength = 1.0f;
-            
-
-            switch (weaponType) {
-                case WeaponAnimationType.Sword:
-                    _clipLength = _swordAttackAminationClip != null ? _swordAttackAminationClip.length : 1.0f;
-                    break;
-                case WeaponAnimationType.Bow:
-                    _clipLength = _bowAttackAminationClip != null ? _bowAttackAminationClip.length : 1.0f;
-                    break;
-                default:
-                    Debug.LogWarning("[EntityAnimator] Undefined attack animation clip!");
-                    break;
-
-            }
-            float unitAttackTime = _unit.AttackTime > 0 ? _unit.AttackTime : 1.0f;
-            float animSpeed = _clipLength / unitAttackTime;
-            PlayAttack(weaponType, animSpeed);
-        }
-        public void PlayAttack(WeaponAnimationType weaponType, float animSpeed)
+        public void PlayAttack(WeaponType weaponType, float animSpeed)
         {
             int attackHash = Animator.StringToHash("SwordAttack");
             switch (weaponType) {
-                case WeaponAnimationType.Sword:
+                case WeaponType.OneHandSword:
                     attackHash = Animator.StringToHash("SwordAttack");
                     break;
-                case WeaponAnimationType.Bow:
+                case WeaponType.Bow:
                     attackHash = Animator.StringToHash("BowShoot");
                     break;
                 default:
@@ -96,8 +74,7 @@ namespace Aegis.View
         }
         public void PlayDeath()
         {
-            Debug.Log("Death animation!");
-            // todo death animation
+            PlayOnce(DeathHash);
         }
         private void PlayOnce(int stateHash)
         {
