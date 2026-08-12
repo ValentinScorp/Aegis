@@ -4,37 +4,43 @@ namespace Aegis.Core
 {
     public class UnitWeaponry
     {
-        public readonly WeaponSet Primary;
-        public readonly WeaponSet Secondary;
-        public WeaponSet Active { get; private set; }
+        private readonly WeaponSet _primary;
+        private readonly WeaponSet _secondary;
+        private WeaponSet _active { get; set; }
 
         public UnitWeaponry(WeaponSet primary, WeaponSet secondary)
         {
-            Primary = primary;
-            Secondary = secondary;
-            Active = primary;
+            _primary = primary;
+            _secondary = secondary;
+            _active = primary;
         }
+        public float AttackTime => _active.AttackTime;
+        public float AttackEventTime => _active.AttackEventTime;
+        public void SetActive(WeaponSet set) => _active = set;
 
-        public void SetActive(WeaponSet set) => Active = set;
-
-        public bool HasAnyRanged => Primary.IsRanged || Secondary.IsRanged;
+        public float Damage => _active.GetDamage;
+        public bool HasBow => _primary.IsBow() || _secondary.IsBow();
+        public bool BowActive => _active.IsBow();
+        public bool HasAnyRanged => _primary.IsRanged || _secondary.IsRanged;
+        public string ActiveProjectileId => _active.ProjectileId;
+        public WeaponType ActiveWeaponType => _active.WeaponType;
         public float GetAttackRange()
         {
-            return Active.GetAttackRange();
+            return _active.GetAttackRange();
         }
         public WeaponSet GetClosestWeaponSet()
         {
-            float primary = Primary.GetAttackRange();
-            float secondary = Secondary.GetAttackRange();
+            float primary = _primary.GetAttackRange();
+            float secondary = _secondary.GetAttackRange();
             if (primary > secondary) {
-                return Secondary;
+                return _secondary;
             }
-            return Primary;
+            return _primary;
         }
         public float GetLongestAttackRange()
         {
-            float primary = Primary.GetAttackRange();
-            float secondary = Secondary.GetAttackRange();
+            float primary = _primary.GetAttackRange();
+            float secondary = _secondary.GetAttackRange();
             if (primary > secondary) {
                 return primary;
             }

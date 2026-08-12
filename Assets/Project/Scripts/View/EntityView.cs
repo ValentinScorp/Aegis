@@ -128,7 +128,7 @@ namespace Aegis.View
             switch (actionEvent.Action) {
                 case UnitAction.Attack:
                     _entityMovement.LookAt(actionEvent.TargetPosition);
-                    var weaponAnim = unit.Weaponry.Active.MainHand?.WeaponType ?? WeaponType.OneHandSword;
+                    var weaponAnim = unit.Weaponry.ActiveWeaponType;
                     if (!unit.CanShoot
                         && _equipmentSlots.TryGetValue(EquipmentSlotType.HandRight, out var mainHandSlot)
                         && _swordPrefab != null) {
@@ -158,7 +158,7 @@ namespace Aegis.View
         private void OnProjectileLaunched(Vector3 targetPosition)
         {
             if (_entity is Unit unit) {
-                string projecitleId = unit.Weaponry.Active.ProjectileId;
+                string projecitleId = unit.Weaponry.ActiveProjectileId;
                 var arrowPrefab = _projectileCatalog.GetPrefab(projecitleId);
                 if (unit?.AttackTarget == null || arrowPrefab == null || _projectileSpawnPoint == null) return;
                 var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);

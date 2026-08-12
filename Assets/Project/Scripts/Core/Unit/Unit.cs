@@ -28,14 +28,14 @@ namespace Aegis.Core
         public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
         public float SearchRadius => _common.SearchRadius;
         public float ChaseRadius => _common.ChaseRadius;
-        public float AttackDamage => Weaponry.Active.MainHand != null ? Weaponry.Active.MainHand.Damage : _common.UnarmedDamage;
+        public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
 
-        public bool CanShoot => Weaponry.Active.IsRanged;
+        public bool CanShoot => Weaponry.HasBow;
         public float AttackRange => Weaponry.GetAttackRange();
-
-        public float AttackTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackTime : _common.UnarmedCooldown;
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
-        public float AttackEventTime => Weaponry.Active.MainHand != null ? Weaponry.Active.AttackEventTime : 0.5f;
+
+        public float AttackTime => Weaponry.AttackTime > 0.01f ? Weaponry.AttackTime : _common.UnarmedCooldown;
+        public float AttackEventTime => Weaponry.AttackEventTime > 0.01f ? Weaponry.AttackEventTime : 0.5f;
 
         public Vector3 FixedPosition { get; set; }
         private WorldEntity _closestTarget;
@@ -152,10 +152,10 @@ namespace Aegis.Core
         {
             if (target == null) return;
 
-            if (Weaponry.Active.IsRanged)
+            if (Weaponry.BowActive)
                 PerformProjectileLaunch(target);
             else {
-                ApplyDamage(target, Weaponry.Active.MainHand.Damage);
+                ApplyDamage(target, Weaponry.Damage);
             }
         }
         private void ApplyDamage(WorldEntity target, float damage)
