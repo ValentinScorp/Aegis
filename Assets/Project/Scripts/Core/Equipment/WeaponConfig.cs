@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Aegis.Core
 {
-    [CreateAssetMenu(fileName = "WeaponConfig", menuName = "Aegis/Weapon Config")]
+    [CreateAssetMenu(fileName = "WeaponConfig", menuName = "Weapon/Weapon Config")]
     public class WeaponConfig : ScriptableObject
     {
         public string Id;

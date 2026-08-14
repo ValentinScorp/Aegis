@@ -1,7 +1,6 @@
 using UnityEngine;
 using Aegis.Core;
 using Aegis.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,6 +13,8 @@ namespace Aegis.View
         [SerializeField] private ProjectileCatalog _projectileCatalog;
         [SerializeField] private Transform _projectileSpawnPoint;
         [SerializeField] private GameObject _swordPrefab;
+        [SerializeField] private WeaponPrefabCatalog _weaponPrefabs;
+        [SerializeField] private WeaponHolsterConfig _weaponHolsters;
         private ICombatView[] _combatViews;
         private Dictionary<EquipmentSlotType, EquipmentSlotView> _equipmentSlots;
 
@@ -22,6 +23,7 @@ namespace Aegis.View
         private EntityAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
+        private UnitEquipmentView _equipment;
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
         private MaterialPropertyBlock _mpb;
@@ -36,7 +38,8 @@ namespace Aegis.View
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
             if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
 
-            _equipmentSlots = GetComponents<EquipmentSlotView>().ToDictionary(s => s.Type);
+            _equipmentSlots = GetComponents<EquipmentSlotView>().ToDictionary(s => s.SlotType);
+            _equipment = ComponentResolver.Require(this, GetComponent<UnitEquipmentView>());
 
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
                 Debug.LogWarning($"No <Renderer> found in prefab: {name}!", this);
@@ -84,12 +87,7 @@ namespace Aegis.View
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
 
-                if (unit.CanShoot) {
-                    var weaponSlot = ComponentResolver.Require(this, GetComponent<EquipmentSlotView>());
-                    if (unit.CanShoot && weaponSlot != null && weaponSlot.Type == EquipmentSlotType.HandLeft && _bowPrefab != null) {
-                        weaponSlot.EquipWeapon(_bowPrefab);
-                    }
-                }
+                _equipment.Bind(unit);
 
                 foreach (var combat in _combatViews)
                     combat.Bind(unit);
@@ -104,6 +102,7 @@ namespace Aegis.View
                 _entityMovement.Unbind();
                 _entityAnimator.Unbind();
                 _unitAnimationSync.Unbind();
+                _equipment.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
                 unit.ChaseTo -= OnChaseToAction;
