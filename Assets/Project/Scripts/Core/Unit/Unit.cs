@@ -73,8 +73,8 @@ namespace Aegis.Core
             _common = common;
 
             Stats = new UnitStats(config.BaseStrength, config.BaseSpeed, config.BaseSpirit);
-            
-            Weaponry = new UnitWeaponry(config.MainHandPrimary, 
+
+            Weaponry = new UnitWeaponry(config.MainHandPrimary,
                                         config.OffHandPrimary,
                                         config.MainHandSecondary,
                                         config.OffHandSecondary);
@@ -124,7 +124,7 @@ namespace Aegis.Core
             var walk = StateMachine.GetState<UnitStateWalk>();
             if (walk != null)
                 walk.Destination = destination;
-                
+
             StateMachine.SetState(UnitState.Walk);
             // Debug.Log("Performing walk!");
             WalkTo?.Invoke(destination);
@@ -158,6 +158,10 @@ namespace Aegis.Core
             else {
                 ApplyDamage(target, Weaponry.Damage);
             }
+        }
+        public void ApplyProjectileDamage(WorldEntity target)
+        {
+            ApplyDamage(target, Weaponry.Damage);
         }
         private void ApplyDamage(WorldEntity target, float damage)
         {

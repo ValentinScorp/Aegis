@@ -1,4 +1,6 @@
 // UnitStateAttack.cs
+using UnityEngine;
+
 namespace Aegis.Core
 {
     public class UnitStateAttack : IUnitState
@@ -13,6 +15,7 @@ namespace Aegis.Core
         public void Enter()
         {
             _self.StopMovement();
+            _self.Weaponry.UpdateActiveForDistance(Vector3.Distance(_self.Position, _self.AttackTarget.Position));
             _self.PerformAttackAction(_self.AttackTarget);
             _cooldownTimer = 0f;
             _damageDone = false;

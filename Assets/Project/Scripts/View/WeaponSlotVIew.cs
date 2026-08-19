@@ -11,7 +11,7 @@ namespace Aegis.View
         private GameObject _currentWeaponInstance;
         private GameObject _equippedPrefab;
 
-        public WeaponSlotType SlotType { get; private set; }
+        public WeaponSlotType SlotType => _socketType;
         private static readonly Quaternion BowRotationOffset = Quaternion.Euler(90f, 0f, 0f);
 
         private void Awake()

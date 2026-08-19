@@ -8,7 +8,7 @@ namespace Aegis.Core
         public class WeaponSet
         {
             public WeaponConfig MainHand { get; private set; }
-            public WeaponConfig OffHand  { get; private set; }
+            public WeaponConfig OffHand { get; private set; }
 
             public WeaponSet()
             { }
@@ -37,6 +37,7 @@ namespace Aegis.Core
                 return false;
             }
             public WeaponType WeaponType => MainHand != null ? MainHand.WeaponType : WeaponType.None;
+            public string Animation => MainHand != null ? MainHand.Animation : null;
             public float GetAttackRange()
             {
                 if (MainHand != null) return MainHand.AttackRange;
@@ -51,7 +52,7 @@ namespace Aegis.Core
             internal void Set(WeaponConfig main, WeaponConfig off)
             {
                 MainHand = main;
-                OffHand  = off;
+                OffHand = off;
             }
         }
 
@@ -67,7 +68,7 @@ namespace Aegis.Core
             Secondary = new WeaponSet();
             Active = Primary;
         }
-        public UnitWeaponry(WeaponConfig primMain, WeaponConfig primOff, 
+        public UnitWeaponry(WeaponConfig primMain, WeaponConfig primOff,
                             WeaponConfig secMain, WeaponConfig secOff)
         {
             Primary = new WeaponSet(primMain, primOff);
@@ -76,14 +77,14 @@ namespace Aegis.Core
         }
         public float AttackTime => Active.AttackTime;
         public float AttackEventTime => Active.AttackEventTime;
-        
+
         public float Damage => Active.GetDamage;
         public bool HasBow => Primary.IsBow() || Secondary.IsBow();
         public bool BowActive => Active.IsBow();
         public bool HasAnyRanged => Primary.IsRanged || Secondary.IsRanged;
         public string ActiveProjectileId => Active.ProjectileId;
         public WeaponType ActiveWeaponType => Active.WeaponType;
-
+        public string ActiveAnimation => Active.Animation;
         public float GetAttackRange()
         {
             return Active.GetAttackRange();
@@ -139,20 +140,38 @@ namespace Aegis.Core
             IsSheathed = false;
             Changed?.Invoke(this);
         }
+        public void UpdateActiveForDistance(float distance)
+        {
+            if (Secondary.IsEmpty) return;
 
+            bool primaryReach = Primary.CanReach(distance);
+            bool secondaryReach = Secondary.CanReach(distance);
+
+            WeaponSet target;
+            if (primaryReach && secondaryReach)
+                target = Primary.GetAttackRange() <= Secondary.GetAttackRange() ? Primary : Secondary; // коротший з тих, що дістають
+            else if (primaryReach)
+                target = Primary;
+            else if (secondaryReach)
+                target = Secondary;
+            else
+                target = Primary.GetAttackRange() >= Secondary.GetAttackRange() ? Primary : Secondary; // fallback — найдовший
+
+            SetActive(target);
+        }
         public void Equip(WeaponSet targetSet, WeaponConfig main, WeaponConfig off)
         {
             if (targetSet != Primary && targetSet != Secondary) return;
 
             targetSet.Set(main, off);
-            
+
             if (targetSet == Active)
                 IsSheathed = false;
 
             Changed?.Invoke(this);
         }
 
-        public void EquipPrimary(WeaponConfig main, WeaponConfig off)   => Equip(Primary, main, off);
+        public void EquipPrimary(WeaponConfig main, WeaponConfig off) => Equip(Primary, main, off);
         public void EquipSecondary(WeaponConfig main, WeaponConfig off) => Equip(Secondary, main, off);
     }
 }

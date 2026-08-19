@@ -13,8 +13,6 @@ namespace Aegis.View
         [SerializeField] private ProjectileCatalog _projectileCatalog;
         [SerializeField] private Transform _projectileSpawnPoint;
         [SerializeField] private GameObject _swordPrefab;
-        [SerializeField] private WeaponPrefabCatalog _weaponPrefabs;
-        [SerializeField] private WeaponHolsterConfig _weaponHolsters;
         private ICombatView[] _combatViews;
         private Dictionary<WeaponSlotType, WeaponSlotView> _equipmentSlots;
 
@@ -128,7 +126,7 @@ namespace Aegis.View
             switch (actionEvent.Action) {
                 case UnitAction.Attack:
                     _entityMovement.LookAt(actionEvent.TargetPosition);
-                    var weaponAnim = unit.Weaponry.ActiveWeaponType;
+                    var weaponAnim = unit.Weaponry.ActiveAnimation;
                     if (!unit.CanShoot
                         && _equipmentSlots.TryGetValue(WeaponSlotType.HandRight, out var mainHandSlot)
                         && _swordPrefab != null) {

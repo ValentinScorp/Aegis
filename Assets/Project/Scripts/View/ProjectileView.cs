@@ -42,7 +42,7 @@ namespace Aegis.View
         private void Hit()
         {
             _hasHit = true;
-            _owner?.PerformAttackImpact(_target);
+            _owner?.ApplyProjectileDamage(_target);
             Destroy(gameObject);
         }
     }

@@ -46,26 +46,21 @@ namespace Aegis.View
 
         private void CacheClipLengths()
         {
-            foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+            foreach (var clip in _animator.runtimeAnimatorController.animationClips) {
                 _clipLengths[Animator.StringToHash(clip.name)] = clip.length;
+            }
         }
-
-        public void PlayAttack(WeaponType weaponType, float attackTime)
+        public void PlayAttack(string weaponAnimation, float attackTime)
         {
-            int attackHash = weaponType switch {
-                WeaponType.Bow => BowShootHash,
-                _ => SwordAttackHash, // TODO: додати гілки для Dagger/Spear, коли з'являться свої кліпи
-            };
-
-            // float clipLength = _clipLengths.TryGetValue(attackHash, out var len) ? len : 1f;
-            float clipLength = GetClipLength("Human_HitSword");
-            // Debug.Log(clipLength);
+            var anim = WeaponAnimationCatalog.Get(weaponAnimation);
+            int clipHash = Animator.StringToHash(anim.ClipName);
+            float clipLength = _clipLengths.TryGetValue(clipHash, out var len) ? len : GetClipLength(anim.ClipName);
 
             float animSpeed = attackTime > 0f ? clipLength / attackTime : 1f;
-            // Debug.Log(animSpeed);
             _animator.SetFloat(AttackSpeedHash, animSpeed);
-            PlayOnce(attackHash);
+            PlayOnce(anim.StateHash);
         }
+        
         public float GetClipLength(string clipName)
         {
             RuntimeAnimatorController controller = _animator.runtimeAnimatorController;
