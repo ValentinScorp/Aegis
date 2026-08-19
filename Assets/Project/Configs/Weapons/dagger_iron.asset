@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: dagger_iron
   DisplayName: Iron Dagger
   Animation: dagger
-  WeaponType: 1
+  WeaponType: 2
   ProjectileId: 
   Damage: 5
   AttackRange: 0.8

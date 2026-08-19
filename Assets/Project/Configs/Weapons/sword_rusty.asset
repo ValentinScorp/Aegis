@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: sword_rusty
   DisplayName: Rusty Sword
   Animation: sword
-  WeaponType: 0
+  WeaponType: 1
   ProjectileId: 
   Damage: 8
   AttackRange: 1.2

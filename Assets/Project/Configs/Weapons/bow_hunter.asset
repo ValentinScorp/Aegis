@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: bow_hunter
   DisplayName: Hunter Bow
   Animation: bow
-  WeaponType: 3
+  WeaponType: 4
   ProjectileId: arrow
   Damage: 14
   AttackRange: 12

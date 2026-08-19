@@ -9,13 +9,13 @@ public class WeaponHolsterConfig : ScriptableObject
     public struct Entry
     {
         public WeaponType WeaponType;
-        public EquipmentSlotType PrimaryHolster;
-        public EquipmentSlotType SecondaryHolster;
+        public WeaponSlotType PrimaryHolster;
+        public WeaponSlotType SecondaryHolster;
     }
 
     public Entry[] Items;
 
-    public bool TryGetHolsters(WeaponType type, out EquipmentSlotType primary, out EquipmentSlotType secondary)
+    public bool TryGetHolsters(WeaponType type, out WeaponSlotType primary, out WeaponSlotType secondary)
     {
         foreach (var e in Items)
         {
@@ -25,8 +25,8 @@ public class WeaponHolsterConfig : ScriptableObject
             return true;
         }
 
-        primary = EquipmentSlotType.HipRight;
-        secondary = EquipmentSlotType.HipLeft;
+        primary = WeaponSlotType.HipRight;
+        secondary = WeaponSlotType.HipLeft;
         return false;
     }
 }

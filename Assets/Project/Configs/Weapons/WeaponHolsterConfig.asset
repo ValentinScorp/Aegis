@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: WeaponHolsterConfig
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHolsterConfig
   Items:
-  - WeaponType: 0
+  - WeaponType: 1
     PrimaryHolster: 5
     SecondaryHolster: 4
-  - WeaponType: 3
+  - WeaponType: 4
     PrimaryHolster: 3
     SecondaryHolster: 2

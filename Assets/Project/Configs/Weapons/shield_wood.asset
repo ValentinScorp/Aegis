@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: shield_wood
   DisplayName: Wooden Shield
   Animation: shield
-  WeaponType: 4
+  WeaponType: 5
   ProjectileId: 
   Damage: 0
   AttackRange: 0

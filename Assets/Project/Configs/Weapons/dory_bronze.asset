@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: dory_bronze
   DisplayName: Dory
   Animation: spear
-  WeaponType: 2
+  WeaponType: 3
   ProjectileId: 
   Damage: 10
   AttackRange: 1.7

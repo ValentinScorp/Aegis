@@ -15,7 +15,7 @@ MonoBehaviour:
   Id: sword_pain
   DisplayName: Sword of Pain
   Animation: sword
-  WeaponType: 0
+  WeaponType: 1
   ProjectileId: 
   Damage: 22
   AttackRange: 1.2

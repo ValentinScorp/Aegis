@@ -73,10 +73,11 @@ namespace Aegis.Core
             _common = common;
 
             Stats = new UnitStats(config.BaseStrength, config.BaseSpeed, config.BaseSpirit);
-
-            var primary = new WeaponSet(config.MainHandPrimary, config.OffHandPrimary);
-            var secondary = new WeaponSet(config.MainHandSecondary, config.OffHandSecondary);
-            Weaponry = new UnitWeaponry(primary, secondary);
+            
+            Weaponry = new UnitWeaponry(config.MainHandPrimary, 
+                                        config.OffHandPrimary,
+                                        config.MainHandSecondary,
+                                        config.OffHandSecondary);
 
             Health = new Health(MaxHealth);
             Health.Changed += (current, max) => HealthChanged?.Invoke(current, max);

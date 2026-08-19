@@ -5,77 +5,75 @@ using UnityEngine;
 
 namespace Aegis.View
 {
-    public class UnitEquipmentView : MonoBehaviour
+    public class UnitWeaponryView : MonoBehaviour
     {
         [SerializeField] private WeaponPrefabCatalog _weaponPrefabs;
         [SerializeField] private WeaponHolsterConfig _holsters;
 
-        private Dictionary<EquipmentSlotType, EquipmentSlotView> _slots;
-        private Unit _unit;
+        private Dictionary<WeaponSlotType, WeaponSlotView> _slots;
+        private UnitWeaponry _weaponry;
 
         // інстанси по id зброї (живуть поки view живий)
         private readonly Dictionary<string, GameObject> _instances = new();
 
         // що зараз у якому слоті (щоб не шукати по ієрархії)
-        private readonly Dictionary<EquipmentSlotType, string> _slotOccupant = new();
+        private readonly Dictionary<WeaponSlotType, string> _slotOccupant = new();
 
         private void Awake()
         {
-            _slots = GetComponentsInChildren<EquipmentSlotView>().ToDictionary(s => s.SlotType);
+            _slots = GetComponentsInChildren<WeaponSlotView>().ToDictionary(s => s.SlotType);
         }
 
-        public void Bind(Unit unit)
+        public void Bind(UnitWeaponry weaponry)
         {
-            _unit = unit;
-            EnsureInstances(unit);
-            Refresh();
+            if (weaponry is null) return;
+            _weaponry = weaponry;
+            SpawnWeaponInstances(_weaponry);
+            Refresh(_weaponry);
+            _weaponry.Changed += Refresh;
         }
 
         public void Unbind()
         {
             ClearAll();
-            _unit = null;
+            _weaponry = null;
         }
 
-        /// <summary>Створити префаби для всієї зброї юніта один раз.</summary>
-        void EnsureInstances(Unit unit)
+        void SpawnWeaponInstances(UnitWeaponry weaponry)
         {
-            void Ensure(WeaponConfig cfg)
+            void SpawnWeapon(WeaponConfig cfg)
             {
                 if (cfg == null || string.IsNullOrEmpty(cfg.Id)) return;
-                if (_instances.ContainsKey(cfg.Id)) return;
 
                 var prefab = _weaponPrefabs.GetPrefab(cfg.Id);
                 if (prefab == null) return;
 
-                var go = Instantiate(prefab);
+                var go = Instantiate(prefab, transform);
                 go.name = cfg.Id;
                 go.SetActive(false);
                 _instances[cfg.Id] = go;
-            }
-
-            var w = unit.Weaponry;
+            }            
             
-            Ensure(w.Primary?.MainHand);
-            Ensure(w.Primary?.OffHand);
-            Ensure(w.Secondary?.MainHand);
-            Ensure(w.Secondary?.OffHand);
+            SpawnWeapon(weaponry.Primary?.MainHand);
+            SpawnWeapon(weaponry.Primary?.OffHand);
+            SpawnWeapon(weaponry.Secondary?.MainHand);
+            SpawnWeapon(weaponry.Secondary?.OffHand);
         }
 
-        public void Refresh()
+        public void Refresh(UnitWeaponry weaponry)
         {
-            if (_unit == null) return;
+            if (weaponry == null) return;
+            _weaponry = weaponry;
 
             DetachAllFromSlots();
 
-            var occupied = new HashSet<EquipmentSlotType>();
-            var w = _unit.Weaponry;
-            var active = w.Active;
-            var other = active == w.Primary ? w.Secondary : w.Primary;
+            var occupied = new HashSet<WeaponSlotType>();
+            var active = _weaponry.Active;
+            var other = active ==_weaponry.Primary ? _weaponry.Secondary : _weaponry.Primary;
 
             // Active — в руках
-            PlaceInSlot(active?.MainHand, EquipmentSlotType.HandRight, occupied);
-            PlaceInSlot(active?.OffHand,  EquipmentSlotType.HandLeft,  occupied);
+            PlaceInSlot(active?.MainHand, WeaponSlotType.HandRight, occupied);
+            PlaceInSlot(active?.OffHand,  WeaponSlotType.HandLeft,  occupied);
 
             // Інший сет — у holster
             PlaceHolstered(other?.MainHand, occupied);
@@ -85,18 +83,18 @@ namespace Aegis.View
         /// <summary>Все з рук у holster (idle / sheathe).</summary>
         public void SheatheAll()
         {
-            if (_unit == null) return;
+            if (_weaponry == null) return;
             DetachAllFromSlots();
 
-            var occupied = new HashSet<EquipmentSlotType>();
-            var w = _unit.Weaponry;
-            PlaceHolstered(w.Primary?.MainHand, occupied);
-            PlaceHolstered(w.Primary?.OffHand, occupied);
-            PlaceHolstered(w.Secondary?.MainHand, occupied);
-            PlaceHolstered(w.Secondary?.OffHand, occupied);
+            var occupied = new HashSet<WeaponSlotType>();
+            var w = _weaponry;
+            PlaceHolstered(_weaponry.Primary?.MainHand, occupied);
+            PlaceHolstered(_weaponry.Primary?.OffHand, occupied);
+            PlaceHolstered(_weaponry.Secondary?.MainHand, occupied);
+            PlaceHolstered(_weaponry.Secondary?.OffHand, occupied);
         }
 
-        void PlaceHolstered(WeaponConfig cfg, HashSet<EquipmentSlotType> occupied)
+        void PlaceHolstered(WeaponConfig cfg, HashSet<WeaponSlotType> occupied)
         {
             if (cfg == null) return;
             _holsters.TryGetHolsters(cfg.WeaponType, out var primary, out var secondary);
@@ -104,7 +102,7 @@ namespace Aegis.View
             PlaceInSlot(cfg, slot, occupied);
         }
 
-        void PlaceInSlot(WeaponConfig cfg, EquipmentSlotType slotType, HashSet<EquipmentSlotType> occupied)
+        void PlaceInSlot(WeaponConfig cfg, WeaponSlotType slotType, HashSet<WeaponSlotType> occupied)
         {
             if (cfg == null) return;
             if (!_instances.TryGetValue(cfg.Id, out var go)) return;

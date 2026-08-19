@@ -1,16 +1,17 @@
 
+using Aegis.Core;
 using UnityEngine;
 
 namespace Aegis.View
 {
-    public class EquipmentSlotView : MonoBehaviour
+    public class WeaponSlotView : MonoBehaviour
     {
-        [SerializeField] private EquipmentSlotType _socketType;
+        [SerializeField] private WeaponSlotType _socketType;
         [SerializeField] private Transform _socket;
         private GameObject _currentWeaponInstance;
         private GameObject _equippedPrefab;
 
-        public EquipmentSlotType SlotType { get; private set; }
+        public WeaponSlotType SlotType { get; private set; }
         private static readonly Quaternion BowRotationOffset = Quaternion.Euler(90f, 0f, 0f);
 
         private void Awake()

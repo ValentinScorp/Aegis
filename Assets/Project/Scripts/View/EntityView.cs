@@ -16,14 +16,14 @@ namespace Aegis.View
         [SerializeField] private WeaponPrefabCatalog _weaponPrefabs;
         [SerializeField] private WeaponHolsterConfig _weaponHolsters;
         private ICombatView[] _combatViews;
-        private Dictionary<EquipmentSlotType, EquipmentSlotView> _equipmentSlots;
+        private Dictionary<WeaponSlotType, WeaponSlotView> _equipmentSlots;
 
         private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
-        private UnitEquipmentView _equipment;
+        private UnitWeaponryView _weaponry;
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
         private MaterialPropertyBlock _mpb;
@@ -38,8 +38,8 @@ namespace Aegis.View
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
             if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
 
-            _equipmentSlots = GetComponents<EquipmentSlotView>().ToDictionary(s => s.SlotType);
-            _equipment = ComponentResolver.Require(this, GetComponent<UnitEquipmentView>());
+            _equipmentSlots = GetComponents<WeaponSlotView>().ToDictionary(s => s.SlotType);
+            _weaponry = ComponentResolver.Require(this, GetComponent<UnitWeaponryView>());
 
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
                 Debug.LogWarning($"No <Renderer> found in prefab: {name}!", this);
@@ -72,6 +72,8 @@ namespace Aegis.View
             transform.position = entity.Position;
 
             if (entity is Unit unit) {
+                _weaponry.Bind(unit.Weaponry);
+
                 _entityMovement.Bind(unit);
                 _entityAnimator.Bind(unit);
                 _unitAnimationSync.Bind(unit);
@@ -87,7 +89,6 @@ namespace Aegis.View
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
 
-                _equipment.Bind(unit);
 
                 foreach (var combat in _combatViews)
                     combat.Bind(unit);
@@ -99,10 +100,10 @@ namespace Aegis.View
             if (_entity == null) return;
 
             if (_entity is Unit unit) {
+                _weaponry.Unbind();
                 _entityMovement.Unbind();
                 _entityAnimator.Unbind();
                 _unitAnimationSync.Unbind();
-                _equipment.Unbind();
 
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
                 unit.ChaseTo -= OnChaseToAction;
@@ -129,7 +130,7 @@ namespace Aegis.View
                     _entityMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveWeaponType;
                     if (!unit.CanShoot
-                        && _equipmentSlots.TryGetValue(EquipmentSlotType.HandRight, out var mainHandSlot)
+                        && _equipmentSlots.TryGetValue(WeaponSlotType.HandRight, out var mainHandSlot)
                         && _swordPrefab != null) {
                         mainHandSlot.EquipWeapon(_swordPrefab);
                     }
@@ -137,7 +138,7 @@ namespace Aegis.View
                     break;
                 case UnitAction.Idle:
                     _entityAnimator.PlayIdle();
-                    if (_equipmentSlots.TryGetValue(EquipmentSlotType.HandRight, out var slot))
+                    if (_equipmentSlots.TryGetValue(WeaponSlotType.HandRight, out var slot))
                         slot.UnequipWeapon();
                     break;
             }
