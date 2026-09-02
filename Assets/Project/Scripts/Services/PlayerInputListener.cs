@@ -10,6 +10,8 @@ namespace Aegis.Services
         private HotkeyListener _hotkeyListener;
         public event Action<Vector2> TapPerformed;
         public event Action AttackPerformed;
+        public Vector2 CameraMoveInput => _inputActions.Camera.Move.ReadValue<Vector2>();
+        public float CameraVerticalInput => _inputActions.Camera.Vertical.ReadValue<float>();
 
         private void Awake()
         {
@@ -21,11 +23,13 @@ namespace Aegis.Services
         {
             _inputActions.Gameplay.Enable();
             _inputActions.Gameplay.Tap.performed += OnTapPerformed;
+            _inputActions.Camera.Enable();
         }
         private void OnDisable()
         {
             _inputActions.Gameplay.Tap.performed -= OnTapPerformed;
             _inputActions.Gameplay.Disable();
+            _inputActions.Camera.Disable();
         }
         private void Update()
         {
@@ -44,8 +48,7 @@ namespace Aegis.Services
         public event Action AttackPressed;
         public void Update()
         {
-            if (Keyboard.current != null && Keyboard.current[Key.Q].wasPressedThisFrame)
-            {
+            if (Keyboard.current != null && Keyboard.current[Key.Q].wasPressedThisFrame) {
                 AttackPressed?.Invoke();
                 Debug.Log("Key Q pressed");
             }
