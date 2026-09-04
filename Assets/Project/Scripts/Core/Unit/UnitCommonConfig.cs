@@ -19,5 +19,11 @@ namespace Aegis.Core
         public float ChaseRadius;
         public float MoveSpeed;
         public float WalkAnimationSpeedMultiplier;
+
+        [Header("Perception")]
+        [Tooltip("Висота 'очей' юніта над Position — звідки й куди тягнеться промінь перевірки видимості.")]
+        public float EyeHeight = 1.6f;
+        [Tooltip("Шари, що блокують видимість (стіни, рельєф тощо). Юнітів у ці шари включати не треба.")]
+        public LayerMask ObstacleMask;
     }
 }

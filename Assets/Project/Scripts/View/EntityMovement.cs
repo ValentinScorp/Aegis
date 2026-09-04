@@ -95,7 +95,12 @@ namespace Aegis.View
         }
         public void DisableAgent()
         {
+            Stop();
             _agent.enabled = false;
+        }
+        public void EnableAgent()
+        {
+            _agent.enabled = true;
         }
 
         private void OnWalkFinished()

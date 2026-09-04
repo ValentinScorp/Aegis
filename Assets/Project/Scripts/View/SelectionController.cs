@@ -14,6 +14,8 @@ namespace Aegis.Services
         [SerializeField] private LayerMask _groundMask;
 
         private Unit _selectedUnit;
+        public Unit SelectedUnit => _selectedUnit;
+        public event Action<Unit> SelectionChanged;
 
         private void Awake()
         {
@@ -86,6 +88,7 @@ namespace Aegis.Services
             }
             _selectedUnit = unit;
             _selectedUnit.Select(true);
+            SelectionChanged?.Invoke(_selectedUnit);
         }
     }
 }

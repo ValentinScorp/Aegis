@@ -349,7 +349,7 @@ GameObject:
   - component: {fileID: 225179182}
   - component: {fileID: 225179181}
   - component: {fileID: 225179180}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Obstacle (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -482,7 +482,7 @@ GameObject:
   - component: {fileID: 306939385}
   - component: {fileID: 306939384}
   - component: {fileID: 306939387}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,6 +615,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -755,6 +756,21 @@ MonoBehaviour:
   _inputListener: {fileID: 1814450725}
   _moveSpeed: 20
   _verticalSpeed: 15
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6442df24075c05b41861b5e652723cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.Services.CameraModeController
+  _cameraView: {fileID: 330585548}
+  _inputListener: {fileID: 1814450725}
+  _selectionController: {fileID: 2138795597}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1039,7 @@ GameObject:
   - component: {fileID: 885259607}
   - component: {fileID: 885259606}
   - component: {fileID: 885259605}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Obstacle (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1513,7 +1529,7 @@ GameObject:
   - component: {fileID: 1569074705}
   - component: {fileID: 1569074704}
   - component: {fileID: 1569074703}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Obstacle (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1646,7 +1662,7 @@ GameObject:
   - component: {fileID: 1729328312}
   - component: {fileID: 1729328311}
   - component: {fileID: 1729328310}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Obstacle (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2049,7 +2065,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2138795595}
-  - component: {fileID: 2138795596}
+  - component: {fileID: 2138795597}
   m_Layer: 0
   m_Name: SelectionController
   m_TagString: Untagged
@@ -2072,7 +2088,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1074663757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2138795596
+--- !u!114 &2138795597
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2081,9 +2097,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2138795594}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd2eb3db42b24434395bc1c1fdb64554, type: 3}
+  m_Script: {fileID: 11500000, guid: e2a91fd75bbd77c47a12fd62d8fcca26, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.Services.Navigator
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.Services.SelectionController
   _playerInputListener: {fileID: 1814450725}
   _raycastHitDetector: {fileID: 2134489057}
   _groundMask:

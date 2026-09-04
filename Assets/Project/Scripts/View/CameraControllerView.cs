@@ -10,37 +10,49 @@ namespace Aegis.View
         [SerializeField] private float _moveSpeed = 20f;
         [SerializeField] private float _verticalSpeed = 15f;
 
-        private CameraController _controller;
+        public CameraRig Rig { get; private set; }
 
         private void Awake()
         {
             _inputListener = Utilities.ComponentResolver.ResolveOrFind(this, _inputListener);
-            _controller = new CameraController(transform.position, _moveSpeed, _verticalSpeed);
+            Rig = new CameraRig(transform.position, _moveSpeed, _verticalSpeed);
         }
 
         private void OnEnable()
         {
-            _controller.PositionChanged += OnPositionChanged;
+            Rig.PositionChanged += OnPositionChanged;
+            Rig.RotationChanged += OnRotationChanged;
         }
 
         private void OnDisable()
         {
-            _controller.PositionChanged -= OnPositionChanged;
+            Rig.PositionChanged -= OnPositionChanged;
+            Rig.RotationChanged -= OnRotationChanged;
         }
 
         private void Update()
         {
             if (_inputListener == null) return;
 
-            Vector2 moveInput = _inputListener.CameraMoveInput;
-            float verticalInput = _inputListener.CameraVerticalInput;
+            var input = new CameraTickInput(
+                _inputListener.CameraMoveInput,
+                _inputListener.CameraVerticalInput,
+                _inputListener.LookDelta,
+                Rig.Target?.Position);
 
-            _controller.Tick(moveInput, verticalInput, Time.deltaTime);
+            Rig.Tick(input, Time.deltaTime);
         }
 
         private void OnPositionChanged(Vector3 position)
         {
             transform.position = position;
+        }
+
+        private void OnRotationChanged(float yaw, float pitch)
+        {
+            // Free-режим орієнтацію не використовує — застосовуємо лише
+            // коли rig її дійсно виставляє (Follow/ThirdPerson).
+            transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
         }
     }
 }

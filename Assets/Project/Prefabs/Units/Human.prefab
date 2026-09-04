@@ -20,6 +20,8 @@ GameObject:
   - component: {fileID: 6473099938786477667}
   - component: {fileID: -1823739907906511677}
   - component: {fileID: 2362292487489536303}
+  - component: {fileID: -4847669449881767682}
+  - component: {fileID: 5472173501788622010}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -76,8 +78,6 @@ MonoBehaviour:
   _projectileCatalog: {fileID: 11400000, guid: dba6814a3839e6241bd2fda0635eb230, type: 2}
   _projectileSpawnPoint: {fileID: 124546060268151181}
   _swordPrefab: {fileID: 7030230649132785133, guid: e47b25270eee6c14b9db87f9201e4f09, type: 3}
-  _weaponPrefabs: {fileID: 11400000, guid: ea88bcfad5d0e5741b8ea61a68074d49, type: 2}
-  _weaponHolsters: {fileID: 11400000, guid: f57196b3f1f20be4e94e553402bf5149, type: 2}
 --- !u!114 &6744078577640128774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +206,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.UnitWeaponryView
   _weaponPrefabs: {fileID: 11400000, guid: ea88bcfad5d0e5741b8ea61a68074d49, type: 2}
   _holsters: {fileID: 11400000, guid: f57196b3f1f20be4e94e553402bf5149, type: 2}
+--- !u!114 &-4847669449881767682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb7cdba1bf0a144dbab31d466210dbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityDirectMovement
+  _rotationSpeedDegPerSec: 720
+  _gravity: -20
+--- !u!143 &5472173501788622010
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5029112721878601802
 GameObject:
   m_ObjectHideFlags: 0

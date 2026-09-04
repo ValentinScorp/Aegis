@@ -19,6 +19,8 @@ MonoBehaviour:
   SearchRadius: 20
   ChaseRadius: 12
   MoveSpeed: 3.5
-  MeleeAttackSpeed: 1
-  RangedAttackSpeed: 1.5
   WalkAnimationSpeedMultiplier: 2.5
+  EyeHeight: 1.6
+  ObstacleMask:
+    serializedVersion: 2
+    m_Bits: 256

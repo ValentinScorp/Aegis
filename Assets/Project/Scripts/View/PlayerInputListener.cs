@@ -12,12 +12,21 @@ namespace Aegis.Services
         public event Action AttackPerformed;
         public Vector2 CameraMoveInput => _inputActions.Camera.Move.ReadValue<Vector2>();
         public float CameraVerticalInput => _inputActions.Camera.Vertical.ReadValue<float>();
+        // Потребує дії "Look" (Vector2, binding "<Mouse>/delta") у мапі "Camera" — додати у Input Actions Editor.
+        public Vector2 LookDelta => _inputActions.Camera.Look.ReadValue<Vector2>();
+
+        public event Action FreeCameraRequested;
+        public event Action FollowCameraRequested;
+        public event Action ThirdPersonCameraRequested;
 
         private void Awake()
         {
             _inputActions = new PlayerInputActions();
             _hotkeyListener = new HotkeyListener();
             _hotkeyListener.AttackPressed += () => AttackPerformed?.Invoke();
+            _hotkeyListener.FreeCameraPressed += () => FreeCameraRequested?.Invoke();
+            _hotkeyListener.FollowCameraPressed += () => FollowCameraRequested?.Invoke();
+            _hotkeyListener.ThirdPersonCameraPressed += () => ThirdPersonCameraRequested?.Invoke();
         }
         private void OnEnable()
         {
@@ -46,12 +55,22 @@ namespace Aegis.Services
     public class HotkeyListener
     {
         public event Action AttackPressed;
+        public event Action FreeCameraPressed;
+        public event Action FollowCameraPressed;
+        public event Action ThirdPersonCameraPressed;
+
         public void Update()
         {
-            if (Keyboard.current != null && Keyboard.current[Key.Q].wasPressedThisFrame) {
+            if (Keyboard.current == null) return;
+
+            if (Keyboard.current[Key.Q].wasPressedThisFrame) {
                 AttackPressed?.Invoke();
                 Debug.Log("Key Q pressed");
             }
+            // Перемикання режимів камери — гарячі клавіші (toggle через явний вибір режиму).
+            if (Keyboard.current[Key.F1].wasPressedThisFrame) FreeCameraPressed?.Invoke();
+            if (Keyboard.current[Key.F2].wasPressedThisFrame) FollowCameraPressed?.Invoke();
+            if (Keyboard.current[Key.F3].wasPressedThisFrame) ThirdPersonCameraPressed?.Invoke();
         }
     }
 

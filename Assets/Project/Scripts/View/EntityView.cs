@@ -18,6 +18,7 @@ namespace Aegis.View
 
         private Renderer _renderer;
         private EntityMovement _entityMovement;
+        private EntityDirectMovement _entityDirectMovement;
         private EntityAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
@@ -30,6 +31,8 @@ namespace Aegis.View
         {
             _healthView = ComponentResolver.Require(this, GetComponentInChildren<HealthView>());
             _entityMovement = GetComponent<EntityMovement>();
+            // Не всі юніти мають CharacterController/пряме керування — компонент опційний.
+            _entityDirectMovement = GetComponent<EntityDirectMovement>();
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
             _unitAnimationSync = ComponentResolver.Require(this, GetComponent<UnitAnimationSync>());
             _combatViews = GetComponents<ICombatView>();
@@ -73,9 +76,12 @@ namespace Aegis.View
                 _weaponry.Bind(unit.Weaponry);
 
                 _entityMovement.Bind(unit);
+                _entityDirectMovement?.Bind(unit);
+                _entityDirectMovement?.SetActive(unit.ControlMode == UnitControlMode.Direct);
                 _entityAnimator.Bind(unit);
                 _unitAnimationSync.Bind(unit);
 
+                unit.ControlModeChanged += OnControlModeChanged;
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseToAction;
                 unit.WalkTo += OnWalkAction;
@@ -100,9 +106,11 @@ namespace Aegis.View
             if (_entity is Unit unit) {
                 _weaponry.Unbind();
                 _entityMovement.Unbind();
+                _entityDirectMovement?.Unbind();
                 _entityAnimator.Unbind();
                 _unitAnimationSync.Unbind();
 
+                unit.ControlModeChanged -= OnControlModeChanged;
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
                 unit.ChaseTo -= OnChaseToAction;
                 unit.WalkTo -= OnWalkAction;
@@ -117,6 +125,21 @@ namespace Aegis.View
                     combat.Unbind();
             }
             _entity = null;
+        }
+        private void OnControlModeChanged(UnitControlMode mode)
+        {
+            bool direct = mode == UnitControlMode.Direct;
+
+            if (direct) {
+                _entityMovement.DisableAgent();
+                _entityDirectMovement?.SetActive(true);
+            } else {
+                _entityDirectMovement?.SetActive(false);
+                _entityMovement.EnableAgent();
+            }
+
+            if (direct && _entityDirectMovement == null)
+                Debug.LogWarning($"[EntityView] Unit переведено в Direct-режим, але на префабі '{name}' немає EntityDirectMovement/CharacterController.", this);
         }
         private void OnActionPerformed(UnitActionEvent actionEvent)
         {

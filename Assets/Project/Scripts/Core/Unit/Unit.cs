@@ -27,8 +27,7 @@ namespace Aegis.Core
         public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
         public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
         public float SearchRadius => _common.SearchRadius;
-        public float ChaseRadius => _common.ChaseRadius;
-        public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
+        public float ChaseRadius => _common.ChaseRadius;        public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
 
         public bool CanShoot => Weaponry.HasBow;
         public float AttackRange => Weaponry.GetAttackRange();
@@ -44,6 +43,8 @@ namespace Aegis.Core
 
         public bool SelectedByPlayer { get; private set; }
 
+        public UnitControlMode ControlMode { get; private set; } = UnitControlMode.Indirect;
+
         public event Action<bool> WasSelectedByPlayer;
         public event Action ExecutedStopMovement;
         public event Action<float, float> HealthChanged;
@@ -52,6 +53,8 @@ namespace Aegis.Core
         public event Action Died;
         public event Action<UnitActionEvent> ActionPerformed;
         public event Action<Vector3> ProjectileLaunched;
+        public event Action<UnitControlMode> ControlModeChanged;
+        public event Action<Vector3> DirectMoveRequested;
 
         public UnitStateMachine StateMachine { get; private set; }
 
@@ -135,6 +138,33 @@ namespace Aegis.Core
 
             ChaseTo?.Invoke(entity.Position);
         }
+        public void SetControlMode(UnitControlMode mode)
+        {
+            if (ControlMode == mode) return;
+
+            if (mode == UnitControlMode.Direct)
+                StopMovement();
+
+            ControlMode = mode;
+            ControlModeChanged?.Invoke(mode);
+        }
+        /// <summary>
+        /// Прямий рух гравця (Odyssey-режим). worldDirection — вже
+        /// нормалізований напрямок у світових координатах (без Y),
+        /// порахований у View з урахуванням орієнтації камери.
+        /// </summary>
+        public void PerformDirectMove(Vector3 worldDirection)
+        {
+            if (!Health.IsAlive) return;
+            if (ControlMode != UnitControlMode.Direct) return;
+
+            if (worldDirection.sqrMagnitude > 0.0001f) {
+                StateMachine.SetState(UnitState.Walk);
+                DirectMoveRequested?.Invoke(worldDirection);
+            } else {
+                StateMachine.SetState(UnitState.Idle);
+            }
+        }
         public void StopMovement()
         {
             ExecutedStopMovement?.Invoke();
@@ -192,7 +222,7 @@ namespace Aegis.Core
                 } else continue;
 
                 float sqrDist = (e.Position - Position).sqrMagnitude;
-                if (sqrDist < closestSqrDist) {
+                if (sqrDist < closestSqrDist && HasLineOfSight(e)) {
                     closestSqrDist = sqrDist;
                     closest = e;
                 }
@@ -201,12 +231,28 @@ namespace Aegis.Core
 
             StateMachine.UpdateInteractions(closest);
         }
+        /// <summary>
+        /// Перевіряє, чи немає перешкод (стін, рельєфу тощо) між очима цього
+        /// юніта і ціллю. Physics.Linecast — тому й дорого викликати щокадрово,
+        /// але UpdateInteractions і так тіктиться раз на _interationsIntervalTime
+        /// (WorldUpdater), тож це прийнятно без додаткового троттлінгу.
+        /// </summary>
+        private bool HasLineOfSight(WorldEntity target)
+        {
+            if (_common.ObstacleMask.value == 0) return true; // маска не налаштована — перевірку не робимо
+
+            Vector3 eyeOffset = Vector3.up * _common.EyeHeight;
+            Vector3 from = Position + eyeOffset;
+            Vector3 to = target.Position + eyeOffset;
+
+            return !Physics.Linecast(from, to, _common.ObstacleMask, QueryTriggerInteraction.Ignore);
+        }
         public bool CanAttack(WorldEntity entity)
         {
             if (entity is Unit unit) {
                 if (unit.FactionId != FactionId) {
                     float distSqr = (entity.Position - Position).sqrMagnitude;
-                    if (distSqr < (AttackRange * AttackRange)) {
+                    if (distSqr < (AttackRange * AttackRange) && HasLineOfSight(entity)) {
                         return true;
                     }
                 }
