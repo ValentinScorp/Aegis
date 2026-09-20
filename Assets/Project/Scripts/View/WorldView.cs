@@ -15,16 +15,26 @@ namespace Aegis.View
         private void Awake()
         {
             _world = World.Instance;
-            _world.EntityCreated += OnEntityCreated;
+            _world.UnitCreated += OnEntityCreated;
         }
         private void Start()
         {
-            _world.SpawnUnits(_unitConfigRegistry, _unitCommonConfig);
+            Unit player = null;
+
+            foreach (var p in FindObjectsByType<UnitSpawnPoint>(FindObjectsSortMode.None)) {
+                var unit = _world.CreateUnit(p.transform.position, p.FactionId, p.UnitType, _unitConfigRegistry.GetConfig(p.UnitType), _unitCommonConfig);
+                if (p.IsPlayerControlled) {
+                    if (player != null) Debug.LogWarning("Кілька UnitSpawnPoint з IsPlayerControlled!", p);
+                    player = unit;
+                }
+            }
+            if (player != null) _world.AssignPlayerUnit(player);
+            else Debug.LogWarning("Жоден UnitSpawnPoint не позначений IsPlayerControlled.");
         }
         private void OnDisable()
         {
             if (_world != null) {
-                _world.EntityCreated -= OnEntityCreated;
+                _world.UnitCreated -= OnEntityCreated;
             }
         }
         private void OnDestroy()
@@ -41,18 +51,11 @@ namespace Aegis.View
 
         private void CreateEntityView(WorldEntity entity)
         {
-            EntityView prefab = null;
+            if (entity is not Unit unit) return;
 
-            if (entity is Unit unit)
-                prefab = _humanoidUnit;
-
-            if (prefab == null) return;
-
-            var view = Instantiate(prefab, entity.Position, entity.Rotation, transform);
-            if (entity is Unit u) {
-                view.Initialize(u.FactionId);
-            }
-            view.Bind(entity);            
+            var view = Instantiate(_humanoidUnit, unit.Position, unit.Rotation, transform);
+            view.Initialize(unit.FactionId);
+            view.Bind(unit);
             _views.Add(view);
         }
     }

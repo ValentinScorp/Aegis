@@ -14,13 +14,15 @@ namespace Aegis.Core
         private const float Distance = 4.5f;
         private const float Height = 2f;
         private const float LookSensitivity = 0.15f;
-        private const float MinPitch = 5f;
-        private const float MaxPitch = 75f;
+        private const float MinPitch = -10f; // side
+        private const float MaxPitch = 75f; // top
         private const float SmoothTime = 0.08f;
+
+        private Vector3 _pivot;
 
         public void Enter(CameraRig rig)
         {
-            // Стартуємо з поточного yaw/pitch рига — без різкого стрибка кута.
+            if (rig.Target != null) _pivot = rig.Target.Position;
         }
         public void Exit(CameraRig rig) { }
 
@@ -32,11 +34,11 @@ namespace Aegis.Core
             float pitch = Mathf.Clamp(rig.Pitch - input.LookDelta.y * LookSensitivity, MinPitch, MaxPitch);
             rig.ApplyRotation(yaw, pitch);
 
-            Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
-            Vector3 desired = rig.Target.Position - rot * Vector3.forward * Distance + Vector3.up * Height;
-
             float t = SmoothTime <= 0f ? 1f : 1f - Mathf.Exp(-deltaTime / SmoothTime);
-            rig.ApplyPosition(Vector3.Lerp(rig.Position, desired, t));
+            _pivot = Vector3.Lerp(_pivot, rig.Target.Position, t);
+
+            Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
+            rig.ApplyPosition(_pivot - rot * Vector3.forward * Distance + Vector3.up * Height);
         }
     }
 }

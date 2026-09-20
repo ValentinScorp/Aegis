@@ -23,6 +23,9 @@ namespace Aegis.View
         private bool _hasPendingDirection;
         private float _verticalVelocity;
 
+        public bool IsMoving { get; private set; }
+        public float CurrentSpeedNormalized { get; private set; }
+
         private void Awake()
         {
             _controller = ComponentResolver.Require(this, GetComponent<CharacterController>());
@@ -31,6 +34,9 @@ namespace Aegis.View
         private void Update()
         {
             if (_unit == null || !_controller.enabled) return;
+
+            IsMoving = _hasPendingDirection;
+            // CurrentSpeedNormalized = _pendingDirection;
 
             Vector3 direction = _hasPendingDirection ? _pendingDirection : Vector3.zero;
             _hasPendingDirection = false;
@@ -42,7 +48,30 @@ namespace Aegis.View
             Vector3 motion = direction * _unit.MoveSpeed + Vector3.up * _verticalVelocity;
             _controller.Move(motion * Time.deltaTime);
 
-            if (direction.sqrMagnitude > 0.0001f) {
+            // TIMCHASOVYI DEBUG — прибрати після діагностики
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 5f))
+            {
+                float capsuleBottom = _controller.bounds.min.y;
+                float floorY = hit.point.y;
+                // Debug.Log($"[DirectMove] transform.y={transform.position.y:F4} " +
+                //           $"capsule.bottom={capsuleBottom:F4} " +
+                //           $"floor(raycast)={floorY:F4} " +
+                //           $"gap={capsuleBottom - floorY:F4} " +
+                //           $"isGrounded={_controller.isGrounded} " +
+                //           $"vVel={_verticalVelocity:F3} " +
+                //           $"center={_controller.center} height={_controller.height} " +
+                //           $"skin={_controller.skinWidth} radius={_controller.radius}");
+            }
+            else
+            {
+                // Debug.Log($"[DirectMove] transform.y={transform.position.y:F4} " +
+                //           $"capsule.bottom={_controller.bounds.min.y:F4} " +
+                //           $"floor(raycast)=НЕ ЗНАЙДЕНО (немає колайдера під ногами!) " +
+                //           $"isGrounded={_controller.isGrounded}");
+            }
+
+            if (direction.sqrMagnitude > 0.0001f)
+            {
                 Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot,
                     _rotationSpeedDegPerSec * Time.deltaTime);
@@ -81,7 +110,7 @@ namespace Aegis.View
         {
             worldDirection.y = 0f;
             _pendingDirection = worldDirection.sqrMagnitude > 1f ? worldDirection.normalized : worldDirection;
-            _hasPendingDirection = true;
+            _hasPendingDirection = true;            
         }
     }
 }

@@ -13,7 +13,9 @@ namespace Aegis.Services
         public Vector2 CameraMoveInput => _inputActions.Camera.Move.ReadValue<Vector2>();
         public float CameraVerticalInput => _inputActions.Camera.Vertical.ReadValue<float>();
         // Потребує дії "Look" (Vector2, binding "<Mouse>/delta") у мапі "Camera" — додати у Input Actions Editor.
-        public Vector2 LookDelta => _inputActions.Camera.Look.ReadValue<Vector2>();
+        public Vector2 LookDelta => IsLookHeld ? _inputActions.Camera.Look.ReadValue<Vector2>() : Vector2.zero;
+        public bool IsLookHeld => _inputActions.Camera.LookHold.IsPressed();
+        private bool _lookWasHeld;
 
         public event Action FreeCameraRequested;
         public event Action FollowCameraRequested;
@@ -43,6 +45,12 @@ namespace Aegis.Services
         private void Update()
         {
             _hotkeyListener.Update();
+            bool held = IsLookHeld;
+            if (held != _lookWasHeld) {
+                Cursor.lockState = held ? CursorLockMode.Locked : CursorLockMode.None;
+                Cursor.visible = !held;
+                _lookWasHeld = held;
+            }
         }
         private void OnTapPerformed(InputAction.CallbackContext context)
         {

@@ -4,7 +4,7 @@ using Aegis.Services;
 
 namespace Aegis.View
 {
-    public class CameraControllerView : MonoBehaviour
+    public class CameraView : MonoBehaviour
     {
         [SerializeField] private PlayerInputListener _inputListener;
         [SerializeField] private float _moveSpeed = 20f;

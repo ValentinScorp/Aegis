@@ -13,35 +13,26 @@ namespace Aegis.Core
             get => _instance;
         }
 
-        public event Action<WorldEntity> EntityCreated;
         private readonly List<WorldEntity> _entities = new();
+        public Unit PlayerUnit { get; private set; }
+        public event Action<WorldEntity> UnitCreated;
+        public event Action<Unit> PlayerUnitAssigned;
         public IReadOnlyList<WorldEntity> Entities => _entities;
 
         private World()
         {
         }
-        public void SpawnUnits(UnitConfigRegistry unitConfigs, UnitCommonConfig unitCommonConfig)
+        public Unit CreateUnit(Vector3 position, int factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
-            CreateEntity(new Vector3(-14f, 0.03f, 11f), factionId: 1, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
-            //CreateEntity(new Vector3(-4f, 0.03f, 10f), factionId: 1, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
-            // CreateEntity(new Vector3(0f, 0.03f, 11f), factionId: 2, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
-            // CreateEntity(new Vector3(5f, 0.03f, 10f), factionId: 2, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
-            CreateEntity(new Vector3(8f, 0.03f, 10f), factionId: 3, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
-            // CreateEntity(new Vector3(4f, 0.03f, 10f), factionId: 3, UnitType.Knight, unitCommonConfig, unitConfigs.GetConfig(UnitType.Knight));
-            // CreateEntity(new Vector3(8f, 0.03f, 11f), factionId: 4, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
-            // CreateEntity(new Vector3(8f, 0.03f, 10f), factionId: 4, UnitType.Archer, unitCommonConfig, unitConfigs.GetConfig(UnitType.Archer));
+            var unit = new Unit(position, factionId, type, config, common);
+            _entities.Add(unit);
+            UnitCreated?.Invoke(unit);
+            return unit;
         }
-        public WorldEntity CreateEntity(Vector3 position, int factionId, UnitType type, UnitCommonConfig unitCommonConfig, UnitConfig config)
+        public void AssignPlayerUnit(Unit unit)
         {
-            var entity = new Unit(position, factionId, type, config, unitCommonConfig);
-            entity.Position = position;
-            _entities.Add(entity);
-            EntityCreated?.Invoke(entity);
-            return entity;
-        }
-        public void RemoveEntity(WorldEntity entity)
-        {
-            _entities.Remove(entity);
+            PlayerUnit = unit;
+            PlayerUnitAssigned?.Invoke(unit);
         }
         public void OnInteractionsUpdate()
         {
