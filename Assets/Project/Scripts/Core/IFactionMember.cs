@@ -1,4 +1,6 @@
+using Aegis.Core;
+
 public interface IFactionMember
 {
-    int FactionId { get; }
+    FactionId FactionId { get; }
 }

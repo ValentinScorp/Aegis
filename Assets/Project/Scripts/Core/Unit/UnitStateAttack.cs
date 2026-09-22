@@ -36,7 +36,7 @@ namespace Aegis.Core
 
             if (!_damageDone && _cooldownTimer >= _self.AttackTime * _self.AttackEventTime)
             {
-                _self.PerformAttackImpact(_self.AttackTarget);
+                _self.PerformAttackImpact(_self.AttackTarget, BodyPartId.Torso);
                 _damageDone = true;
             }
 

@@ -16,7 +16,7 @@ namespace Aegis.Core
         public void Evaluate(WorldEntity closestTarget)
         {
             // 1. Найвищий пріоритет — смерть
-            if (!_unit.Health.IsAlive)
+            if (!_unit.IsAlive)
             {
                 _sm.SetState(UnitState.Dead);
                 return;
@@ -68,7 +68,7 @@ namespace Aegis.Core
             if (other.FactionId == _unit.FactionId)
                 return false;
 
-            if (!other.Health.IsAlive)
+            if (!other.IsAlive)
                 return false;
 
             return true;

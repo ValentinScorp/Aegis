@@ -8,6 +8,7 @@ namespace Aegis.View
 {
     public class EntityView : MonoBehaviour
     {
+        [SerializeField] FactionPalette _factionPalette;
         [SerializeField] private GameObject _bowPrefab;
         [SerializeField] private HealthView _healthView;
         [SerializeField] private ProjectileCatalog _projectileCatalog;
@@ -53,17 +54,12 @@ namespace Aegis.View
 
             Unbind();
         }
-        public void Initialize(int factionId)
+        public void Initialize(FactionId factionIdid)
         {
             _mpb = new MaterialPropertyBlock();
 
-            switch (factionId) {
-                case 1: SetFactionColor(Color.red); break;
-                case 2: SetFactionColor(Color.blue); break;
-                case 3: SetFactionColor(Color.green); break;
-                case 4: SetFactionColor(Color.yellow); break;
-                default: break;
-            }
+
+            SetFactionColor(_factionPalette.GetColor(factionIdid));
         }
         public void Bind(WorldEntity entity)
         {
@@ -92,7 +88,6 @@ namespace Aegis.View
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
-
 
                 foreach (var combat in _combatViews)
                     combat.Bind(unit);

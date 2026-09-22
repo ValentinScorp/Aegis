@@ -95,6 +95,7 @@ namespace Aegis.Services
 
         private void ReleaseThirdPersonUnit()
         {
+            Debug.Log("ReleaseThirdPersonUnit");
             if (_thirdPersonUnit == null) return;
 
             _thirdPersonUnit.PerformDirectMove(Vector3.zero);

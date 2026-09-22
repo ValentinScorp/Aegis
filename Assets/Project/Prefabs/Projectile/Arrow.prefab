@@ -45,8 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf3faf23d2451d54b9550809f1236d7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.Arrow
-  _speed: 20
+  _horizontalSpeed: 20
+  _gravity: 20
+  _hitRadius: 0.5
   _hitDistance: 0.1
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  _maxLifetime: 10
 --- !u!1 &8531845194257202943
 GameObject:
   m_ObjectHideFlags: 0

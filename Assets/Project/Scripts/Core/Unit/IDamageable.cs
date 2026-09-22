@@ -4,8 +4,9 @@ namespace Aegis.Core
 {
     public interface IDamageable
     {
-        public Health Health { get; }
-        void TakeDamage(float amount);
+        public bool IsAlive { get; }
+        public BodyHealth BodyHealth { get; }
+        void TakeDamage(BodyPartId partId, float amount);
         event Action Died;
     }
 }

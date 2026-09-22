@@ -8,46 +8,48 @@ namespace Aegis.Core
 {
     public class Unit : WorldEntity, IFactionMember, IDamageable
     {
+        // ─── Fields ───────────────────────────────────────────
+        private readonly UnitCommonConfig _common;
+        private BodyHealth _bodyHealth;
+        private WorldEntity _closestTarget;
+
+        // ─── Identity & config ────────────────────────────────
+        public FactionId FactionId { get; private set; }
+        public UnitType EntityType { get; private set; }
+        public UnitConfig Config { get; private set; }
+
+        // ─── Core systems ─────────────────────────────────────
         public UnitStats Stats { get; }
         public UnitWeaponry Weaponry { get; }
-        private readonly UnitCommonConfig _common;
+        public BodyHealth BodyHealth => _bodyHealth;
+        public bool IsAlive => BodyHealth.IsAlive;
+        public UnitStateMachine StateMachine { get; private set; }
 
-        private Health _health;
-        public Health Health {
-            get {
-                if (_health == null)
-                    Debug.LogWarning($"[Unit] Спроба звернутись до Health до того, як він створений ({EntityType}). Викличте SetConfig() раніше.");
-                return _health;
-            }
-            private set => _health = value;
-        }
-        public int FactionId { get; private set; }
-        public UnitType EntityType { get; set; }
-        public UnitConfig Config;
-        public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
+        // ─── Derived combat / movement stats ──────────────────
+        // public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
         public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
         public float SearchRadius => _common.SearchRadius;
-        public float ChaseRadius => _common.ChaseRadius;        public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
-
-        public bool CanShoot => Weaponry.HasBow;
+        public float ChaseRadius => _common.ChaseRadius; 
+        public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
         public float AttackRange => Weaponry.GetAttackRange();
+        public bool CanShoot => Weaponry.HasBow;
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
-
         public float AttackTime => Weaponry.AttackTime > 0.01f ? Weaponry.AttackTime : _common.UnarmedCooldown;
         public float AttackEventTime => Weaponry.AttackEventTime > 0.01f ? Weaponry.AttackEventTime : 0.5f;
 
+        // ─── Runtime state ────────────────────────────────────
         public Vector3 FixedPosition { get; set; }
-        private WorldEntity _closestTarget;
-        public WorldEntity AttackTarget;
-        public WorldEntity ChaseTarget;
-
+        public WorldEntity AttackTarget { get; set; }
+        public WorldEntity ChaseTarget { get; set; }
+        public WorldEntity ClosestTarget { get; set; }
         public bool SelectedByPlayer { get; private set; }
-
         public UnitControlMode ControlMode { get; private set; } = UnitControlMode.Indirect;
 
+        // ─── Events ───────────────────────────────────────────
+        public event Action<BodyPartId, float, float> BodyPartHealthChanged;
+        public event Action<float, float> HealthChanged;
         public event Action<bool> WasSelectedByPlayer;
         public event Action ExecutedStopMovement;
-        public event Action<float, float> HealthChanged;
         public event Action<Vector3> WalkTo;
         public event Action<Vector3> ChaseTo;
         public event Action Died;
@@ -56,19 +58,7 @@ namespace Aegis.Core
         public event Action<UnitControlMode> ControlModeChanged;
         public event Action<Vector3> DirectMoveRequested;
 
-        public UnitStateMachine StateMachine { get; private set; }
-
-        public WorldEntity ClosestTarget {
-            get => _closestTarget;
-            set {
-                if (_closestTarget != value) {
-                    _closestTarget = value;
-                    // LookedAt?.Invoke(_closestTarget);
-                }
-            }
-        }
-
-        public Unit(Vector3 position, int factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
+        public Unit(Vector3 position, FactionId factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
             FactionId = factionId;
             EntityType = type;
@@ -82,45 +72,69 @@ namespace Aegis.Core
                                         config.MainHandSecondary,
                                         config.OffHandSecondary);
 
-            Health = new Health(MaxHealth);
-            Health.Changed += (current, max) => HealthChanged?.Invoke(current, max);
-            Health.Depleted += OnHealthDepleted;
+            _bodyHealth = new BodyHealth(headMax: 50f, torsoMax: 100f, armMax: 60f, legMax: 70f);
+            _bodyHealth.InitEvents();
+            _bodyHealth.PartChanged += OnBodyPartHealthChanged;
+            _bodyHealth.Depleted += OnHealthDepleted;
 
             StateMachine = new UnitStateMachine(this);
             Position = position;
             FixedPosition = Position;
         }
 
+        // ─── Health / death ───────────────────────────────────
+
+        public void TakeDamage(BodyPartId partId, float amount)
+        {
+            if (!_bodyHealth.Get(BodyPartId.Head).IsAlive && !_bodyHealth.Get(BodyPartId.Torso).IsAlive)
+                return;
+
+            _bodyHealth.TakeDamage(partId, amount);
+        }
+        public void Heal(BodyPartId partId, float amount)
+        {
+            BodyHealth.Heal(partId, amount);
+        }
+        private void OnBodyPartHealthChanged(BodyPartId partId, float cur, float max)
+        {
+            BodyPartHealthChanged?.Invoke(partId, cur, max);
+            HealthChanged(BodyHealth.GetCurrentAllParts(), BodyHealth.GetMaxAllParts());
+        }
         private void OnHealthDepleted()
         {
             PerformDeath();
         }
-        public void TakeDamage(float amount)
+        public void PerformDeath()
         {
-            if (!Health.IsAlive) return;
+            StateMachine.SetState(UnitState.Dead);
+            SelectedByPlayer = false;
+            WasSelectedByPlayer?.Invoke(false);
+            Died?.Invoke();
+        }
 
-            Health.TakeDamage(amount);
-        }
-        public void Heal(float amount)
-        {
-            Health.Heal(amount);
-        }
-        public void MovementComplete(Vector3 position)
-        {
-            Position = position;
-
-            StateMachine.SetState(UnitState.Idle);
-        }
+        // ─── Selection & control ──────────────────────────────
         public void Select(bool selected)
         {
-            if (!Health.IsAlive) return;
+            if (!BodyHealth.IsAlive) return;
 
             SelectedByPlayer = selected;
             WasSelectedByPlayer?.Invoke(selected);
         }
+        public void SetControlMode(UnitControlMode mode)
+        {
+            if (ControlMode == mode) return;
+
+            if (mode == UnitControlMode.Direct)
+                StopMovement();
+
+            ControlMode = mode;
+            ControlModeChanged?.Invoke(mode);
+        }
+
+        // ─── Movement ─────────────────────────────────────────        
         public void PerformWalk(Vector3 destination)
         {
-            if (!Health.IsAlive) return;
+            if (!BodyHealth.IsAlive) return;
 
             FixedPosition = destination;
 
@@ -134,28 +148,11 @@ namespace Aegis.Core
         }
         public void PerformChase(WorldEntity entity)
         {
-            // Debug.Log("Performing chase!");
-
             ChaseTo?.Invoke(entity.Position);
         }
-        public void SetControlMode(UnitControlMode mode)
-        {
-            if (ControlMode == mode) return;
-
-            if (mode == UnitControlMode.Direct)
-                StopMovement();
-
-            ControlMode = mode;
-            ControlModeChanged?.Invoke(mode);
-        }
-        /// <summary>
-        /// Прямий рух гравця (Odyssey-режим). worldDirection — вже
-        /// нормалізований напрямок у світових координатах (без Y),
-        /// порахований у View з урахуванням орієнтації камери.
-        /// </summary>
         public void PerformDirectMove(Vector3 worldDirection)
         {
-            if (!Health.IsAlive) return;
+            if (!BodyHealth.IsAlive) return;
             if (ControlMode != UnitControlMode.Direct) return;
 
             if (worldDirection.sqrMagnitude > 0.0001f) {
@@ -169,6 +166,14 @@ namespace Aegis.Core
         {
             ExecutedStopMovement?.Invoke();
         }
+        public void MovementComplete(Vector3 position)
+        {
+            Position = position;
+
+            StateMachine.SetState(UnitState.Idle);
+        }
+
+        // ─── Combat ───────────────────────────────────────────
         public void PerformAttackAction(WorldEntity target)
         {
             ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Attack, target.Position));
@@ -179,36 +184,31 @@ namespace Aegis.Core
             if (AttackTarget == null) return;
             ProjectileLaunched?.Invoke(target.Position);
         }
-        public void PerformAttackImpact(WorldEntity target)
+        public void PerformAttackImpact(WorldEntity target, BodyPartId partId)
         {
             if (target == null) return;
 
             if (Weaponry.BowActive)
                 PerformProjectileLaunch(target);
             else {
-                ApplyDamage(target, Weaponry.Damage);
+                ApplyDamage(target, partId, Weaponry.Damage);
             }
         }
-        public void ApplyProjectileDamage(WorldEntity target)
+        public void ApplyProjectileDamage(WorldEntity target, BodyPartId partId)
         {
-            ApplyDamage(target, Weaponry.Damage);
+            ApplyDamage(target, partId, Weaponry.Damage);
         }
-        private void ApplyDamage(WorldEntity target, float damage)
+        private void ApplyDamage(WorldEntity target, BodyPartId partId, float damage)
         {
             if (target != null && target is Unit unit) {
-                unit.TakeDamage(damage);
+                unit.TakeDamage(partId, damage);
             }
         }
-        public void PerformDeath()
-        {
-            StateMachine.SetState(UnitState.Dead);
-            SelectedByPlayer = false;
-            WasSelectedByPlayer?.Invoke(false);
-            Died?.Invoke();
-        }
+
+        // ─── AI / interactions ────────────────────────────────
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
-            if (!Health.IsAlive) return;
+            if (!BodyHealth.IsAlive) return;
 
             WorldEntity closest = null;
             float closestSqrDist = SearchRadius * SearchRadius;
@@ -217,7 +217,7 @@ namespace Aegis.Core
                 if (e is IFactionMember fmEntity) {
                     if (fmEntity == this || fmEntity.FactionId == FactionId)
                         continue;
-                    else if (fmEntity is IDamageable damageable && !damageable.Health.IsAlive)
+                    else if (fmEntity is IDamageable damageable && !damageable.IsAlive)
                         continue;
                 } else continue;
 
@@ -231,12 +231,7 @@ namespace Aegis.Core
 
             StateMachine.UpdateInteractions(closest);
         }
-        /// <summary>
-        /// Перевіряє, чи немає перешкод (стін, рельєфу тощо) між очима цього
-        /// юніта і ціллю. Physics.Linecast — тому й дорого викликати щокадрово,
-        /// але UpdateInteractions і так тіктиться раз на _interationsIntervalTime
-        /// (WorldUpdater), тож це прийнятно без додаткового троттлінгу.
-        /// </summary>
+
         private bool HasLineOfSight(WorldEntity target)
         {
             if (_common.ObstacleMask.value == 0) return true; // маска не налаштована — перевірку не робимо

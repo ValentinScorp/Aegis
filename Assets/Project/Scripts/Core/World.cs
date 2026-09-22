@@ -22,7 +22,7 @@ namespace Aegis.Core
         private World()
         {
         }
-        public Unit CreateUnit(Vector3 position, int factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
+        public Unit CreateUnit(Vector3 position, FactionId factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
             var unit = new Unit(position, factionId, type, config, common);
             _entities.Add(unit);
@@ -30,7 +30,7 @@ namespace Aegis.Core
             return unit;
         }
         public void AssignPlayerUnit(Unit unit)
-        {
+        {            
             PlayerUnit = unit;
             PlayerUnitAssigned?.Invoke(unit);
         }

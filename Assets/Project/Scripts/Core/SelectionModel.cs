@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Aegis.Core
 {
@@ -18,6 +19,7 @@ namespace Aegis.Core
             _selectedUnit = unit;
             _selectedUnit?.Select(true);
             Changed?.Invoke(_selectedUnit);
+            Debug.Log("Invoke Select!");
         }
 
         public void Clear() => Select(null);

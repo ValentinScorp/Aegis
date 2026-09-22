@@ -28,8 +28,10 @@ namespace Aegis.View
                     player = unit;
                 }
             }
-            if (player != null) _world.AssignPlayerUnit(player);
-            else Debug.LogWarning("Жоден UnitSpawnPoint не позначений IsPlayerControlled.");
+            if (player != null) 
+                _world.AssignPlayerUnit(player);
+            else 
+                Debug.LogWarning("Жоден UnitSpawnPoint не позначений IsPlayerControlled.");
         }
         private void OnDisable()
         {

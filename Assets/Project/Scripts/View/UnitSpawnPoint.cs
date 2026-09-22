@@ -6,13 +6,15 @@ namespace Aegis.View
     public class UnitSpawnPoint : MonoBehaviour
     {
         [field: SerializeField] public bool IsPlayerControlled { get; private set; }
-        [field: SerializeField] public int FactionId { get; private set; } = 1;
+        [field: SerializeField] public FactionId FactionId { get; private set; } = FactionId.Red;
         [field: SerializeField] public UnitType UnitType { get; private set; } = UnitType.Archer;
+        [SerializeField] private FactionPalette palette;
+        [SerializeField] private float _gizmoRadius = 0.5f;
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, 0.5f);
+            Gizmos.color = palette != null ? palette.GetColor(FactionId) : Color.magenta;;
+            Gizmos.DrawWireSphere(transform.position, _gizmoRadius);
         }
     }
 }

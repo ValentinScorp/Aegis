@@ -1,5 +1,350 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &117077175299718124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 948881361864930482}
+  - component: {fileID: 4979791239492129323}
+  - component: {fileID: 7717305890400222553}
+  m_Layer: 16
+  m_Name: HitZone_ArmLower_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &948881361864930482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117077175299718124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2464586717666658958}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4979791239492129323
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117077175299718124}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Height: 0.35
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.17, z: 0}
+--- !u!114 &7717305890400222553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117077175299718124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 4
+--- !u!1 &591242277422604355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4771553782367054655}
+  - component: {fileID: 5489199451507841455}
+  - component: {fileID: 3754059622506976082}
+  m_Layer: 16
+  m_Name: HitZone_ArmUpper_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4771553782367054655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591242277422604355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6891246677987494558}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &5489199451507841455
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591242277422604355}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.07
+  m_Height: 0.38
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.15, z: 0}
+--- !u!114 &3754059622506976082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591242277422604355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 4
+--- !u!1 &1788440981668273608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3682287610073740430}
+  - component: {fileID: 5264483591473405915}
+  - component: {fileID: 6124688049920674467}
+  m_Layer: 16
+  m_Name: HitZone_Torso
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3682287610073740430
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788440981668273608}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.15866543, y: -4.2597106e-10, z: 0.000007792803, w: 0.9873324}
+  m_LocalPosition: {x: 0, y: -0.47322476, z: -0.11021444}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2165521772516949140}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &5264483591473405915
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788440981668273608}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.19
+  m_Height: 0.71
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.27, z: 0}
+--- !u!114 &6124688049920674467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788440981668273608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 2
+--- !u!1 &2225540657328186097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6349009809836732319}
+  - component: {fileID: 2092900473202457438}
+  - component: {fileID: 2055612219238871061}
+  m_Layer: 16
+  m_Name: HitZone_ArmLower_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6349009809836732319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2225540657328186097}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6763281404602918544}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &2092900473202457438
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2225540657328186097}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Height: 0.35
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.17, z: 0}
+--- !u!114 &2055612219238871061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2225540657328186097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 3
+--- !u!1 &4215003747227347583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4533743758042597728}
+  - component: {fileID: 1031796909724855164}
+  - component: {fileID: 4561764885598463107}
+  m_Layer: 16
+  m_Name: HItZone_LegUpper_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4533743758042597728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4215003747227347583}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4508072641814283656}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1031796909724855164
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4215003747227347583}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.09
+  m_Height: 0.48
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.21, z: 0}
+--- !u!114 &4561764885598463107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4215003747227347583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 5
 --- !u!1 &5009968616239787632
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,6 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e67d3b8c23a9041a3ef344d3e1d582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityView
+  _factionPalette: {fileID: 11400000, guid: 58ec9e9c620b09f409b321b341ce8f44, type: 2}
   _bowPrefab: {fileID: 6204959886361044491, guid: 2af3da8a2711c824c95b50d930e5494b, type: 3}
   _healthView: {fileID: 8501964369632210417}
   _projectileCatalog: {fileID: 11400000, guid: dba6814a3839e6241bd2fda0635eb230, type: 2}
@@ -300,6 +646,75 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!1 &5701583167071536534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3249789332416174271}
+  - component: {fileID: 5681258246415222783}
+  - component: {fileID: 2326527461719727249}
+  m_Layer: 16
+  m_Name: HitZone_Head
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3249789332416174271
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701583167071536534}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 492697119675659756}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &5681258246415222783
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701583167071536534}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1
+  m_Height: 0.35
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.18, z: 0}
+--- !u!114 &2326527461719727249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5701583167071536534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 1
 --- !u!1 &5888454316871074849
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,6 +747,75 @@ Transform:
   - {fileID: 4448496099563693979}
   m_Father: {fileID: 215086420609590629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5912473799485543836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7818299271526138401}
+  - component: {fileID: 1381432226132553094}
+  - component: {fileID: 5327649559802771499}
+  m_Layer: 16
+  m_Name: HItZone_LegLower_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7818299271526138401
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912473799485543836}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7851313171756515736}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1381432226132553094
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912473799485543836}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.07
+  m_Height: 0.58
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.22, z: 0}
+--- !u!114 &5327649559802771499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912473799485543836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 5
 --- !u!1 &6372502450058403511
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,6 +847,213 @@ Transform:
   m_Children: []
   m_Father: {fileID: 215086420609590629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7527484348298331096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7473231902845214454}
+  - component: {fileID: 4784201068905235025}
+  - component: {fileID: 7617086572372659076}
+  m_Layer: 16
+  m_Name: HItZone_LegUpper_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7473231902845214454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7527484348298331096}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4200072169187986039}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4784201068905235025
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7527484348298331096}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.09
+  m_Height: 0.48
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.21, z: 0}
+--- !u!114 &7617086572372659076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7527484348298331096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 6
+--- !u!1 &8245001191248050065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1800514488858422211}
+  - component: {fileID: 3495208611102929321}
+  - component: {fileID: 1115261399290465896}
+  m_Layer: 16
+  m_Name: HitZone_ArmUpper_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1800514488858422211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8245001191248050065}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7046027803694490503}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &3495208611102929321
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8245001191248050065}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.07
+  m_Height: 0.38
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.15, z: 0}
+--- !u!114 &1115261399290465896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8245001191248050065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 3
+--- !u!1 &8528395034481728506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1992080729878767467}
+  - component: {fileID: 3258572871009872468}
+  - component: {fileID: 6743903501963431196}
+  m_Layer: 16
+  m_Name: HItZone_LegLower_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1992080729878767467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8528395034481728506}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 695615107789758568}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &3258572871009872468
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8528395034481728506}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.07
+  m_Height: 0.58
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.22, z: 0}
+--- !u!114 &6743903501963431196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8528395034481728506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb3efc08e3d7e747b295dcf71ad2ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HitZoneView
+  _id: 6
 --- !u!1001 &4194683998733664368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -421,12 +1112,62 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 913b746b47871f24aa35b8def1c8be75, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -6612418624748110620, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3682287610073740430}
+    - targetCorrespondingSourceObject: {fileID: -4836606837817526884, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3249789332416174271}
+    - targetCorrespondingSourceObject: {fileID: -2594629549719985161, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1800514488858422211}
+    - targetCorrespondingSourceObject: {fileID: -1735431469291690272, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6349009809836732319}
+    - targetCorrespondingSourceObject: {fileID: 7319513265191521006, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4771553782367054655}
+    - targetCorrespondingSourceObject: {fileID: 1730924118110620414, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 948881361864930482}
+    - targetCorrespondingSourceObject: {fileID: -8882955602365102600, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4533743758042597728}
+    - targetCorrespondingSourceObject: {fileID: 6252110517958967784, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7818299271526138401}
+    - targetCorrespondingSourceObject: {fileID: 35788819261114887, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7473231902845214454}
+    - targetCorrespondingSourceObject: {fileID: 3715980544878387224, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1992080729878767467}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -7746498224137077902, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3070868607875388222}
   m_SourcePrefab: {fileID: 100100000, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+--- !u!4 &492697119675659756 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4836606837817526884, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &695615107789758568 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3715980544878387224, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2165521772516949140 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6612418624748110620, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2464586717666658958 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1730924118110620414, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3335032309338635010 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7746498224137077902, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
@@ -454,6 +1195,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &4200072169187986039 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 35788819261114887, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4218986865050820770 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 52452116352835794, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
@@ -462,6 +1208,11 @@ Transform:
 --- !u!4 &4448496099563693979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4508072641814283656 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8882955602365102600, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
   m_PrefabInstance: {fileID: 4194683998733664368}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &4827874010229883009 stripped
@@ -474,9 +1225,29 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7454755361139078087, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
   m_PrefabInstance: {fileID: 4194683998733664368}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &6763281404602918544 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1735431469291690272, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6880097031225637486 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1923739545201444322, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6891246677987494558 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7319513265191521006, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7046027803694490503 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -2594629549719985161, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7851313171756515736 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6252110517958967784, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
   m_PrefabInstance: {fileID: 4194683998733664368}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6860376316552560039
