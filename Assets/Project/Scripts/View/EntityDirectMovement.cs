@@ -98,10 +98,10 @@ namespace Aegis.View
             _unit = null;
         }
 
-        public void SetActive(bool active)
+        public void SetActive(bool value)
         {
-            _controller.enabled = active;
-            enabled = active;
+            _controller.enabled = value;
+            enabled = value;
             _hasPendingDirection = false;
             _verticalVelocity = 0f;
         }

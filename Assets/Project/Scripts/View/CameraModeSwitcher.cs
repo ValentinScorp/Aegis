@@ -49,8 +49,7 @@ namespace Aegis.Services
             if (_thirdPersonUnit == null) return;
             if (_camRig.CurrentMode != CameraMode.ThirdPerson) return;
 
-            // WASD в Odyssey-режимі керує не панорамою камери, а юнітом —
-            // напрямок рахуємо відносно поточного yaw камери.
+            // WASD movement            
             Vector2 move = _inputListener.CameraMoveInput;
             Quaternion yawRot = Quaternion.Euler(0f, _camRig.Yaw, 0f);
             Vector3 worldDir = yawRot * new Vector3(move.x, 0f, move.y);
@@ -58,12 +57,12 @@ namespace Aegis.Services
             _thirdPersonUnit.PerformDirectMove(worldDir);
         }
 
+        // --- Actions ------------------------------------
         private void OnFreeRequested()
         {
             ReleaseThirdPersonUnit();
             _camRig.SetMode(CameraMode.Free);
         }
-
         private void OnFollowRequested()
         {
             var unit = _selectionModel.Selected;
@@ -74,7 +73,6 @@ namespace Aegis.Services
             ReleaseThirdPersonUnit();
             _camRig.SetMode(CameraMode.Follow, unit);
         }
-
         private void OnThirdPersonRequested()
         {
             var unit = _selectionModel.Selected;
@@ -84,15 +82,21 @@ namespace Aegis.Services
             }
 
             EnterThirdPerson(unit);
+        }       
+        private void OnPlayerUnitAssigned(Unit unit)
+        {
+            // _selectionModel.Select(unit);
+            EnterThirdPerson(unit);
         }
-        public void EnterThirdPerson(Unit unit)
+
+        // --- Helpers ------------------------------------------------------
+        private void EnterThirdPerson(Unit unit)
         {
             ReleaseThirdPersonUnit();
             _thirdPersonUnit = unit;
             unit.SetControlMode(UnitControlMode.Direct);
             _camRig.SetMode(CameraMode.ThirdPerson, unit);
         }
-
         private void ReleaseThirdPersonUnit()
         {
             Debug.Log("ReleaseThirdPersonUnit");
@@ -101,11 +105,6 @@ namespace Aegis.Services
             _thirdPersonUnit.PerformDirectMove(Vector3.zero);
             _thirdPersonUnit.SetControlMode(UnitControlMode.Indirect);
             _thirdPersonUnit = null;
-        }
-        private void OnPlayerUnitAssigned(Unit unit)
-        {
-            _selectionModel.Select(unit);
-            EnterThirdPerson(unit);
         }
     }
 }

@@ -21,10 +21,15 @@ namespace Aegis.View
         {
             Unit player = null;
 
-            foreach (var p in FindObjectsByType<UnitSpawnPoint>(FindObjectsSortMode.None)) {
-                var unit = _world.CreateUnit(p.transform.position, p.FactionId, p.UnitType, _unitConfigRegistry.GetConfig(p.UnitType), _unitCommonConfig);
-                if (p.IsPlayerControlled) {
-                    if (player != null) Debug.LogWarning("Кілька UnitSpawnPoint з IsPlayerControlled!", p);
+            foreach (var spawnPoint in FindObjectsByType<UnitSpawnPoint>(FindObjectsSortMode.None)) {
+                var unit = _world.CreateUnit(   spawnPoint.transform.position, 
+                                                spawnPoint.FactionId, 
+                                                spawnPoint.UnitType, 
+                                                _unitConfigRegistry.GetConfig(spawnPoint.UnitType), 
+                                                _unitCommonConfig);
+                if (spawnPoint.IsPlayerControlled) {
+                    if (player != null) 
+                        Debug.LogWarning("Кілька UnitSpawnPoint з IsPlayerControlled!", spawnPoint);
                     player = unit;
                 }
             }

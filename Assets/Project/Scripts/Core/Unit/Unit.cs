@@ -29,7 +29,7 @@ namespace Aegis.Core
         // public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
         public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
         public float SearchRadius => _common.SearchRadius;
-        public float ChaseRadius => _common.ChaseRadius; 
+        public float ChaseRadius => _common.ChaseRadius;
         public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
         public float AttackRange => Weaponry.GetAttackRange();
         public bool CanShoot => Weaponry.HasBow;
@@ -43,6 +43,7 @@ namespace Aegis.Core
         public WorldEntity ChaseTarget { get; set; }
         public WorldEntity ClosestTarget { get; set; }
         public bool SelectedByPlayer { get; private set; }
+        public bool IsPlayerControlled { get; private set; }
         public UnitControlMode ControlMode { get; private set; } = UnitControlMode.Indirect;
 
         // ─── Events ───────────────────────────────────────────
@@ -119,6 +120,14 @@ namespace Aegis.Core
 
             SelectedByPlayer = selected;
             WasSelectedByPlayer?.Invoke(selected);
+        }
+        public void SetPlayerControlled(bool value)
+        {
+            IsPlayerControlled = value;
+            if (value)
+                SetControlMode(UnitControlMode.Direct);
+            else
+                SetControlMode(UnitControlMode.Indirect);
         }
         public void SetControlMode(UnitControlMode mode)
         {
@@ -209,6 +218,7 @@ namespace Aegis.Core
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
             if (!BodyHealth.IsAlive) return;
+            if (ControlMode == UnitControlMode.Direct) return;
 
             WorldEntity closest = null;
             float closestSqrDist = SearchRadius * SearchRadius;
@@ -257,6 +267,7 @@ namespace Aegis.Core
 
         internal void UpdateActions(float deltaTime)
         {
+            if (ControlMode == UnitControlMode.Direct) return;
             StateMachine.UpdateActions(deltaTime);
         }
     }

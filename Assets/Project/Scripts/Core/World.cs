@@ -30,8 +30,12 @@ namespace Aegis.Core
             return unit;
         }
         public void AssignPlayerUnit(Unit unit)
-        {            
+        {
+            if (PlayerUnit is not null) {
+                PlayerUnit.SetPlayerControlled(false);
+            }
             PlayerUnit = unit;
+            unit.SetPlayerControlled(true);
             PlayerUnitAssigned?.Invoke(unit);
         }
         public void OnInteractionsUpdate()
