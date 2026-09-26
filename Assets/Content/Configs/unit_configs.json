@@ -5,30 +5,30 @@
 			"base_strength": 10,
 			"base_speed": 4,
 			"base_spirit": 7,
-			"main_hand_primary": "sword_iron",
-			"off_hand_primary": "shield_iron",
-			"main_hand_secondary": "none",
-			"off_hand_secondary": "none"
+			"main_weapon_primary": "sword_iron",
+			"off_weapon_primary": "shield_iron",
+			"main_weapon_secondary": "none",
+			"off_weapon_secondary": "none"
 		},
 		{
 			"unit_type": "Hoplite",
 			"base_strength": 12,
 			"base_speed": 5,
 			"base_spirit": 4,
-			"main_hand_primary": "dory_bronze",
-			"off_hand_primary": "aspis_bronze",
-			"main_hand_secondary": "none",
-			"off_hand_secondary": "none"
+			"main_weapon_primary": "dory_bronze",
+			"off_weapon_primary": "aspis_bronze",
+			"main_weapon_secondary": "none",
+			"off_weapon_secondary": "none"
 		},
 		{
 			"unit_type": "Archer",
 			"base_strength": 5,
 			"base_speed": 12,
 			"base_spirit": 3,
-			"main_hand_primary": "bow_hunter",
-			"off_hand_primary": "none",
-			"main_hand_secondary": "sword_iron",
-			"off_hand_secondary": "none"
+			"main_weapon_primary": "bow_hunter",
+			"off_weapon_primary": "none",
+			"main_weapon_secondary": "sword_iron",
+			"off_weapon_secondary": "none"
 		}
 	]
 }

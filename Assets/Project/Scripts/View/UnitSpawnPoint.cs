@@ -9,12 +9,15 @@ namespace Aegis.View
         [field: SerializeField] public FactionId FactionId { get; private set; } = FactionId.Red;
         [field: SerializeField] public UnitType UnitType { get; private set; } = UnitType.Archer;
         [SerializeField] private FactionPalette palette;
-        [SerializeField] private float _gizmoRadius = 0.5f;
+        [SerializeField] private float _gizmoRadius = 0.2f;
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = palette != null ? palette.GetColor(FactionId) : Color.magenta;;
-            Gizmos.DrawWireSphere(transform.position, _gizmoRadius);
+            Gizmos.color = palette != null ? palette.GetColor(FactionId) : Color.magenta;
+            if (IsPlayerControlled)
+                Gizmos.DrawSphere(transform.position + Vector3.up * 0.1f, _gizmoRadius);
+            else
+                Gizmos.DrawWireSphere(transform.position, _gizmoRadius);
         }
     }
 }

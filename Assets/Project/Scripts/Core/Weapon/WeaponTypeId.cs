@@ -1,12 +1,13 @@
 namespace Aegis.Core
 {
-    public enum WeaponType
+    public enum WeaponTypeId
     {
         None,
         OneHandSword,
         OneHandDagger,
         OneHandSpear,
         Bow,
+        TwoHandSword,
         Shield
     }
 }

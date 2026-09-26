@@ -12,6 +12,7 @@ namespace Aegis.View
         [SerializeField] private float _hitDistance = 0.1f;
         [SerializeField] private LayerMask _groundMask;
         [SerializeField] private float _maxLifetime = 10f;
+        [SerializeField] private float _drag = 0.003f;
         private Unit _owner;
         private WorldEntity _target;
         private Vector3 _velocity;
@@ -46,6 +47,7 @@ namespace Aegis.View
 
             Vector3 prev = transform.position;
             _velocity.y -= _gravity * dt;
+            _velocity -= _velocity * (_drag * _velocity.magnitude * dt); // додали опір від повітря
             Vector3 next = prev + _velocity * dt;
 
             // 1. Влучання в ціль: перевіряємо відрізок руху за кадр, а не лише точку,

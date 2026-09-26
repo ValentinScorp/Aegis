@@ -8,14 +8,17 @@ namespace Aegis.Services
     {
         private PlayerInputActions _inputActions;
         private HotkeyListener _hotkeyListener;
+        private bool _lookWasHeld;
+        private Vector2 _savedCursorPos;
         public event Action<Vector2> TapPerformed;
         public event Action AttackPerformed;
         public Vector2 CameraMoveInput => _inputActions.Camera.Move.ReadValue<Vector2>();
         public float CameraVerticalInput => _inputActions.Camera.Vertical.ReadValue<float>();
         // Потребує дії "Look" (Vector2, binding "<Mouse>/delta") у мапі "Camera" — додати у Input Actions Editor.
         public Vector2 LookDelta => IsLookHeld ? _inputActions.Camera.Look.ReadValue<Vector2>() : Vector2.zero;
+        public Vector2 PointerPosition => _inputActions.Gameplay.Point.ReadValue<Vector2>();
         public bool IsLookHeld => _inputActions.Camera.LookHold.IsPressed();
-        private bool _lookWasHeld;
+         public bool IsAimHeld => _inputActions.Gameplay.Aim.IsPressed(); 
 
         public event Action FreeCameraRequested;
         public event Action FollowCameraRequested;
@@ -47,8 +50,15 @@ namespace Aegis.Services
             _hotkeyListener.Update();
             bool held = IsLookHeld;
             if (held != _lookWasHeld) {
-                Cursor.lockState = held ? CursorLockMode.Locked : CursorLockMode.None;
-                Cursor.visible = !held;
+                if (held) {
+                    _savedCursorPos = Mouse.current.position.ReadValue();
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                } else {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                    Mouse.current.WarpCursorPosition(_savedCursorPos);
+                }
                 _lookWasHeld = held;
             }
         }

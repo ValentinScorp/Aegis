@@ -360,13 +360,16 @@ GameObject:
   - component: {fileID: 5239837113355921407}
   - component: {fileID: 360421993291956606}
   - component: {fileID: 6023794523833144764}
-  - component: {fileID: 6732715348411497767}
-  - component: {fileID: 1244903504320578063}
-  - component: {fileID: 6473099938786477667}
-  - component: {fileID: -1823739907906511677}
   - component: {fileID: 2362292487489536303}
   - component: {fileID: -4847669449881767682}
   - component: {fileID: 5472173501788622010}
+  - component: {fileID: 9219757580616983336}
+  - component: {fileID: 2452688038647769536}
+  - component: {fileID: 5937537767196262191}
+  - component: {fileID: 7976722988778948260}
+  - component: {fileID: 8027207417067980098}
+  - component: {fileID: 7467569691576019607}
+  - component: {fileID: 837520493443552067}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -482,62 +485,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
---- !u!114 &6732715348411497767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5009968616239787632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9f93b27ad2a70f44b0c9717592c3ca7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.WeaponSocket
-  _socketType: 0
-  _socket: {fileID: 6719966984637461431}
---- !u!114 &1244903504320578063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5009968616239787632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9f93b27ad2a70f44b0c9717592c3ca7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EquipmentSlotView
-  _socketType: 1
-  _socket: {fileID: 4827874010229883009}
---- !u!114 &6473099938786477667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5009968616239787632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9f93b27ad2a70f44b0c9717592c3ca7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EquipmentSlotView
-  _socketType: 5
-  _socket: {fileID: 6880097031225637486}
---- !u!114 &-1823739907906511677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5009968616239787632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9f93b27ad2a70f44b0c9717592c3ca7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EquipmentSlotView
-  _socketType: 3
-  _socket: {fileID: 4218986865050820770}
 --- !u!114 &2362292487489536303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,8 +497,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74ee7229c02fc940890dec9d5378713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.UnitWeaponryView
-  _weaponPrefabs: {fileID: 11400000, guid: ea88bcfad5d0e5741b8ea61a68074d49, type: 2}
-  _holsters: {fileID: 11400000, guid: f57196b3f1f20be4e94e553402bf5149, type: 2}
+  _weaponPrefabCatalog: {fileID: 0}
+  _holsterConfig: {fileID: 0}
 --- !u!114 &-4847669449881767682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,6 +538,104 @@ CharacterController:
   m_SkinWidth: 0.05
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.98, z: 0}
+--- !u!114 &9219757580616983336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8153ee17cac13b04abf1443cb087e98d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HolsterSocketView
+  _socket: {fileID: 6880097031225637486}
+  _id: 2
+--- !u!114 &2452688038647769536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8153ee17cac13b04abf1443cb087e98d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HolsterSocketView
+  _socket: {fileID: 5419051500329760709}
+  _id: 1
+--- !u!114 &5937537767196262191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8153ee17cac13b04abf1443cb087e98d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HolsterSocketView
+  _socket: {fileID: 4218986865050820770}
+  _id: 3
+--- !u!114 &7976722988778948260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8153ee17cac13b04abf1443cb087e98d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HolsterSocketView
+  _socket: {fileID: 2825023427570283371}
+  _id: 4
+--- !u!114 &8027207417067980098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8153ee17cac13b04abf1443cb087e98d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HolsterSocketView
+  _socket: {fileID: 4218986865050820770}
+  _id: 5
+--- !u!114 &7467569691576019607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0ab8e37a1a1a7a48acbde7485fe6de8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HandSocketView
+  _socket: {fileID: 6719966984637461431}
+  _id: 0
+--- !u!114 &837520493443552067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5009968616239787632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0ab8e37a1a1a7a48acbde7485fe6de8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HandSocketView
+  _socket: {fileID: 4827874010229883009}
+  _id: 1
 --- !u!1 &5029112721878601802
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,6 +1213,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1730924118110620414, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
   m_PrefabInstance: {fileID: 4194683998733664368}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2825023427570283371 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7132860641954319589, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3335032309338635010 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7746498224137077902, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
@@ -1218,6 +1268,11 @@ Transform:
 --- !u!4 &4827874010229883009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -489046236115058447, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
+  m_PrefabInstance: {fileID: 4194683998733664368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5419051500329760709 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1080067316387219531, guid: f752b3115f4ceb94bb7ec229b9fe90ed, type: 3}
   m_PrefabInstance: {fileID: 4194683998733664368}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6719966984637461431 stripped

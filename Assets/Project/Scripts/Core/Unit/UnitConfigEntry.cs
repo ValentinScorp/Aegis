@@ -5,10 +5,10 @@ public class UnitConfigEntry
     public float base_strength;
     public float base_speed;
     public float base_spirit;
-    public string main_hand_primary;
-    public string off_hand_primary;
-    public string main_hand_secondary;
-    public string off_hand_secondary;
+    public string main_weapon_primary;
+    public string off_weapon_primary;
+    public string main_weapon_secondary;
+    public string off_weapon_secondary;
 }
 
 [System.Serializable]

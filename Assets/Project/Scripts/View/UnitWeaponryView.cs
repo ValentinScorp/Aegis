@@ -1,28 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using Aegis.Core;
+using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Aegis.View
 {
     public class UnitWeaponryView : MonoBehaviour
     {
-        [SerializeField] private WeaponPrefabCatalog _weaponPrefabs;
-        [SerializeField] private WeaponHolsterConfig _holsters;
-
-        private Dictionary<WeaponSlotType, WeaponSlotView> _slots;
+        [SerializeField] private WeaponPrefabCatalog _weaponPrefabCatalog;
+        [SerializeField] private WeaponHolsterConfig _holsterConfig;
+        private Dictionary<HandSocketId, HandSocketView> _handSockets;
+        private Dictionary<HolsterSocketId, HolsterSocketView> _holsterSockets;
         private UnitWeaponry _weaponry;
-
-        // інстанси по id зброї (живуть поки view живий)
-        private readonly Dictionary<string, GameObject> _instances = new();
-
-        // що зараз у якому слоті (щоб не шукати по ієрархії)
-        private readonly Dictionary<WeaponSlotType, string> _slotOccupant = new();
+        private Dictionary<WeaponEquipId, GameObject> _weaponInstances = new();
 
         private void Awake()
         {
-            _slots = GetComponentsInChildren<WeaponSlotView>().ToDictionary(s => s.SlotType);
+            _handSockets = GetComponentsInChildren<HandSocketView>().ToDictionary(s => s.Id);
+            _holsterSockets = GetComponentsInChildren<HolsterSocketView>().ToDictionary(s => s.Id);
         }
+        private void OnDestroy() => ClearAll();
 
         public void Bind(UnitWeaponry weaponry)
         {
@@ -32,119 +31,122 @@ namespace Aegis.View
             Refresh(_weaponry);
             _weaponry.Changed += Refresh;
         }
-
         public void Unbind()
         {
             ClearAll();
             _weaponry = null;
         }
-
         void SpawnWeaponInstances(UnitWeaponry weaponry)
         {
-            void SpawnWeapon(WeaponConfig cfg)
-            {
-                if (cfg == null || string.IsNullOrEmpty(cfg.Id)) return;
-
-                var prefab = _weaponPrefabs.GetPrefab(cfg.Id);
-                if (prefab == null) return;
-
-                var go = Instantiate(prefab, transform);
-                go.name = cfg.Id;
-                go.SetActive(false);
-                _instances[cfg.Id] = go;
-            }            
-            
-            SpawnWeapon(weaponry.Primary?.MainHand);
-            SpawnWeapon(weaponry.Primary?.OffHand);
-            SpawnWeapon(weaponry.Secondary?.MainHand);
-            SpawnWeapon(weaponry.Secondary?.OffHand);
+            SpawnWeapon(weaponry.WeaponSets[WeaponSetId.Primary].MainWeapon, WeaponEquipId.PrimaryMain);
+            SpawnWeapon(weaponry.WeaponSets[WeaponSetId.Primary].OffWeapon, WeaponEquipId.PrimaryOff);
+            SpawnWeapon(weaponry.WeaponSets[WeaponSetId.Secondary].MainWeapon, WeaponEquipId.SecondaryMain);
+            SpawnWeapon(weaponry.WeaponSets[WeaponSetId.Secondary].OffWeapon, WeaponEquipId.SecondaryOff);
         }
+        private void SpawnWeapon(WeaponConfig cfg, WeaponEquipId equipId)
+        {
+            if (cfg == null || string.IsNullOrEmpty(cfg.Id)) return;
 
+            var prefab = _weaponPrefabCatalog.GetPrefab(cfg.Id);
+            if (prefab == null) return;
+
+            var go = Instantiate(prefab, transform);
+            go.name = cfg.Id;
+            go.SetActive(false);
+            _weaponInstances[equipId] = go;
+        }
         public void Refresh(UnitWeaponry weaponry)
         {
-            if (weaponry == null) return;
+            if (weaponry == null) {
+                Debug.LogError($"[{nameof(UnitWeaponryView)}] Refresh called with null weaponry on {name}.");
+                return;
+            }
             _weaponry = weaponry;
 
             DetachAllFromSlots();
 
-            var occupied = new HashSet<WeaponSlotType>();
-            var active = _weaponry.Active;
-            var other = active ==_weaponry.Primary ? _weaponry.Secondary : _weaponry.Primary;
+            bool handPrimary = false;
+            bool handSecondary = false;
 
-            // Active — в руках
-            PlaceInSlot(active?.MainHand, WeaponSlotType.HandRight, occupied);
-            PlaceInSlot(active?.OffHand,  WeaponSlotType.HandLeft,  occupied);
-
-            // Інший сет — у holster
-            PlaceHolstered(other?.MainHand, occupied);
-            PlaceHolstered(other?.OffHand,  occupied);
+            if (!_weaponry.IsHolstered) {
+                switch (_weaponry.ActiveSet) {
+                    case WeaponSetId.Primary:
+                        handPrimary = true;
+                        break;
+                    case WeaponSetId.Secondary:
+                        handSecondary = true;
+                        break;
+                    default:
+                        Debug.LogError($"[{nameof(UnitWeaponryView)}] Unhandled ActiveSet '{_weaponry.ActiveSet}' on {name}.");
+                        break;
+                }
+            }
+            PlaceSet(WeaponSetId.Primary, hand: handPrimary);
+            PlaceSet(WeaponSetId.Secondary, hand: handSecondary);
         }
-
-        /// <summary>Все з рук у holster (idle / sheathe).</summary>
-        public void SheatheAll()
+        private void PlaceSet(WeaponSetId set, bool hand)
         {
-            if (_weaponry == null) return;
-            DetachAllFromSlots();
+            var mainWeapon = _weaponry.GetWeaponType(set, WeaponRoleId.Main);
+            var offWeapon = _weaponry.GetWeaponType(set, WeaponRoleId.Off);
 
-            var occupied = new HashSet<WeaponSlotType>();
-            var w = _weaponry;
-            PlaceHolstered(_weaponry.Primary?.MainHand, occupied);
-            PlaceHolstered(_weaponry.Primary?.OffHand, occupied);
-            PlaceHolstered(_weaponry.Secondary?.MainHand, occupied);
-            PlaceHolstered(_weaponry.Secondary?.OffHand, occupied);
+            var mainEquip = set == WeaponSetId.Primary ? WeaponEquipId.PrimaryMain : WeaponEquipId.SecondaryMain;
+            var offEquip = set == WeaponSetId.Primary ? WeaponEquipId.PrimaryOff : WeaponEquipId.SecondaryOff;
+
+            if (hand) {
+                var mainHand = WeaponGrip.HandSlot(mainWeapon);
+                TryPlaceHand(mainEquip, mainHand);
+                TryPlaceHand(offEquip, HandSocketId.Left);
+            } else {
+                var mainHolster = _holsterConfig.GetHolster(mainWeapon, set, WeaponRoleId.Main);
+                var offHolster = _holsterConfig.GetHolster(offWeapon, set, WeaponRoleId.Off);
+                TryPlaceHolster(mainEquip, mainHolster);
+                TryPlaceHolster(offEquip, offHolster);
+            }
         }
-
-        void PlaceHolstered(WeaponConfig cfg, HashSet<WeaponSlotType> occupied)
+        private void TryPlaceHolster(WeaponEquipId equipId, HolsterSocketId holsterId)
         {
-            if (cfg == null) return;
-            _holsters.TryGetHolsters(cfg.WeaponType, out var primary, out var secondary);
-            var slot = !occupied.Contains(primary) ? primary : secondary;
-            PlaceInSlot(cfg, slot, occupied);
+            if (!_weaponInstances.TryGetValue(equipId, out var instance)) return; // немає зброї в слоті — нема що ставити, це норма
+            if (holsterId == HolsterSocketId.None) return; // холстер навмисно не потрібен
+
+            if (!_holsterSockets.TryGetValue(holsterId, out var socket)) {
+                Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Holster socket '{holsterId}' not found on {name}.");
+                return;
+            }
+            PlaceInSlot(instance, socket);
         }
 
-        void PlaceInSlot(WeaponConfig cfg, WeaponSlotType slotType, HashSet<WeaponSlotType> occupied)
+        private void TryPlaceHand(WeaponEquipId equipId, HandSocketId handId)
         {
-            if (cfg == null) return;
-            if (!_instances.TryGetValue(cfg.Id, out var go)) return;
-            if (!_slots.TryGetValue(slotType, out var slot)) return;
+            if (!_weaponInstances.TryGetValue(equipId, out var instance)) return;
 
-            // якщо слот зайнятий іншою зброєю — знімаємо
-            if (_slotOccupant.TryGetValue(slotType, out var oldId) && oldId != cfg.Id)
-                Detach(oldId);
-
-            slot.Attach(go); // parent + local pose, SetActive(true)
-            _slotOccupant[slotType] = cfg.Id;
-            occupied.Add(slotType);
-            go.SetActive(true);
+            if (!_handSockets.TryGetValue(handId, out var socket)) {
+                Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Hand socket '{handId}' not found on {name}.");
+                return;
+            }
+            PlaceInSlot(instance, socket);
         }
-
+        private void PlaceInSlot(GameObject weaponInst, WeaponSocketView holsterSocket)
+        {
+            weaponInst.transform.SetParent(holsterSocket.transform, false);
+        }
         void DetachAllFromSlots()
         {
-            foreach (var id in _instances.Keys.ToList())
+            foreach (var id in _weaponInstances.Keys.ToList())
                 Detach(id);
-            _slotOccupant.Clear();
         }
-
-        void Detach(string weaponId)
+        void Detach(WeaponEquipId equipId)
         {
-            if (!_instances.TryGetValue(weaponId, out var go)) return;
-            go.transform.SetParent(transform, false); // «склад» на юніті
+            if (!_weaponInstances.TryGetValue(equipId, out var go)) return;
+            go.transform.SetParent(transform, false);
             go.SetActive(false);
-
-            // прибрати з _slotOccupant
-            foreach (var kv in _slotOccupant.ToList())
-                if (kv.Value == weaponId)
-                    _slotOccupant.Remove(kv.Key);
         }
 
-        void ClearAll()
+        private void ClearAll()
         {
             DetachAllFromSlots();
-            foreach (var go in _instances.Values)
+            foreach (var go in _weaponInstances.Values)
                 if (go != null) Destroy(go);
-            _instances.Clear();
+            _weaponInstances.Clear();
         }
-
-        private void OnDestroy() => ClearAll();
     }
 }

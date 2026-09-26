@@ -31,8 +31,8 @@ namespace Aegis.Core
             int created = 0, updated = 0;
 
             foreach (var entry in data.items) {
-                if (!TryParseWeaponType(entry.weapon_type, out WeaponType parsedType)) {
-                    Debug.LogWarning($"Unknown WeaponType '{entry.weapon_type}' for '{entry.id}', skipped.");
+                if (!TryParseWeaponId(entry.weapon_id, out WeaponTypeId parsedId)) {
+                    Debug.LogWarning($"Unknown WeaponId '{entry.weapon_id}' for '{entry.id}', skipped.");
                     continue;
                 }
 
@@ -51,7 +51,7 @@ namespace Aegis.Core
                 config.Id = entry.id;
                 config.DisplayName = entry.display_name;
                 config.Animation = entry.animation;
-                config.WeaponType = parsedType;
+                config.WeaponType = parsedId;
                 config.ProjectileId = entry.projectile;
                 config.Damage = entry.damage;
                 config.AttackRange = entry.attack_range;
@@ -68,8 +68,8 @@ namespace Aegis.Core
             Debug.Log($"Import done: {created} created, {updated} updated.");
         }
 
-        // "one_hand_sword" -> "OneHandSword", бо Enum.TryParse не розбирає snake_case сам
-        private static bool TryParseWeaponType(string snakeCase, out WeaponType result)
+        // "one_hand_sword" -> "OneHandSword"
+        private static bool TryParseWeaponId(string snakeCase, out WeaponTypeId result)
         {
             string pascalCase = string.Concat(
                 snakeCase.Split('_').Select(w => char.ToUpper(w[0]) + w.Substring(1))

@@ -14,9 +14,9 @@ namespace Aegis.Core
         public float BaseSpirit;
 
         [Header("Weaponry")]
-        public WeaponConfig MainHandPrimary;
-        public WeaponConfig OffHandPrimary;
-        public WeaponConfig MainHandSecondary;
-        public WeaponConfig OffHandSecondary;
+        public WeaponConfig MainWeaponPrimary;
+        public WeaponConfig OffWeaponPrimary;
+        public WeaponConfig MainWeaponSecondary;
+        public WeaponConfig OffWeaponSecondary;
     }
 }

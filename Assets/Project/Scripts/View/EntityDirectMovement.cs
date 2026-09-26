@@ -49,8 +49,7 @@ namespace Aegis.View
             _controller.Move(motion * Time.deltaTime);
 
             // TIMCHASOVYI DEBUG — прибрати після діагностики
-            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 5f))
-            {
+            if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 5f)) {
                 float capsuleBottom = _controller.bounds.min.y;
                 float floorY = hit.point.y;
                 // Debug.Log($"[DirectMove] transform.y={transform.position.y:F4} " +
@@ -61,20 +60,20 @@ namespace Aegis.View
                 //           $"vVel={_verticalVelocity:F3} " +
                 //           $"center={_controller.center} height={_controller.height} " +
                 //           $"skin={_controller.skinWidth} radius={_controller.radius}");
-            }
-            else
-            {
+            } else {
                 // Debug.Log($"[DirectMove] transform.y={transform.position.y:F4} " +
                 //           $"capsule.bottom={_controller.bounds.min.y:F4} " +
                 //           $"floor(raycast)=НЕ ЗНАЙДЕНО (немає колайдера під ногами!) " +
                 //           $"isGrounded={_controller.isGrounded}");
             }
-
-            if (direction.sqrMagnitude > 0.0001f)
-            {
-                Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot,
+            if (_unit.IsAiming) {
+                direction = Vector3.zero; // під час натягування стоїмо
+                transform.rotation = Quaternion.RotateTowards(transform.rotation,
+                    Quaternion.LookRotation(_unit.AimDirection, Vector3.up),
                     _rotationSpeedDegPerSec * Time.deltaTime);
+            } else if (direction.sqrMagnitude > 0.0001f) {
+                Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, _rotationSpeedDegPerSec * Time.deltaTime);
             }
         }
 
@@ -110,7 +109,7 @@ namespace Aegis.View
         {
             worldDirection.y = 0f;
             _pendingDirection = worldDirection.sqrMagnitude > 1f ? worldDirection.normalized : worldDirection;
-            _hasPendingDirection = true;            
+            _hasPendingDirection = true;
         }
     }
 }

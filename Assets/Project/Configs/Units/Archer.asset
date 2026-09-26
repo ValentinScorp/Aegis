@@ -16,7 +16,7 @@ MonoBehaviour:
   BaseStrength: 5
   BaseSpeed: 12
   BaseSpirit: 3
-  MainHandPrimary: {fileID: 11400000, guid: f13c71e24e76ab245b0e3f1526c0fecc, type: 2}
-  OffHandPrimary: {fileID: 0}
-  MainHandSecondary: {fileID: 11400000, guid: f7acf47c8e508a94782385c5a96c4cda, type: 2}
-  OffHandSecondary: {fileID: 0}
+  MainWeaponPrimary: {fileID: 11400000, guid: f13c71e24e76ab245b0e3f1526c0fecc, type: 2}
+  OffWeaponPrimary: {fileID: 0}
+  MainWeaponSecondary: {fileID: 11400000, guid: f7acf47c8e508a94782385c5a96c4cda, type: 2}
+  OffWeaponSecondary: {fileID: 0}

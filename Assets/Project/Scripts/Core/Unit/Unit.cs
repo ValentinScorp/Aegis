@@ -12,6 +12,7 @@ namespace Aegis.Core
         private readonly UnitCommonConfig _common;
         private BodyHealth _bodyHealth;
         private WorldEntity _closestTarget;
+        private UnitWeaponry _weaponry;
 
         // ─── Identity & config ────────────────────────────────
         public FactionId FactionId { get; private set; }
@@ -20,7 +21,7 @@ namespace Aegis.Core
 
         // ─── Core systems ─────────────────────────────────────
         public UnitStats Stats { get; }
-        public UnitWeaponry Weaponry { get; }
+        public UnitWeaponry Weaponry => _weaponry;
         public BodyHealth BodyHealth => _bodyHealth;
         public bool IsAlive => BodyHealth.IsAlive;
         public UnitStateMachine StateMachine { get; private set; }
@@ -36,6 +37,8 @@ namespace Aegis.Core
         public float WalkAnimationSpeedMultiplier => _common.WalkAnimationSpeedMultiplier;
         public float AttackTime => Weaponry.AttackTime > 0.01f ? Weaponry.AttackTime : _common.UnarmedCooldown;
         public float AttackEventTime => Weaponry.AttackEventTime > 0.01f ? Weaponry.AttackEventTime : 0.5f;
+        public bool IsAiming { get; private set; }
+        public Vector3 AimDirection { get; private set; }
 
         // ─── Runtime state ────────────────────────────────────
         public Vector3 FixedPosition { get; set; }
@@ -58,6 +61,9 @@ namespace Aegis.Core
         public event Action<Vector3> ProjectileLaunched;
         public event Action<UnitControlMode> ControlModeChanged;
         public event Action<Vector3> DirectMoveRequested;
+        public event Action AimStarted;
+        public event Action AimEnded;
+
 
         public Unit(Vector3 position, FactionId factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
@@ -68,10 +74,10 @@ namespace Aegis.Core
 
             Stats = new UnitStats(config.BaseStrength, config.BaseSpeed, config.BaseSpirit);
 
-            Weaponry = new UnitWeaponry(config.MainHandPrimary,
-                                        config.OffHandPrimary,
-                                        config.MainHandSecondary,
-                                        config.OffHandSecondary);
+            _weaponry = new UnitWeaponry(config.MainWeaponPrimary,
+                                        config.OffWeaponPrimary,
+                                        config.MainWeaponSecondary,
+                                        config.OffWeaponSecondary);
 
             _bodyHealth = new BodyHealth(headMax: 50f, torsoMax: 100f, armMax: 60f, legMax: 70f);
             _bodyHealth.InitEvents();
@@ -183,8 +189,24 @@ namespace Aegis.Core
         }
 
         // ─── Combat ───────────────────────────────────────────
+        public void PerformAim(Vector3 worldDirection)
+        {
+            if (!IsAlive || ControlMode != UnitControlMode.Direct || !CanShoot) return;
+            worldDirection.y = 0f;
+            AimDirection = worldDirection.normalized;
+            if (IsAiming) return;
+            IsAiming = true;
+            AimStarted?.Invoke();
+        }
+        public void ReleaseAim()
+        {
+            if (!IsAiming) return;
+            IsAiming = false;
+            AimEnded?.Invoke();
+        }
         public void PerformAttackAction(WorldEntity target)
         {
+            _weaponry.Unholster();
             ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Attack, target.Position));
         }
         public void StopAttackAction() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Vector3.zero));

@@ -48,10 +48,10 @@ namespace Aegis.Core
                 config.BaseSpeed = entry.base_speed;
                 config.BaseSpirit = entry.base_spirit;
 
-                config.MainHandPrimary = ResolveWeapon(entry.main_hand_primary);
-                config.OffHandPrimary = ResolveWeapon(entry.off_hand_primary);
-                config.MainHandSecondary = ResolveWeapon(entry.main_hand_secondary);
-                config.OffHandSecondary = ResolveWeapon(entry.off_hand_secondary);
+                config.MainWeaponPrimary = ResolveWeapon(entry.main_weapon_primary);
+                config.OffWeaponPrimary = ResolveWeapon(entry.off_weapon_primary);
+                config.MainWeaponSecondary = ResolveWeapon(entry.main_weapon_secondary);
+                config.OffWeaponSecondary = ResolveWeapon(entry.off_weapon_secondary);
 
                 EditorUtility.SetDirty(config);
             }

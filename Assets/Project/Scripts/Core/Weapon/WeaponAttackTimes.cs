@@ -4,17 +4,17 @@ namespace Aegis.Core
 {
     public static class WeaponAttackTimes
     {
-        public static readonly Dictionary<WeaponType, float> Times = new() {
-        { WeaponType.OneHandSword,  1.2f },
-        { WeaponType.OneHandDagger, 0.7f },
-        { WeaponType.OneHandSpear,  1.2f },
-        { WeaponType.Bow,           1.5f },
-        { WeaponType.Shield,        1.0f },
+        public static readonly Dictionary<WeaponTypeId, float> Times = new() {
+        { WeaponTypeId.OneHandSword,  1.2f },
+        { WeaponTypeId.OneHandDagger, 0.7f },
+        { WeaponTypeId.OneHandSpear,  1.2f },
+        { WeaponTypeId.Bow,           1.5f },
+        { WeaponTypeId.Shield,        1.0f },
     };
 
-        public static float Get(WeaponType type)
+        public static float Get(WeaponTypeId weaponType)
         {
-            return Times.TryGetValue(type, out float time) ? time : 0.5f;
+            return Times.TryGetValue(weaponType, out float time) ? time : 0.5f;
         }
     }
 }

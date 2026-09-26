@@ -15,8 +15,6 @@ namespace Aegis.View
         [SerializeField] private Transform _projectileSpawnPoint;
         [SerializeField] private GameObject _swordPrefab;
         private ICombatView[] _combatViews;
-        private Dictionary<WeaponSlotType, WeaponSlotView> _equipmentSlots;
-
         private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityDirectMovement _entityDirectMovement;
@@ -40,7 +38,6 @@ namespace Aegis.View
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
             if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
 
-            _equipmentSlots = GetComponents<WeaponSlotView>().ToDictionary(s => s.SlotType);
             _weaponry = ComponentResolver.Require(this, GetComponent<UnitWeaponryView>());
 
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
@@ -145,17 +142,18 @@ namespace Aegis.View
                 case UnitAction.Attack:
                     _entityMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
-                    if (!unit.CanShoot
-                        && _equipmentSlots.TryGetValue(WeaponSlotType.HandRight, out var mainHandSlot)
-                        && _swordPrefab != null) {
-                        mainHandSlot.EquipWeapon(_swordPrefab);
-                    }
                     _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
+
+                    // if (!unit.CanShoot
+                    //     && _equipmentSockets.TryGetValue(WeaponSocketType.HandRight, out var mainHandSlot)
+                    //     && _swordPrefab != null) {
+                    //     mainHandSlot.EquipWeapon(_swordPrefab);
+                    // }                    
                     break;
                 case UnitAction.Idle:
                     _entityAnimator.PlayIdle();
-                    if (_equipmentSlots.TryGetValue(WeaponSlotType.HandRight, out var slot))
-                        slot.UnequipWeapon();
+                    // if (_equipmentSockets.TryGetValue(WeaponSocketType.HandRight, out var slot))
+                    //     slot.UnequipWeapon();
                     break;
             }
         }

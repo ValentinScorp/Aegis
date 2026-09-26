@@ -8,25 +8,56 @@ public class WeaponHolsterConfig : ScriptableObject
     [Serializable]
     public struct Entry
     {
-        public WeaponType WeaponType;
-        public WeaponSlotType PrimaryHolster;
-        public WeaponSlotType SecondaryHolster;
+        public WeaponTypeId WeaponId;
+        public HolsterSocketId PrimaryMainWeaponHolster;
+        public HolsterSocketId PrimaryOffWeaponHolster;
+        public HolsterSocketId SecondaryMainWeaponHolster;
+        public HolsterSocketId SecondaryOffWeaponHolster;
     }
 
     public Entry[] Items;
-
-    public bool TryGetHolsters(WeaponType type, out WeaponSlotType primary, out WeaponSlotType secondary)
+    public HolsterSocketId GetHolster(WeaponTypeId weaponId, WeaponSetId setId, WeaponRoleId roleId)
     {
-        foreach (var e in Items)
-        {
-            if (e.WeaponType != type) continue;
-            primary = e.PrimaryHolster;
-            secondary = e.SecondaryHolster;
-            return true;
-        }
+        if (weaponId == WeaponTypeId.None) return HolsterSocketId.None;
+        
+        foreach (var item in Items) {
+            if (item.WeaponId != weaponId) continue;
 
-        primary = WeaponSlotType.HipRight;
-        secondary = WeaponSlotType.HipLeft;
-        return false;
+            if (setId == WeaponSetId.Primary) {
+                if (roleId == WeaponRoleId.Main)
+                    return item.PrimaryMainWeaponHolster;
+                if (roleId == WeaponRoleId.Off) {
+                    return item.PrimaryOffWeaponHolster;
+                }
+            }
+            if (setId == WeaponSetId.Secondary) {
+                if (roleId == WeaponRoleId.Main)
+                    return item.SecondaryMainWeaponHolster;
+                if (roleId == WeaponRoleId.Off) {
+                    return item.SecondaryOffWeaponHolster;
+                }
+            }
+        }
+        Debug.LogWarning($"[{GetType().Name}] Can't find weapon holster config!", this);
+        return HolsterSocketId.None;
     }
+    // public bool TryGetHolsters(WeaponTypeId weaponId, WeaponRoleId roleId, out HolsterSocketId primary, out HolsterSocketId secondary)
+    // {
+    //     foreach (var item in Items) {
+    //         if (item.WeaponId != weaponId) continue;
+    //         if (roleId == WeaponRoleId.Main) {
+    //             primary = item.PrimaryMainWeaponHolster;
+    //             secondary = item.SecondaryMainWeaponHolster;
+    //             return true;
+    //         } else if (roleId == WeaponRoleId.Off) {
+    //             primary = item.PrimaryOffWeaponHolster;
+    //             secondary = item.SecondaryOffWeaponHolster;
+    //             return true;
+    //         }
+    //     }
+    //     Debug.LogWarning($"[{GetType().Name}] Can't find weapon holster config!", this);
+    //     primary = HolsterSocketId.ShoulderLeft;
+    //     secondary = HolsterSocketId.ShoulderRight;
+    //     return false;
+    // }
 }

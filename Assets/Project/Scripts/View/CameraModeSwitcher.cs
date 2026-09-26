@@ -49,6 +49,12 @@ namespace Aegis.Services
             if (_thirdPersonUnit == null) return;
             if (_camRig.CurrentMode != CameraMode.ThirdPerson) return;
 
+            if (_inputListener.IsAimHeld) {
+                Vector3 camForward = Quaternion.Euler(0f, _camRig.Yaw, 0f) * Vector3.forward;
+                _thirdPersonUnit.PerformAim(camForward);
+            } else {
+                _thirdPersonUnit.ReleaseAim();
+            }
             // WASD movement            
             Vector2 move = _inputListener.CameraMoveInput;
             Quaternion yawRot = Quaternion.Euler(0f, _camRig.Yaw, 0f);
@@ -82,7 +88,7 @@ namespace Aegis.Services
             }
 
             EnterThirdPerson(unit);
-        }       
+        }
         private void OnPlayerUnitAssigned(Unit unit)
         {
             // _selectionModel.Select(unit);
@@ -98,10 +104,9 @@ namespace Aegis.Services
             _camRig.SetMode(CameraMode.ThirdPerson, unit);
         }
         private void ReleaseThirdPersonUnit()
-        {
-            Debug.Log("ReleaseThirdPersonUnit");
+        {            
             if (_thirdPersonUnit == null) return;
-
+            _thirdPersonUnit.ReleaseAim();
             _thirdPersonUnit.PerformDirectMove(Vector3.zero);
             _thirdPersonUnit.SetControlMode(UnitControlMode.Indirect);
             _thirdPersonUnit = null;
