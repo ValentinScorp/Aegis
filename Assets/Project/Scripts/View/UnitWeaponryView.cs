@@ -20,6 +20,12 @@ namespace Aegis.View
         {
             _handSockets = GetComponentsInChildren<HandSocketView>().ToDictionary(s => s.Id);
             _holsterSockets = GetComponentsInChildren<HolsterSocketView>().ToDictionary(s => s.Id);
+
+            if (_weaponPrefabCatalog == null)
+                Debug.LogError($"[{nameof(UnitWeaponryView)}] WeaponPrefabCatalog not assigned on {name}!", this);
+            
+            if (_holsterConfig == null)
+                Debug.LogError($"[{nameof(UnitWeaponryView)}] WeaponHolsterConfig not assigned on {name}!", this);
         }
         private void OnDestroy() => ClearAll();
 

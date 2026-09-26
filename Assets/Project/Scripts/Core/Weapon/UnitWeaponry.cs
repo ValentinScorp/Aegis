@@ -26,7 +26,7 @@ namespace Aegis.Core
             };
             ActiveSet = WeaponSetId.Primary;
         }
-        
+
         public float AttackTime => WeaponSets[ActiveSet].AttackTime;
         public float AttackEventTime => WeaponSets[ActiveSet].AttackEventTime;
         public float Damage => WeaponSets[ActiveSet].GetDamage;
@@ -65,12 +65,14 @@ namespace Aegis.Core
 
         internal WeaponTypeId GetWeaponType(WeaponSetId setId, WeaponRoleId roleId)
         {
-            if (roleId == WeaponRoleId.Main)
-                return WeaponSets[setId].MainWeapon.WeaponType;
-            if (roleId == WeaponRoleId.Off)
-                return WeaponSets[setId].OffWeapon.WeaponType;
-            
-            return WeaponTypeId.None;
+            if (!WeaponSets.TryGetValue(setId, out var set))
+                return WeaponTypeId.None;
+
+            return roleId switch {
+                WeaponRoleId.Main => set.MainWeapon?.WeaponType ?? WeaponTypeId.None,
+                WeaponRoleId.Off => set.OffWeapon?.WeaponType ?? WeaponTypeId.None,
+                _ => WeaponTypeId.None
+            };
         }
     }
 }

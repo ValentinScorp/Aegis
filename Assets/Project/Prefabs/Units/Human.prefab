@@ -497,8 +497,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74ee7229c02fc940890dec9d5378713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.UnitWeaponryView
-  _weaponPrefabCatalog: {fileID: 0}
-  _holsterConfig: {fileID: 0}
+  _weaponPrefabCatalog: {fileID: 11400000, guid: ea88bcfad5d0e5741b8ea61a68074d49, type: 2}
+  _holsterConfig: {fileID: 11400000, guid: f57196b3f1f20be4e94e553402bf5149, type: 2}
 --- !u!114 &-4847669449881767682
 MonoBehaviour:
   m_ObjectHideFlags: 0
