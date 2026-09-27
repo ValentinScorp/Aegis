@@ -1,29 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using Aegis.Core;
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Aegis.View
 {
     public class UnitWeaponryView : MonoBehaviour
     {
-        [SerializeField] private WeaponPrefabCatalog _weaponPrefabCatalog;
+        [SerializeField] private WeaponsPrefabCatalog _weaponPrefabCatalog;
+        [SerializeField] private WeaponsAttachCatalog _weaponsAttachCatalog;
         [SerializeField] private WeaponHolsterConfig _holsterConfig;
         private Dictionary<HandSocketId, HandSocketView> _handSockets;
         private Dictionary<HolsterSocketId, HolsterSocketView> _holsterSockets;
         private UnitWeaponry _weaponry;
-        private Dictionary<WeaponEquipId, GameObject> _weaponInstances = new();
+        private Dictionary<WeaponEquipId, WeaponView> _weaponInstances = new();
 
         private void Awake()
         {
-            _handSockets = GetComponentsInChildren<HandSocketView>().ToDictionary(s => s.Id);
-            _holsterSockets = GetComponentsInChildren<HolsterSocketView>().ToDictionary(s => s.Id);
+            _handSockets = GetComponentsInChildren<HandSocketView>(true).ToDictionary(s => s.Id);
+            _holsterSockets = GetComponentsInChildren<HolsterSocketView>(true).ToDictionary(s => s.Id);
 
             if (_weaponPrefabCatalog == null)
                 Debug.LogError($"[{nameof(UnitWeaponryView)}] WeaponPrefabCatalog not assigned on {name}!", this);
-            
+
             if (_holsterConfig == null)
                 Debug.LogError($"[{nameof(UnitWeaponryView)}] WeaponHolsterConfig not assigned on {name}!", this);
         }
@@ -51,15 +50,27 @@ namespace Aegis.View
         }
         private void SpawnWeapon(WeaponConfig cfg, WeaponEquipId equipId)
         {
-            if (cfg == null || string.IsNullOrEmpty(cfg.Id)) return;
-
+            if (cfg == null || string.IsNullOrEmpty(cfg.Id)) {
+                // Debug.LogWarning($"[{nameof(UnitWeaponryView)}] No WeaponConfig/Id for slot '{equipId}' on {name}.");
+                return;
+            }
             var prefab = _weaponPrefabCatalog.GetPrefab(cfg.Id);
-            if (prefab == null) return;
+            if (prefab == null) {
+                // Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Prefab for '{cfg.Id}' not found in catalog (slot '{equipId}') on {name}.");
+                return;
+            }
 
             var go = Instantiate(prefab, transform);
             go.name = cfg.Id;
             go.SetActive(false);
-            _weaponInstances[equipId] = go;
+
+            var weaponView = go.GetComponent<WeaponView>();
+            if (weaponView == null) {
+                Debug.LogError($"[{nameof(UnitWeaponryView)}] Prefab '{cfg.Id}' has no WeaponView component!", go);
+                Destroy(go);
+                return;
+            }
+            _weaponInstances[equipId] = weaponView;
         }
         public void Refresh(UnitWeaponry weaponry)
         {
@@ -69,19 +80,15 @@ namespace Aegis.View
             }
             _weaponry = weaponry;
 
-            DetachAllFromSlots();
+            DetachAllFromSockets();
 
             bool handPrimary = false;
             bool handSecondary = false;
 
             if (!_weaponry.IsHolstered) {
                 switch (_weaponry.ActiveSet) {
-                    case WeaponSetId.Primary:
-                        handPrimary = true;
-                        break;
-                    case WeaponSetId.Secondary:
-                        handSecondary = true;
-                        break;
+                    case WeaponSetId.Primary: handPrimary = true; break;
+                    case WeaponSetId.Secondary: handSecondary = true; break;
                     default:
                         Debug.LogError($"[{nameof(UnitWeaponryView)}] Unhandled ActiveSet '{_weaponry.ActiveSet}' on {name}.");
                         break;
@@ -99,7 +106,7 @@ namespace Aegis.View
             var offEquip = set == WeaponSetId.Primary ? WeaponEquipId.PrimaryOff : WeaponEquipId.SecondaryOff;
 
             if (hand) {
-                var mainHand = WeaponGrip.HandSlot(mainWeapon);
+                var mainHand = WeaponGrip.MainWeaponHandSlot(mainWeapon);
                 TryPlaceHand(mainEquip, mainHand);
                 TryPlaceHand(offEquip, HandSocketId.Left);
             } else {
@@ -108,6 +115,16 @@ namespace Aegis.View
                 TryPlaceHolster(mainEquip, mainHolster);
                 TryPlaceHolster(offEquip, offHolster);
             }
+        }
+        public WeaponView GetActiveHandWeapon()
+        {
+            if (_weaponry == null) return null;
+
+            var equipId = _weaponry.ActiveSet == WeaponSetId.Primary
+                ? WeaponEquipId.PrimaryMain
+                : WeaponEquipId.SecondaryMain;
+
+            return _weaponInstances.TryGetValue(equipId, out var view) ? view : null;
         }
         private void TryPlaceHolster(WeaponEquipId equipId, HolsterSocketId holsterId)
         {
@@ -118,40 +135,43 @@ namespace Aegis.View
                 Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Holster socket '{holsterId}' not found on {name}.");
                 return;
             }
-            PlaceInSlot(instance, socket);
+            socket.AttachWeapon(instance, _weaponsAttachCatalog);
         }
 
         private void TryPlaceHand(WeaponEquipId equipId, HandSocketId handId)
         {
-            if (!_weaponInstances.TryGetValue(equipId, out var instance)) return;
-
-            if (!_handSockets.TryGetValue(handId, out var socket)) {
-                Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Hand socket '{handId}' not found on {name}.");
+            if (!_weaponInstances.TryGetValue(equipId, out var instance)) {
+                // Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Weapon instance of '{equipId}' not found in [_weaponInstances].");
                 return;
             }
-            PlaceInSlot(instance, socket);
+
+            if (!_handSockets.TryGetValue(handId, out var socket)) {
+                // Debug.LogWarning($"[{nameof(UnitWeaponryView)}] Hand socket '{handId}' not found on {name}.");
+                return;
+            }
+            socket.AttachWeapon(instance, _weaponsAttachCatalog);
         }
-        private void PlaceInSlot(GameObject weaponInst, WeaponSocketView holsterSocket)
+        void DetachAllFromSockets()
         {
-            weaponInst.transform.SetParent(holsterSocket.transform, false);
+            foreach (var socket in _handSockets.Values)
+                DetachFromSocket(socket);
+            foreach (var socket in _holsterSockets.Values)
+                DetachFromSocket(socket);
         }
-        void DetachAllFromSlots()
+        void DetachFromSocket(WeaponSocketView socket)
         {
-            foreach (var id in _weaponInstances.Keys.ToList())
-                Detach(id);
-        }
-        void Detach(WeaponEquipId equipId)
-        {
-            if (!_weaponInstances.TryGetValue(equipId, out var go)) return;
-            go.transform.SetParent(transform, false);
-            go.SetActive(false);
+            var weapon = socket.UnattachWeapon();
+            if (weapon == null) return;
+
+            weapon.transform.SetParent(transform, false);
+            weapon.gameObject.SetActive(false);
         }
 
         private void ClearAll()
         {
-            DetachAllFromSlots();
-            foreach (var go in _weaponInstances.Values)
-                if (go != null) Destroy(go);
+            DetachAllFromSockets();
+            foreach (var view in _weaponInstances.Values)
+                if (view != null) Destroy(view.gameObject);
             _weaponInstances.Clear();
         }
     }

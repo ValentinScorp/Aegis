@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.WeaponConfig
   Id: bow_hunter
   DisplayName: Hunter Bow
+  _attachConfig: {fileID: 11400000, guid: cab80e86fb3f7e74f909f7e8c059e1f8, type: 2}
   Animation: bow
   WeaponType: 4
   ProjectileId: arrow

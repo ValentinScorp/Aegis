@@ -37,9 +37,7 @@ namespace Aegis.View
         }
         private void OnEnable()
         {
-            Debug.Log("OnEnable");
             if (_selectionModel != null) {
-                Debug.Log("Binding");
                 _selectionModel.Changed += Bind;
             }
         }
@@ -71,7 +69,6 @@ namespace Aegis.View
 
         public void OnPartChanged(BodyPartId part, float current, float max)
         {
-            Debug.Log("Part changed");
             if (_labels.TryGetValue(part, out var text))
                 text.text = $"{Mathf.CeilToInt(current)}/{Mathf.CeilToInt(max)}";
         }

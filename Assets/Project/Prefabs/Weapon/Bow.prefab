@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7884183501762673156}
   - component: {fileID: 1099275824338255371}
+  - component: {fileID: 5628355992161490348}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -45,8 +46,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee8e6f8ffdf1734191553f5a6f6a874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityAnimator
-  _swordAttackAminationClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
-  _bowAttackAminationClip: {fileID: 3951970577203447479, guid: 3f4f5491979ece1458163af1690d0417, type: 3}
+--- !u!114 &5628355992161490348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6204959886361044491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02492527425dffb47885214be5bffc6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponView
+  _typeId: 4
+  _animator: {fileID: 6829328745090450469}
+  _actionStateName: Shoot
 --- !u!1001 &4481568588056606310
 PrefabInstance:
   m_ObjectHideFlags: 0

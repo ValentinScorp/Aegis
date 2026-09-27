@@ -50,7 +50,7 @@ namespace Aegis.View
                 _clipLengths[Animator.StringToHash(clip.name)] = clip.length;
             }
         }
-        public void PlayAttack(string weaponAnimation, float attackTime)
+        public float PlayAttack(string weaponAnimation, float attackTime)
         {
             var anim = WeaponAnimationCatalog.Get(weaponAnimation);
             int clipHash = Animator.StringToHash(anim.ClipName);
@@ -59,6 +59,7 @@ namespace Aegis.View
             float animSpeed = attackTime > 0f ? clipLength / attackTime : 1f;
             _animator.SetFloat(AttackSpeedHash, animSpeed);
             PlayOnce(anim.StateHash);
+            return animSpeed;
         }
         
         public float GetClipLength(string clipName)

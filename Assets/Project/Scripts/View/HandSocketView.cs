@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Aegis.Core;
 using UnityEngine;
 
@@ -8,6 +7,6 @@ namespace Aegis.View
     {
         [SerializeField] private HandSocketId _id;
         public HandSocketId Id => _id;
-        private static readonly Quaternion BowRotationOffset = Quaternion.Euler(90f, 0f, 0f);
+        protected override (Vector3, Quaternion) GetAttachOffset(WeaponAttachConfig config) => config.GetAttach(_id);
     }
 }

@@ -142,8 +142,8 @@ namespace Aegis.View
                 case UnitAction.Attack:
                     _entityMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
-                    _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
-
+                    var ainmSpeed = _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
+                     _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
                     // if (!unit.CanShoot
                     //     && _equipmentSockets.TryGetValue(WeaponSocketType.HandRight, out var mainHandSlot)
                     //     && _swordPrefab != null) {

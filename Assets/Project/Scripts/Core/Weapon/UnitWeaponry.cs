@@ -15,6 +15,7 @@ namespace Aegis.Core
         {
             WeaponSets = new Dictionary<WeaponSetId, WeaponSet>();
             ActiveSet = WeaponSetId.Primary;
+            Holster();
         }
         public UnitWeaponry(WeaponConfig primMain, WeaponConfig primOff,
                             WeaponConfig secMain, WeaponConfig secOff)
@@ -25,6 +26,7 @@ namespace Aegis.Core
                 { WeaponSetId.Secondary, new WeaponSet(secMain, secOff) }
             };
             ActiveSet = WeaponSetId.Primary;
+            Holster();
         }
 
         public float AttackTime => WeaponSets[ActiveSet].AttackTime;
@@ -49,7 +51,7 @@ namespace Aegis.Core
             if (IsHolstered) Unholster();
             else Holster();
         }
-        public void Holster()
+        private void Holster()
         {
             if (IsHolstered) return;
             IsHolstered = true;

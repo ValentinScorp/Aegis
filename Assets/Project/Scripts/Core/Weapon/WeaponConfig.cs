@@ -1,3 +1,4 @@
+using Aegis.View;
 using UnityEngine;
 
 namespace Aegis.Core
@@ -7,6 +8,7 @@ namespace Aegis.Core
     {
         public string Id;
         public string DisplayName;
+        public WeaponAttachConfig _attachConfig;
         public string Animation;
         public WeaponTypeId WeaponType;
         public bool IsRanged => WeaponType == WeaponTypeId.Bow;

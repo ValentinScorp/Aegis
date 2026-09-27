@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Aegis.View
 {
-    [CreateAssetMenu(menuName = "Aegis/Weapon Prefab Catalog")]
-    public class WeaponPrefabCatalog : ScriptableObject
+    [CreateAssetMenu(menuName = "Aegis/Weapons Prefab Catalog")]
+    public class WeaponsPrefabCatalog : ScriptableObject
     {
         [Serializable]
         public struct Entry

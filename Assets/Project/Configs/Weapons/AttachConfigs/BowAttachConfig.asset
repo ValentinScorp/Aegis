@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bb1f9da991ae74893ae0337f8cb4f1, type: 3}
+  m_Name: BowAttachConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.WeaponAttachConfig
+  _weaponType: 4
+  _defaultPosition: {x: 0, y: 0, z: 0}
+  _defaultRotationEuler: {x: 0, y: 0, z: 0}
+  _handOffsets:
+  - SocketId: 0
+    Position: {x: 0, y: 0, z: 0}
+    RotationEuler: {x: 90, y: 0, z: 0}
+  _holsterOffsets:
+  - SocketId: 3
+    Position: {x: 0, y: 0, z: 0}
+    RotationEuler: {x: 0, y: 180, z: 0}
+  - SocketId: 4
+    Position: {x: 0, y: 0, z: 0}
+    RotationEuler: {x: 0, y: 180, z: 0}

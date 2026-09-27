@@ -1,22 +1,20 @@
-using System.Collections.Generic;
-using Aegis.Core;
 using UnityEngine;
 
 namespace Aegis.View
 {
-    public class WeaponSocketView : MonoBehaviour
+    public abstract class WeaponSocketView : MonoBehaviour
     {
         [SerializeField] protected Transform _socket;
-        private GameObject _equippedWeapon;
+
+        private WeaponView _equippedWeapon;
 
         public Transform Socket => _socket != null ? _socket : transform;
+        public WeaponView EquippedWeapon => _equippedWeapon;
         public bool IsOccupied => _equippedWeapon != null;
-        public GameObject EquippedWeapon => _equippedWeapon;
 
-        private void Awake()
-        {
-        }
-        public void AttachWeapon(GameObject instance)
+        protected abstract (Vector3 pos, Quaternion rot) GetAttachOffset(WeaponAttachConfig config);
+
+        public void AttachWeapon(WeaponView instance, WeaponsAttachCatalog attachCatalog)
         {
             if (instance == null || _socket == null) return;
 
@@ -30,13 +28,18 @@ namespace Aegis.View
             }
             _equippedWeapon = instance;
 
+            var attachConfig = attachCatalog != null ? attachCatalog.GetConfig(instance.WeaponType) : null;
+            var (pos, rot) = attachConfig != null
+                ? GetAttachOffset(attachConfig)
+                : (Vector3.zero, Quaternion.identity);
+
             instance.transform.SetParent(_socket, false);
-            instance.transform.localPosition = Vector3.zero;
-            instance.transform.localRotation = Quaternion.identity;
-            instance.SetActive(true);
+            instance.transform.localPosition = pos;
+            instance.transform.localRotation = rot;
+            instance.gameObject.SetActive(true);
         }
 
-        public GameObject UnattachWeapon()
+        public WeaponView UnattachWeapon()
         {
             if (_equippedWeapon == null) return null;
 
