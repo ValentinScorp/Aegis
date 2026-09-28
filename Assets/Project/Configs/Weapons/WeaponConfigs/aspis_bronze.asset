@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.WeaponConfig
   Id: aspis_bronze
   DisplayName: Bronze Aspis
+  _attachConfig: {fileID: 0}
   Animation: shield
-  WeaponType: 5
+  WeaponType: 6
   ProjectileId: 
   Damage: 0
   AttackRange: 0

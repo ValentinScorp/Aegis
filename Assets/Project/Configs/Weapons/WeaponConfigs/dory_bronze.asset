@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.WeaponConfig
   Id: dory_bronze
   DisplayName: Dory
+  _attachConfig: {fileID: 0}
   Animation: spear
   WeaponType: 3
   ProjectileId: 

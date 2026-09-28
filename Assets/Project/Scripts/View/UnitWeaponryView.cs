@@ -82,22 +82,22 @@ namespace Aegis.View
 
             DetachAllFromSockets();
 
-            bool handPrimary = false;
-            bool handSecondary = false;
+            bool unholsterPrim = false;
+            bool unholsterSec = false;
 
             if (!_weaponry.IsHolstered) {
                 switch (_weaponry.ActiveSet) {
-                    case WeaponSetId.Primary: handPrimary = true; break;
-                    case WeaponSetId.Secondary: handSecondary = true; break;
+                    case WeaponSetId.Primary: unholsterPrim = true; break;
+                    case WeaponSetId.Secondary: unholsterSec = true; break;
                     default:
                         Debug.LogError($"[{nameof(UnitWeaponryView)}] Unhandled ActiveSet '{_weaponry.ActiveSet}' on {name}.");
                         break;
                 }
             }
-            PlaceSet(WeaponSetId.Primary, hand: handPrimary);
-            PlaceSet(WeaponSetId.Secondary, hand: handSecondary);
+            PlaceSet(WeaponSetId.Primary, unholsterPrim);
+            PlaceSet(WeaponSetId.Secondary, unholsterSec);
         }
-        private void PlaceSet(WeaponSetId set, bool hand)
+        private void PlaceSet(WeaponSetId set, bool unholstered)
         {
             var mainWeapon = _weaponry.GetWeaponType(set, WeaponRoleId.Main);
             var offWeapon = _weaponry.GetWeaponType(set, WeaponRoleId.Off);
@@ -105,13 +105,17 @@ namespace Aegis.View
             var mainEquip = set == WeaponSetId.Primary ? WeaponEquipId.PrimaryMain : WeaponEquipId.SecondaryMain;
             var offEquip = set == WeaponSetId.Primary ? WeaponEquipId.PrimaryOff : WeaponEquipId.SecondaryOff;
 
-            if (hand) {
+            if (unholstered) {
                 var mainHand = WeaponGrip.MainWeaponHandSlot(mainWeapon);
                 TryPlaceHand(mainEquip, mainHand);
                 TryPlaceHand(offEquip, HandSocketId.Left);
             } else {
-                var mainHolster = _holsterConfig.GetHolster(mainWeapon, set, WeaponRoleId.Main);
-                var offHolster = _holsterConfig.GetHolster(offWeapon, set, WeaponRoleId.Off);
+                var mainHolster = _holsterConfig.GetHolster(mainWeapon, WeaponSetId.Primary, WeaponRoleId.Main);
+                var offHolster = _holsterConfig.GetHolster(offWeapon, WeaponSetId.Primary, WeaponRoleId.Off);
+                if (set == WeaponSetId.Secondary) {
+                    mainHolster = _holsterConfig.GetHolster(mainWeapon, set, WeaponRoleId.Main, mainHolster);
+                    offHolster = _holsterConfig.GetHolster(offWeapon, set, WeaponRoleId.Off, offHolster);
+                }
                 TryPlaceHolster(mainEquip, mainHolster);
                 TryPlaceHolster(offEquip, offHolster);
             }

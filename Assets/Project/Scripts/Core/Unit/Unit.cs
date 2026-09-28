@@ -90,12 +90,12 @@ namespace Aegis.Core
 
         // ─── Health / death ───────────────────────────────────
 
-        public void TakeDamage(BodyPartId partId, float amount)
+        public void TakeDamage(BodyPartId bodyPart, float amount)
         {
             if (!_bodyHealth.Get(BodyPartId.Head).IsAlive && !_bodyHealth.Get(BodyPartId.Torso).IsAlive)
                 return;
 
-            _bodyHealth.TakeDamage(partId, amount);
+            _bodyHealth.TakeDamage(bodyPart, amount);
         }
         public void Heal(BodyPartId partId, float amount)
         {
@@ -214,24 +214,26 @@ namespace Aegis.Core
             if (AttackTarget == null) return;
             ProjectileLaunched?.Invoke(target.Position);
         }
-        public void PerformAttackImpact(WorldEntity target, BodyPartId partId)
+        public void PerformAttackImpact(WorldEntity target, BodyPartId bodyPart)
         {
             if (target == null) return;
 
             if (Weaponry.BowActive)
                 PerformProjectileLaunch(target);
             else {
-                ApplyDamage(target, partId, Weaponry.Damage);
+                ApplyDamage(target, bodyPart, Weaponry.Damage);
             }
         }
-        public void ApplyProjectileDamage(WorldEntity target, BodyPartId partId)
+        public void ApplyProjectileDamage(WorldEntity target, BodyPartId bodyPart)
         {
-            ApplyDamage(target, partId, Weaponry.Damage);
+            ApplyDamage(target, bodyPart, Weaponry.Damage);
         }
-        private void ApplyDamage(WorldEntity target, BodyPartId partId, float damage)
+        private void ApplyDamage(WorldEntity target, BodyPartId bodyPart, float damage)
         {
+            Debug.Log($"{target}");
             if (target != null && target is Unit unit) {
-                unit.TakeDamage(partId, damage);
+                Debug.Log($"Unit taking damage {damage}");
+                unit.TakeDamage(bodyPart, damage);
             }
         }
 

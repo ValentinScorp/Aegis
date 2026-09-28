@@ -14,7 +14,7 @@ namespace Aegis.View
         [SerializeField] private ProjectileCatalog _projectileCatalog;
         [SerializeField] private Transform _projectileSpawnPoint;
         [SerializeField] private GameObject _swordPrefab;
-        private ICombatView[] _combatViews;
+        [SerializeField] private BodyPartId _aimBodyPart = BodyPartId.Torso;
         private Renderer _renderer;
         private EntityMovement _entityMovement;
         private EntityDirectMovement _entityDirectMovement;
@@ -22,9 +22,14 @@ namespace Aegis.View
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
         private UnitWeaponryView _weaponry;
+        private static readonly Dictionary<WorldEntity, EntityView> _views = new();
+        private readonly Dictionary<BodyPartId, HitZoneView> _hitZones = new();
+
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
         private MaterialPropertyBlock _mpb;
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => _views.Clear();
 
         private void Awake()
         {
@@ -34,7 +39,6 @@ namespace Aegis.View
             _entityDirectMovement = GetComponent<EntityDirectMovement>();
             _entityAnimator = GetComponentInChildren<EntityAnimator>();
             _unitAnimationSync = ComponentResolver.Require(this, GetComponent<UnitAnimationSync>());
-            _combatViews = GetComponents<ICombatView>();
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
             if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
 
@@ -64,6 +68,7 @@ namespace Aegis.View
 
             _entity = entity;
             transform.position = entity.Position;
+            _views[entity] = this;   // одразу після _entity = entity;
 
             if (entity is Unit unit) {
                 _weaponry.Bind(unit.Weaponry);
@@ -86,14 +91,40 @@ namespace Aegis.View
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
 
-                foreach (var combat in _combatViews)
-                    combat.Bind(unit);
+                foreach (var zone in GetComponentsInChildren<HitZoneView>(true)) {
+                    zone.Bind(unit);
+                    _hitZones[zone.BodyPart] = zone;
+                }
+                foreach (var kv in _hitZones) {
+                    var z = kv.Value;
+                    var col = z.GetComponent<Collider>();
+                    Debug.Log(
+                        $"{kv.Key}: collider#{col.GetInstanceID()}, path={GetPath(z.transform)}, " +
+                        $"worldPos={z.transform.position}, center={z.Center}", z);
+
+                    var cap = z.GetComponent<CapsuleCollider>();
+                    Debug.Log(
+                        $"{kv.Key}: localCenter={cap.center}, lossyScale={z.transform.lossyScale}, " +
+                        $"bounds.center={cap.bounds.center}, transformPoint={z.transform.TransformPoint(cap.center)}, " +
+                        $"boneY={z.transform.position.y:F2}", z);
+                }
             }
+        }
+        private static string GetPath(Transform t)
+        {
+            string path = t.name;
+            while (t.parent != null) {
+                t = t.parent;
+                path = t.name + "/" + path;
+            }
+            return path;
         }
 
         public void Unbind()
         {
             if (_entity == null) return;
+            _views.Remove(_entity);
+            _hitZones.Clear();
 
             if (_entity is Unit unit) {
                 _weaponry.Unbind();
@@ -113,8 +144,8 @@ namespace Aegis.View
                 unit.HealthChanged -= _healthView.OnHealthChanged;
                 unit.Died -= _healthView.OnHealthDepleted;
 
-                foreach (var combat in _combatViews)
-                    combat.Unbind();
+                foreach (var zone in GetComponentsInChildren<HitZoneView>(true))
+                    zone.Unbind();
             }
             _entity = null;
         }
@@ -143,7 +174,7 @@ namespace Aegis.View
                     _entityMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
                     var ainmSpeed = _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
-                     _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
+                    _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
                     // if (!unit.CanShoot
                     //     && _equipmentSockets.TryGetValue(WeaponSocketType.HandRight, out var mainHandSlot)
                     //     && _swordPrefab != null) {
@@ -162,23 +193,55 @@ namespace Aegis.View
         private void OnChaseToAction(Vector3 target)
         {
             _entityMovement.MoveTo(target);
-            _entityAnimator.PlayWalk(_entityMovement.Velocity);
+            _entityAnimator.PlayWalk(_entityMovement.AgentSpeed);
         }
         private void OnWalkAction(Vector3 destination)
         {
             _entityMovement.MoveTo(destination);
-            _entityAnimator.PlayWalk(_entityMovement.Velocity);
+            _entityAnimator.PlayWalk(_entityMovement.AgentSpeed);
         }
         private void OnProjectileLaunched(Vector3 targetPosition)
         {
             if (_entity is Unit unit) {
-                string projecitleId = unit.Weaponry.ActiveProjectileId;
-                var arrowPrefab = _projectileCatalog.GetPrefab(projecitleId);
-                if (unit?.AttackTarget == null || arrowPrefab == null || _projectileSpawnPoint == null) return;
+                var target = unit.AttackTarget;
+                var arrowPrefab = _projectileCatalog.GetPrefab(unit.Weaponry.ActiveProjectileId);
+                if (target == null || arrowPrefab == null || _projectileSpawnPoint == null) return;
+
                 var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
-                arrow.Launch(unit, unit.AttackTarget);
+                var aimPoint = GetAimPointOn(target);
+                Debug.DrawLine(_projectileSpawnPoint.position, aimPoint, Color.green, 3f);
+                arrow.Launch(unit, aimPoint, target.Velocity);
             }
         }
+        private Vector3 GetAimPointOn(WorldEntity target)
+        {
+            return _views.TryGetValue(target, out var view)
+                ? view.GetAimPoint(_aimBodyPart)
+                : target.Position + Vector3.up;
+        }
+        public Vector3 GetAimPoint(BodyPartId part)
+        {
+            if (TryGetCenter(part, out var center)) {
+                return center;
+            }
+            if (TryGetCenter(BodyPartId.Torso, out center)) {
+                return center;
+            }
+
+            return transform.position + Vector3.up;   // запасний варіант, якщо зон нема
+        }
+        private bool TryGetCenter(BodyPartId part, out Vector3 center)
+        {
+            if (_hitZones.TryGetValue(part, out var zone) && zone.TryGetComponent(out CapsuleCollider cap)) {
+                center = zone.transform.TransformPoint(cap.center);
+                return true;
+            }
+            center = Vector3.zero;
+            return false;
+        }
+
+        // Точка, в яку цей юніт цілиться по ворогу
+
         private void OnMovementComplete(Vector3 pos)
         {
             _entityAnimator.PlayIdle();

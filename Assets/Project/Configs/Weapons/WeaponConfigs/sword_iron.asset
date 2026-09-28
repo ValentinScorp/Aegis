@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.Core.WeaponConfig
   Id: sword_iron
   DisplayName: Iron Sword
+  _attachConfig: {fileID: 0}
   Animation: sword
   WeaponType: 1
   ProjectileId: 

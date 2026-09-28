@@ -19,7 +19,7 @@ MonoBehaviour:
   WeaponType: 4
   ProjectileId: arrow
   Damage: 14
-  AttackRange: 12
+  AttackRange: 20
   Weight: 2
   ArmorValue: 0
   DeflectChance: 0

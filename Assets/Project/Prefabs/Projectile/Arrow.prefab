@@ -47,11 +47,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.Arrow
   _horizontalSpeed: 20
   _gravity: 20
-  _hitRadius: 0.5
-  _hitDistance: 0.1
+  _arrowRadius: 0.05
+  _hitZoneMask:
+    serializedVersion: 2
+    m_Bits: 65536
   _groundMask:
     serializedVersion: 2
     m_Bits: 1024
+  _drag: 0.003
+  _safeDistance: 1
   _maxLifetime: 10
 --- !u!1 &8531845194257202943
 GameObject:

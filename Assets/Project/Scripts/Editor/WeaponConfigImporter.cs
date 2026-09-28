@@ -10,7 +10,7 @@ namespace Aegis.Core
     public static class WeaponConfigImporter
     {
         private const string JsonPath = "Assets/Content/Configs/weapon_configs.json";
-        private const string SOFolder = "Assets/Project/Configs/Weapons/";
+        private const string SOFolder = "Assets/Project/Configs/Weapons/WeaponConfigs/";
 
         [MenuItem("Aegis/Import Weapon Configs From JSON")]
         public static void ImportFromJson()
@@ -31,8 +31,8 @@ namespace Aegis.Core
             int created = 0, updated = 0;
 
             foreach (var entry in data.items) {
-                if (!TryParseWeaponId(entry.weapon_id, out WeaponTypeId parsedId)) {
-                    Debug.LogWarning($"Unknown WeaponId '{entry.weapon_id}' for '{entry.id}', skipped.");
+                if (!TryParseWeaponId(entry.weapon_type, out WeaponTypeId parsedId)) {
+                    Debug.LogWarning($"Unknown WeaponId '{entry.weapon_type}' for '{entry.id}', skipped.");
                     continue;
                 }
 

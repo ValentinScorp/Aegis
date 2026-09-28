@@ -14,9 +14,12 @@ namespace Aegis.View
         private Unit _unit;
         private bool _isMoving;
         private float _positionSyncEpsilon = 0.0001f;
+        private Vector3 _lastFramePos;
+        private bool _hasLastFramePos;
         private Vector3 _lastSyncedPosition;
-
-        public float Velocity => _agent.velocity.magnitude;
+        private Vector3 _realVelocity;
+        public Vector3 RealVelocity => _realVelocity;
+        public float AgentSpeed => _agent.isActiveAndEnabled ? _agent.velocity.magnitude : 0f;
         // EntityMovement.cs
         public float NormalizedSpeed => _agent.speed > 0f ? _agent.velocity.magnitude / _agent.speed : 0f; // 0..1
         public bool IsWalking => _isMoving;
@@ -43,10 +46,32 @@ namespace Aegis.View
             if (_unit == null) return;
 
             var current = transform.position;
+
+            UpdateRealVelocity(current);
+
             if ((current - _lastSyncedPosition).sqrMagnitude > _positionSyncEpsilon) {
                 _lastSyncedPosition = current;
                 _unit.Position = current;
             }
+            _unit.Velocity = _realVelocity;
+        }
+        private void UpdateRealVelocity(Vector3 current)
+        {
+            float dt = Time.deltaTime;
+            if (dt <= 0f) return;
+
+            if (_hasLastFramePos) {
+                Vector3 raw = (current - _lastFramePos) / dt;
+                raw.y = 0f;
+
+                // телепорт або спавн не повинні давати шалену швидкість
+                if (raw.sqrMagnitude > 30f * 30f) raw = Vector3.zero;
+
+                _realVelocity = Vector3.Lerp(_realVelocity, raw, 0.3f); // згладжування
+            }
+
+            _lastFramePos = current;
+            _hasLastFramePos = true;
         }
 
         public void Bind(Unit unit)

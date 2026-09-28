@@ -16,6 +16,7 @@ namespace Aegis.Core
             }
         }
         public Quaternion Rotation;
+        public Vector3 Velocity { get; set; }
 
         public event Action <Vector3> ChangedPosition;
     }

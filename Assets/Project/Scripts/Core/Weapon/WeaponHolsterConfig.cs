@@ -1,5 +1,6 @@
 using System;
 using Aegis.Core;
+using NUnit.Framework;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponHolsterConfig", menuName = "Weapon/Weapon Holster Config")]
@@ -16,10 +17,10 @@ public class WeaponHolsterConfig : ScriptableObject
     }
 
     public Entry[] Items;
-    public HolsterSocketId GetHolster(WeaponTypeId weaponId, WeaponSetId setId, WeaponRoleId roleId)
+    public HolsterSocketId GetHolster(WeaponTypeId weaponId, WeaponSetId setId, WeaponRoleId roleId, HolsterSocketId primHolstSock = HolsterSocketId.None)
     {
         if (weaponId == WeaponTypeId.None) return HolsterSocketId.None;
-        
+
         foreach (var item in Items) {
             if (item.WeaponId != weaponId) continue;
 
@@ -31,9 +32,16 @@ public class WeaponHolsterConfig : ScriptableObject
                 }
             }
             if (setId == WeaponSetId.Secondary) {
-                if (roleId == WeaponRoleId.Main)
+                if (roleId == WeaponRoleId.Main) {
+                    if (primHolstSock != item.SecondaryMainWeaponHolster) {
+                        return item.PrimaryMainWeaponHolster;
+                    }
                     return item.SecondaryMainWeaponHolster;
+                }
                 if (roleId == WeaponRoleId.Off) {
+                    if (primHolstSock != item.SecondaryOffWeaponHolster) {
+                        return item.PrimaryOffWeaponHolster;
+                    }
                     return item.SecondaryOffWeaponHolster;
                 }
             }
