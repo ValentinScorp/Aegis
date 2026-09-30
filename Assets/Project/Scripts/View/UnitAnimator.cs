@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Aegis.Core;
 using Aegis.Utilities;
@@ -7,12 +6,20 @@ using UnityEngine;
 
 namespace Aegis.View
 {
-    public class EntityAnimator : MonoBehaviour
+    public class UnitAnimator : MonoBehaviour
     {
         [SerializeField] private ClipAction _swordHitClip;
+        [SerializeField, Range(0f, 1f)] private float _bowDrawNormalizedTime = 0.45f; // підберіть на око: кадр, де тятива натягнута
+        [SerializeField] private float _drawSpeed = 2.5f;   // швидкість фази натягу (1/сек по normalizedTime)
+        [SerializeField] private float _releaseSpeed = 3.5f; // швидкість фази спуску
+        [SerializeField] private float _layerBlendSpeed = 6f;
         private Animator _animator;
         private Unit _unit;
         private int _currentStateHash;
+        private float _upperWeight;
+        private float _bowTime;
+        private bool _upperActive;
+
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int DeathHash = Animator.StringToHash("Death");
         private static readonly int SwordAttackHash = Animator.StringToHash("SwordAttack");
@@ -22,6 +29,10 @@ namespace Aegis.View
         private static readonly int WalkSpeedHash = Animator.StringToHash("WalkSpeed");
         private static readonly int AttackSpeedHash = Animator.StringToHash("AttackSpeed");
 
+        private static readonly int BowShootUpperHash = Animator.StringToHash("BowShoot");
+        private static string UpperBodyLayerName = "UpperBody";
+        private int _upperBodyLayer = -1;
+
         private readonly Dictionary<int, float> _clipLengths = new();
 
         public bool IsWalking => _currentStateHash == WalkHash;
@@ -30,6 +41,7 @@ namespace Aegis.View
         private void Awake()
         {
             _animator = ComponentResolver.Require(this, GetComponentInChildren<Animator>());
+            _upperBodyLayer = _animator.GetLayerIndex(UpperBodyLayerName);
             CacheClipLengths();
         }
         private void OnDestroy()
@@ -61,7 +73,7 @@ namespace Aegis.View
             PlayOnce(anim.StateHash);
             return animSpeed;
         }
-        
+
         public float GetClipLength(string clipName)
         {
             RuntimeAnimatorController controller = _animator.runtimeAnimatorController;
@@ -77,16 +89,41 @@ namespace Aegis.View
         }
         public void PlayIdle()
         {
+            // Debug.Log($"PlayIdle called, current={_currentStateHash}, target={IdleHash}");
             PlayLooping(IdleHash);
         }
         public void PlayWalk(float speed)
         {
             SetWalkSpeed(speed);
+            // Debug.Log($"PlayWalk called, current={_currentStateHash}, target={WalkHash}");
             PlayLooping(WalkHash);
         }
         public void PlayDeath()
         {
             PlayOnce(DeathHash);
+        }
+        public void UpdateAimAnimation(bool isAiming, float dt)
+        {
+            if (isAiming) {
+                _upperActive = true;
+                _upperWeight = Mathf.MoveTowards(_upperWeight, 1f, dt * _layerBlendSpeed);
+                _bowTime = Mathf.MoveTowards(_bowTime, _bowDrawNormalizedTime, dt * _drawSpeed);
+            } else if (_upperActive) {
+                _bowTime += dt * _releaseSpeed;
+                if (_bowTime >= 1f) {
+                    _bowTime = 1f;
+                    _upperActive = false;
+                }
+            } else {
+                _upperWeight = Mathf.MoveTowards(_upperWeight, 0f, dt * _layerBlendSpeed);
+            }
+
+            _animator.SetLayerWeight(_upperBodyLayer, _upperWeight);
+            
+            // Debug.Log($"weight={_upperWeight:F2}, bowTime={_bowTime:F2}, active={_upperActive}");
+
+            if (_upperWeight > 0.001f)
+                _animator.Play(BowShootUpperHash, _upperBodyLayer, _bowTime);
         }
         private void PlayOnce(int stateHash)
         {

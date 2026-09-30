@@ -6,14 +6,16 @@ namespace Aegis.View
 {
     public class UnitAnimationSync : MonoBehaviour
     {
-        private EntityAnimator _animator;
-        private EntityMovement _movement;
+        private UnitAnimator _animator;
+        private UnitAgentMovement _movement;
+        private UnitDirectMovement _directMovement;
         private Unit _unit;
 
         private void Awake()
         {
-            _animator = ComponentResolver.Require(this, GetComponent<EntityAnimator>());
-            _movement = ComponentResolver.Require(this, GetComponent<EntityMovement>());
+            _animator = ComponentResolver.Require(this, GetComponent<UnitAnimator>());
+            _movement = ComponentResolver.Require(this, GetComponent<UnitAgentMovement>());
+            _directMovement = GetComponent<UnitDirectMovement>();
         }
 
         public void Bind(Unit unit) => _unit = unit;
@@ -21,8 +23,28 @@ namespace Aegis.View
 
         private void Update()
         {
-            if (!_animator.IsWalking || _unit?.Config == null) return;
-            _animator.SetWalkSpeed(_movement.NormalizedSpeed * _unit.WalkAnimationSpeedMultiplier);
+            if (_unit?.Config == null) return;
+
+            if (_unit.ControlMode == UnitControlMode.Direct) {
+                UpdateDirectMode();
+            } else if (_animator.IsWalking) {
+                _animator.SetWalkSpeed(_movement.NormalizedSpeed * _unit.WalkAnimationSpeedMultiplier);
+            }
+            // Debug.Log($"[{name}] ControlMode={_unit.ControlMode}, IsMoving={_directMovement?.IsMoving}, Speed={_directMovement?.CurrentSpeedNormalized}");
+
+        }
+        private void UpdateDirectMode()
+        {
+            if (_directMovement != null) {
+                // Debug.Log($"[Sync] IsMoving={_directMovement.IsMoving}");
+                if (_directMovement.IsMoving)
+                    _animator.PlayWalk(_directMovement.CurrentSpeedNormalized * _unit.WalkAnimationSpeedMultiplier);
+                else
+                    _animator.PlayIdle();
+            }
+
+            // Debug.Log($"[{name}] UpdateAimAnimation called, IsAiming={_unit.IsAiming}");
+            _animator.UpdateAimAnimation(_unit.IsAiming, Time.deltaTime);
         }
     }
 }

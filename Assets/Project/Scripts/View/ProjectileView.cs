@@ -11,9 +11,12 @@ namespace Aegis.View
         [SerializeField] private float _arrowRadius = 0.05f;
         [SerializeField] private LayerMask _hitZoneMask;
         [SerializeField] private LayerMask _groundMask;
+        [SerializeField] private LayerMask _obstacleMask;
         [SerializeField] private float _drag = 0.003f;
         [SerializeField] private float _safeDistance = 1.0f; // дистанція, на яку стріла не перевіряє зони тіла того хто її випустив
         [SerializeField] private float _maxLifetime = 10f;
+        [SerializeField] private float _stickDuration = 20f;
+        [SerializeField] private float _playerShotSpeed = 35f;
         private int _allHitMasks;
         private Unit _owner;
         private Vector3 _velocity;
@@ -24,26 +27,8 @@ namespace Aegis.View
         private readonly RaycastHit[] _hits = new RaycastHit[8];
         private void Awake()
         {
-            _allHitMasks = _hitZoneMask | _groundMask;
+            _allHitMasks = _hitZoneMask | _groundMask | _obstacleMask;
         }
-        // public void Launch(Unit owner, WorldEntity target)
-        // {
-        //     _owner = owner;
-
-        //     Vector3 aimPoint = target.Position + Vector3.up * 1f;
-        //     Vector3 delta = aimPoint - transform.position;
-        //     Vector3 flat = new Vector3(delta.x, 0f, delta.z);
-
-        //     float t = Mathf.Max(flat.magnitude / _horizontalSpeed, 0.05f);
-
-        //     // швидкість, з якою через t секунд стріла опиниться в aimPoint
-        //     _velocity = new Vector3(
-        //         delta.x / t,
-        //         delta.y / t + 0.5f * _gravity * t,
-        //         delta.z / t);
-
-        //     transform.rotation = Quaternion.LookRotation(_velocity);
-        // }
 
         public void Launch(Unit owner, Vector3 aimPoint, Vector3 targetVelocity)
         {
@@ -114,12 +99,26 @@ namespace Aegis.View
             _hasHit = true;
             transform.position = hit.point;
 
-            // влучили в зону: шкода саме тій зоні й тому юніту, до якого вона належить
+            if (TryGetComponent(out Collider selfCollider))
+                selfCollider.enabled = false;
+
             if (hit.collider.TryGetComponent(out HitZoneView zone))
                 _owner?.ApplyProjectileDamage(zone.Owner, zone.BodyPart);
 
-            // інакше це земля або перешкода: промах
-            Destroy(gameObject);
+            transform.SetParent(hit.collider.transform, worldPositionStays: true);
+
+            enabled = false;
+
+            Destroy(gameObject, _stickDuration);
+        }
+        public void LaunchStraight(Unit owner, Vector3 aimPoint)
+        {
+            _owner = owner;
+
+            Vector3 dir = (aimPoint - transform.position).normalized;
+            _velocity = dir * _playerShotSpeed;
+
+            transform.rotation = Quaternion.LookRotation(_velocity);
         }
     }
 }

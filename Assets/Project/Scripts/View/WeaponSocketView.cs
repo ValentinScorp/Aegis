@@ -14,7 +14,7 @@ namespace Aegis.View
 
         protected abstract (Vector3 pos, Quaternion rot) GetAttachOffset(WeaponAttachConfig config);
 
-        public void AttachWeapon(WeaponView instance, WeaponsAttachCatalog attachCatalog)
+        public void AttachWeapon(WeaponView instance, WeaponAttachCatalog attachCatalog)
         {
             if (instance == null || _socket == null) return;
 

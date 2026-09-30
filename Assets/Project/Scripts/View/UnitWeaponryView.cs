@@ -7,8 +7,8 @@ namespace Aegis.View
 {
     public class UnitWeaponryView : MonoBehaviour
     {
-        [SerializeField] private WeaponsPrefabCatalog _weaponPrefabCatalog;
-        [SerializeField] private WeaponsAttachCatalog _weaponsAttachCatalog;
+        [SerializeField] private WeaponPrefabCatalog _weaponPrefabCatalog;
+        [SerializeField] private WeaponAttachCatalog _weaponsAttachCatalog;
         [SerializeField] private WeaponHolsterConfig _holsterConfig;
         private Dictionary<HandSocketId, HandSocketView> _handSockets;
         private Dictionary<HolsterSocketId, HolsterSocketView> _holsterSockets;

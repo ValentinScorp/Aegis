@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Aegis.View
 {
     [CreateAssetMenu(fileName = "WeaponsAttachCatalog", menuName = "Aegis/Weapons Attach Config Catalog")]
-    public class WeaponsAttachCatalog : ScriptableObject
+    public class WeaponAttachCatalog : ScriptableObject
     {
         [SerializeField] private WeaponAttachConfig[] _configs;
 
@@ -17,7 +17,7 @@ namespace Aegis.View
             foreach (var cfg in _configs) {
                 if (cfg == null) continue;
                 if (!_lookup.TryAdd(cfg.WeaponType, cfg))
-                    Debug.LogWarning($"[{nameof(WeaponsAttachCatalog)}] Duplicate entry for WeaponTypeId '{cfg.WeaponType}' in {name}.", this);
+                    Debug.LogWarning($"[{nameof(WeaponAttachCatalog)}] Duplicate entry for WeaponTypeId '{cfg.WeaponType}' in {name}.", this);
             }
         }
 
@@ -28,7 +28,7 @@ namespace Aegis.View
             if (_lookup.TryGetValue(typeId, out var cfg))
                 return cfg;
 
-            Debug.LogWarning($"[{nameof(WeaponsAttachCatalog)}] No WeaponAttachConfig found for WeaponTypeId '{typeId}'.");
+            Debug.LogWarning($"[{nameof(WeaponAttachCatalog)}] No WeaponAttachConfig found for WeaponTypeId '{typeId}'.");
             return null;
         }
     }

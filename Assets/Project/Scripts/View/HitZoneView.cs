@@ -8,15 +8,17 @@ namespace Aegis.View
     public class HitZoneView : MonoBehaviour
     {
         [SerializeField] private BodyPartId _bodyPartId;
-        private Collider _collider;
+        [SerializeField] private Collider _collider;
         public BodyPartId BodyPart => _bodyPartId;
         public WorldEntity Owner { get; private set; }
         public Vector3 Center => _collider != null ? _collider.bounds.center : transform.position;
 
         private void Awake()
         {
-            _collider = ComponentResolver.ResolveOrFind(this, _collider);
-            
+            if (_collider == null) {
+                Debug.LogWarning($"[HitZoneView] Collider is not assigned on '{name}'. Trying to find one via GetComponent.", this);
+                _collider = GetComponent<Collider>();
+            }
         }
         public void Bind(WorldEntity owner)
         {

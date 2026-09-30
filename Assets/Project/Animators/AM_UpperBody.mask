@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AM_UpperBody
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Human_Armature
+    m_Weight: 0
+  - m_Path: Human_Armature/Root
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/Spine
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Skt.Back.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Skt.Back.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Skt.Hip.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Skt.Hip.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Neck
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Neck/Head
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L/MiddleIntermediate.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L/MiddleIntermediate.L/MiddleDistal.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Skt.Hand.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L/ThumbIntermediate.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L/ThumbIntermediate.L/ThumbDistal.L
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R/MiddleIntermediate.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R/MiddleIntermediate.R/MiddleDistal.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Skt.Hand.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/Spine/Spine1/Spine2/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R/ThumbDistal.R
+    m_Weight: 1
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.L
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.L/LowerLeg.L
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Toes.L
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.R
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.R/LowerLeg.R
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R
+    m_Weight: 0
+  - m_Path: Human_Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toes.R
+    m_Weight: 0
+  - m_Path: Human_Mesh
+    m_Weight: 0

@@ -6,11 +6,11 @@ namespace Aegis.View
 {
     public class WorldView : MonoBehaviour
     {
-        [SerializeField] private UnitConfigRegistry _unitConfigRegistry;
+        [SerializeField] private UnitConfigCatalog _unitConfigRegistry;
         [SerializeField] private UnitCommonConfig _unitCommonConfig;
-        [SerializeField] private EntityView _humanoidUnit;
+        [SerializeField] private UnitView _humanoidUnit;
 
-        private List<EntityView> _views = new();
+        private List<UnitView> _views = new();
         private World _world;
         private void Awake()
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Aegis.Core
@@ -60,6 +61,11 @@ namespace Aegis.Core
         {
             _currentState?.OnInteractionsUpdate(closestTarget);
             _transitions.Evaluate(closestTarget);
+        }
+
+        internal void Stop()
+        {
+//            throw new NotImplementedException();
         }
     }
 }

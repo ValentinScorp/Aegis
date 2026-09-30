@@ -53,10 +53,11 @@ namespace Aegis.Services
                 Vector3 camForward = Quaternion.Euler(0f, _camRig.Yaw, 0f) * Vector3.forward;
                 _thirdPersonUnit.PerformAim(camForward);
             } else {
-                _thirdPersonUnit.ReleaseAim();
+                _thirdPersonUnit.PerformReleaseShot();
             }
             // WASD movement            
             Vector2 move = _inputListener.CameraMoveInput;
+            // Debug.Log($"[Switcher] move={move}");
             Quaternion yawRot = Quaternion.Euler(0f, _camRig.Yaw, 0f);
             Vector3 worldDir = yawRot * new Vector3(move.x, 0f, move.y);
 

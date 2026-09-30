@@ -398,8 +398,8 @@ Transform:
   m_GameObject: {fileID: 225179178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.65, y: 0.62, z: 14.73}
-  m_LocalScale: {x: 9.8022, y: 1.3, z: 1.2}
+  m_LocalPosition: {x: -3.15, y: 1.12, z: 14.73}
+  m_LocalScale: {x: 10.802025, y: 2.300135, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 970333578}
@@ -531,8 +531,8 @@ Transform:
   m_GameObject: {fileID: 306939382}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.36, y: 0.62, z: 5.79}
-  m_LocalScale: {x: 20, y: 1.3, z: 1.2}
+  m_LocalPosition: {x: 1.3599997, y: 1.12, z: 5.79}
+  m_LocalScale: {x: 20, y: 2.29996, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 970333578}
@@ -1411,8 +1411,8 @@ Transform:
   m_GameObject: {fileID: 885259603}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.13, y: 0.62, z: 10.28}
-  m_LocalScale: {x: 1.1084275, y: 1.3, z: 9.99852}
+  m_LocalPosition: {x: -8.13, y: 1.12, z: 10.280001}
+  m_LocalScale: {x: 1.1084275, y: 2.29996, z: 9.99852}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 970333578}
@@ -2286,8 +2286,8 @@ Transform:
   m_GameObject: {fileID: 1569074701}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.74, y: 0.62, z: 10.28}
-  m_LocalScale: {x: 1.1084275, y: 1.3, z: 9.99852}
+  m_LocalPosition: {x: 10.74, y: 1.12, z: 10.279999}
+  m_LocalScale: {x: 1.1084275, y: 2.29996, z: 9.99852}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 970333578}
@@ -2556,8 +2556,8 @@ Transform:
   m_GameObject: {fileID: 1729328308}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.36, y: 0.62, z: 14.61}
-  m_LocalScale: {x: 6.1496925, y: 1.3, z: 1.2}
+  m_LocalPosition: {x: 7.36, y: 1.12, z: 14.61}
+  m_LocalScale: {x: 6.1498346, y: 2.29996, z: 1.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 970333578}

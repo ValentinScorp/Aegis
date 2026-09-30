@@ -3,14 +3,14 @@ using UnityEngine;
 using Aegis.View;
 using Aegis.Core;
 
-[CustomEditor(typeof(EntityView))]
+[CustomEditor(typeof(UnitView))]
 public class EntityViewDebugEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        var view = (EntityView)target;
+        var view = (UnitView)target;
         
         var unit = view.GetUnit(); 
         if (unit == null) return;

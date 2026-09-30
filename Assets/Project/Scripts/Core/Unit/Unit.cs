@@ -62,7 +62,7 @@ namespace Aegis.Core
         public event Action<Vector3> DirectMoveRequested;
         public event Action AimStarted;
         public event Action AimEnded;
-
+        public event Action ShotReleased;
 
         public Unit(Vector3 position, FactionId factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
@@ -138,8 +138,10 @@ namespace Aegis.Core
         {
             if (ControlMode == mode) return;
 
-            if (mode == UnitControlMode.Direct)
+            if (mode == UnitControlMode.Direct) {
                 StopMovement();
+                StateMachine.Stop();
+            }
 
             ControlMode = mode;
             ControlModeChanged?.Invoke(mode);
@@ -170,10 +172,10 @@ namespace Aegis.Core
             if (ControlMode != UnitControlMode.Direct) return;
 
             if (worldDirection.sqrMagnitude > 0.0001f) {
-                StateMachine.SetState(UnitState.Walk);
+                // StateMachine.SetState(UnitState.Walk);
                 DirectMoveRequested?.Invoke(worldDirection);
             } else {
-                StateMachine.SetState(UnitState.Idle);
+                // StateMachine.SetState(UnitState.Idle);
             }
         }
         public void StopMovement()
@@ -224,15 +226,21 @@ namespace Aegis.Core
                 ApplyDamage(target, bodyPart, Weaponry.Damage);
             }
         }
+        public void PerformReleaseShot()
+        {
+            if (!IsAiming) return;
+            IsAiming = false;
+            AimEnded?.Invoke();
+            ShotReleased?.Invoke();
+        }
         public void ApplyProjectileDamage(WorldEntity target, BodyPartId bodyPart)
         {
             ApplyDamage(target, bodyPart, Weaponry.Damage);
         }
         private void ApplyDamage(WorldEntity target, BodyPartId bodyPart, float damage)
         {
-            Debug.Log($"{target}");
             if (target != null && target is Unit unit) {
-                Debug.Log($"Unit taking damage {damage}");
+                // Debug.Log($"Unit taking damage {damage}");
                 unit.TakeDamage(bodyPart, damage);
             }
         }

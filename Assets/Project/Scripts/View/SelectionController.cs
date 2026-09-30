@@ -56,10 +56,10 @@ namespace Aegis.Services
             worldEntity = null;
             return false;
         }
-        private bool TryGetEntityView(List<RaycastHit> hits, out EntityView view)
+        private bool TryGetEntityView(List<RaycastHit> hits, out UnitView view)
         {
             foreach (var hit in hits) {
-                view = hit.collider.GetComponentInParent<EntityView>();
+                view = hit.collider.GetComponentInParent<UnitView>();
                 if (view != null) return true;
             }
 

@@ -54,6 +54,9 @@ MonoBehaviour:
   _groundMask:
     serializedVersion: 2
     m_Bits: 1024
+  _obstacleMask:
+    serializedVersion: 2
+    m_Bits: 256
   _drag: 0.003
   _safeDistance: 1
   _maxLifetime: 10

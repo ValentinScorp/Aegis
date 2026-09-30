@@ -7,7 +7,7 @@ using Aegis.Utilities;
 namespace Aegis.View
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class EntityMovement : MonoBehaviour
+    public class UnitAgentMovement : MonoBehaviour
     {
         private NavMeshAgent _agent;
 
@@ -20,7 +20,6 @@ namespace Aegis.View
         private Vector3 _realVelocity;
         public Vector3 RealVelocity => _realVelocity;
         public float AgentSpeed => _agent.isActiveAndEnabled ? _agent.velocity.magnitude : 0f;
-        // EntityMovement.cs
         public float NormalizedSpeed => _agent.speed > 0f ? _agent.velocity.magnitude / _agent.speed : 0f; // 0..1
         public bool IsWalking => _isMoving;
 

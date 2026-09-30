@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Aegis.View
 {
-    public class EntityView : MonoBehaviour
+    public class UnitView : MonoBehaviour
     {
         [SerializeField] FactionPalette _factionPalette;
         [SerializeField] private GameObject _bowPrefab;
@@ -15,14 +15,15 @@ namespace Aegis.View
         [SerializeField] private Transform _projectileSpawnPoint;
         [SerializeField] private GameObject _swordPrefab;
         [SerializeField] private BodyPartId _aimBodyPart = BodyPartId.Torso;
+        [SerializeField] private LayerMask _aimRaycastMask;
         private Renderer _renderer;
-        private EntityMovement _entityMovement;
-        private EntityDirectMovement _entityDirectMovement;
-        private EntityAnimator _entityAnimator;
+        private UnitAgentMovement _unitAgentMovement;
+        private UnitDirectMovement _unitDirectMovement;
+        private UnitAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
         private UnitWeaponryView _weaponry;
-        private static readonly Dictionary<WorldEntity, EntityView> _views = new();
+        private static readonly Dictionary<WorldEntity, UnitView> _views = new();
         private readonly Dictionary<BodyPartId, HitZoneView> _hitZones = new();
 
         public WorldEntity Entity => _entity;
@@ -34,10 +35,10 @@ namespace Aegis.View
         private void Awake()
         {
             _healthView = ComponentResolver.Require(this, GetComponentInChildren<HealthView>());
-            _entityMovement = GetComponent<EntityMovement>();
+            _unitAgentMovement = GetComponent<UnitAgentMovement>();
             // Не всі юніти мають CharacterController/пряме керування — компонент опційний.
-            _entityDirectMovement = GetComponent<EntityDirectMovement>();
-            _entityAnimator = GetComponentInChildren<EntityAnimator>();
+            _unitDirectMovement = GetComponent<UnitDirectMovement>();
+            _entityAnimator = GetComponentInChildren<UnitAnimator>();
             _unitAnimationSync = ComponentResolver.Require(this, GetComponent<UnitAnimationSync>());
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
             if (_projectileSpawnPoint == null) Debug.LogWarning("No projectile spawn point on Humanoid prefab!");
@@ -47,19 +48,17 @@ namespace Aegis.View
             if ((_renderer = GetComponentInChildren<Renderer>()) == null)
                 Debug.LogWarning($"No <Renderer> found in prefab: {name}!", this);
 
-            _entityMovement.MovementCompleted += OnMovementComplete;
+            _unitAgentMovement.MovementCompleted += OnMovementComplete;
         }
         private void OnDestroy()
         {
-            _entityMovement.MovementCompleted -= OnMovementComplete;
+            _unitAgentMovement.MovementCompleted -= OnMovementComplete;
 
             Unbind();
         }
         public void Initialize(FactionId factionIdid)
         {
             _mpb = new MaterialPropertyBlock();
-
-
             SetFactionColor(_factionPalette.GetColor(factionIdid));
         }
         public void Bind(WorldEntity entity)
@@ -73,9 +72,9 @@ namespace Aegis.View
             if (entity is Unit unit) {
                 _weaponry.Bind(unit.Weaponry);
 
-                _entityMovement.Bind(unit);
-                _entityDirectMovement?.Bind(unit);
-                _entityDirectMovement?.SetActive(unit.ControlMode == UnitControlMode.Direct);
+                _unitAgentMovement.Bind(unit);
+                _unitDirectMovement?.Bind(unit);
+                _unitDirectMovement?.SetActive(unit.ControlMode == UnitControlMode.Direct);
                 _entityAnimator.Bind(unit);
                 _unitAnimationSync.Bind(unit);
 
@@ -83,10 +82,11 @@ namespace Aegis.View
                 unit.WasSelectedByPlayer += OnPlayerSelection;
                 unit.ChaseTo += OnChaseToAction;
                 unit.WalkTo += OnWalkAction;
-                unit.ExecutedStopMovement += _entityMovement.Stop;
+                unit.ExecutedStopMovement += _unitAgentMovement.Stop;
                 unit.ActionPerformed += OnActionPerformed;
                 unit.Died += OnDied;
                 unit.ProjectileLaunched += OnProjectileLaunched;
+                unit.ShotReleased += OnShotReleased;
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.Died += _healthView.OnHealthDepleted;
@@ -94,19 +94,6 @@ namespace Aegis.View
                 foreach (var zone in GetComponentsInChildren<HitZoneView>(true)) {
                     zone.Bind(unit);
                     _hitZones[zone.BodyPart] = zone;
-                }
-                foreach (var kv in _hitZones) {
-                    var z = kv.Value;
-                    var col = z.GetComponent<Collider>();
-                    Debug.Log(
-                        $"{kv.Key}: collider#{col.GetInstanceID()}, path={GetPath(z.transform)}, " +
-                        $"worldPos={z.transform.position}, center={z.Center}", z);
-
-                    var cap = z.GetComponent<CapsuleCollider>();
-                    Debug.Log(
-                        $"{kv.Key}: localCenter={cap.center}, lossyScale={z.transform.lossyScale}, " +
-                        $"bounds.center={cap.bounds.center}, transformPoint={z.transform.TransformPoint(cap.center)}, " +
-                        $"boneY={z.transform.position.y:F2}", z);
                 }
             }
         }
@@ -128,8 +115,8 @@ namespace Aegis.View
 
             if (_entity is Unit unit) {
                 _weaponry.Unbind();
-                _entityMovement.Unbind();
-                _entityDirectMovement?.Unbind();
+                _unitAgentMovement.Unbind();
+                _unitDirectMovement?.Unbind();
                 _entityAnimator.Unbind();
                 _unitAnimationSync.Unbind();
 
@@ -137,9 +124,10 @@ namespace Aegis.View
                 unit.WasSelectedByPlayer -= OnPlayerSelection;
                 unit.ChaseTo -= OnChaseToAction;
                 unit.WalkTo -= OnWalkAction;
-                unit.ExecutedStopMovement -= _entityMovement.Stop;
+                unit.ExecutedStopMovement -= _unitAgentMovement.Stop;
                 unit.Died -= OnDied;
                 unit.ProjectileLaunched -= OnProjectileLaunched;
+                unit.ShotReleased -= OnShotReleased;
 
                 unit.HealthChanged -= _healthView.OnHealthChanged;
                 unit.Died -= _healthView.OnHealthDepleted;
@@ -154,14 +142,14 @@ namespace Aegis.View
             bool direct = mode == UnitControlMode.Direct;
 
             if (direct) {
-                _entityMovement.DisableAgent();
-                _entityDirectMovement?.SetActive(true);
+                _unitAgentMovement.DisableAgent();
+                _unitDirectMovement?.SetActive(true);
             } else {
-                _entityDirectMovement?.SetActive(false);
-                _entityMovement.EnableAgent();
+                _unitDirectMovement?.SetActive(false);
+                _unitAgentMovement.EnableAgent();
             }
 
-            if (direct && _entityDirectMovement == null)
+            if (direct && _unitDirectMovement == null)
                 Debug.LogWarning($"[EntityView] Unit переведено в Direct-режим, але на префабі '{name}' немає EntityDirectMovement/CharacterController.", this);
         }
         private void OnActionPerformed(UnitActionEvent actionEvent)
@@ -171,34 +159,25 @@ namespace Aegis.View
 
             switch (actionEvent.Action) {
                 case UnitAction.Attack:
-                    _entityMovement.LookAt(actionEvent.TargetPosition);
+                    _unitAgentMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
                     var ainmSpeed = _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
                     _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
-                    // if (!unit.CanShoot
-                    //     && _equipmentSockets.TryGetValue(WeaponSocketType.HandRight, out var mainHandSlot)
-                    //     && _swordPrefab != null) {
-                    //     mainHandSlot.EquipWeapon(_swordPrefab);
-                    // }                    
                     break;
                 case UnitAction.Idle:
                     _entityAnimator.PlayIdle();
-                    // if (_equipmentSockets.TryGetValue(WeaponSocketType.HandRight, out var slot))
-                    //     slot.UnequipWeapon();
                     break;
             }
         }
-
-
         private void OnChaseToAction(Vector3 target)
         {
-            _entityMovement.MoveTo(target);
-            _entityAnimator.PlayWalk(_entityMovement.AgentSpeed);
+            _unitAgentMovement.MoveTo(target);
+            _entityAnimator.PlayWalk(_unitAgentMovement.AgentSpeed);
         }
         private void OnWalkAction(Vector3 destination)
         {
-            _entityMovement.MoveTo(destination);
-            _entityAnimator.PlayWalk(_entityMovement.AgentSpeed);
+            _unitAgentMovement.MoveTo(destination);
+            _entityAnimator.PlayWalk(_unitAgentMovement.AgentSpeed);
         }
         private void OnProjectileLaunched(Vector3 targetPosition)
         {
@@ -230,6 +209,30 @@ namespace Aegis.View
 
             return transform.position + Vector3.up;   // запасний варіант, якщо зон нема
         }
+        private void OnShotReleased()
+        {
+            if (_entity is not Unit unit) return;
+
+            var arrowPrefab = _projectileCatalog.GetPrefab(unit.Weaponry.ActiveProjectileId);
+            if (arrowPrefab == null || _projectileSpawnPoint == null) return;
+
+            Vector3 aimPoint = GetScreenCenterAimPoint();
+            var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+            arrow.Launch(unit, aimPoint, Vector3.zero); // ціль довільна, упередження не рахуємо
+        }
+        private Vector3 GetScreenCenterAimPoint()
+        {
+            var cam = Camera.main;
+            if (cam == null)
+                return _projectileSpawnPoint.position + _projectileSpawnPoint.forward * 30f;
+
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, _aimRaycastMask, QueryTriggerInteraction.Collide))
+                return hit.point;
+
+            return ray.origin + ray.direction * 60f;
+        }
+
         private bool TryGetCenter(BodyPartId part, out Vector3 center)
         {
             if (_hitZones.TryGetValue(part, out var zone) && zone.TryGetComponent(out CapsuleCollider cap)) {
@@ -250,12 +253,12 @@ namespace Aegis.View
         {
             if (target == null) return;
 
-            _entityMovement.LookAt(target.Position);
+            _unitAgentMovement.LookAt(target.Position);
         }
         private void OnDied()
         {
-            _entityMovement.Stop();
-            _entityMovement.DisableAgent();
+            _unitAgentMovement.Stop();
+            _unitAgentMovement.DisableAgent();
 
             var selectable = GetComponent<Selectable>();
             if (selectable) selectable.Select(false);

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b27007729d0d0545b6a9c2590134688, type: 3}
-  m_Name: WeaponsAttachCatalog
+  m_Name: WeaponAttachCatalog
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.WeaponAttachCatalog
   _configs:
   - {fileID: 11400000, guid: cab80e86fb3f7e74f909f7e8c059e1f8, type: 2}
