@@ -51,7 +51,7 @@ namespace Aegis.Services
 
             if (_inputListener.IsAimHeld) {
                 Vector3 camForward = Quaternion.Euler(0f, _camRig.Yaw, 0f) * Vector3.forward;
-                _thirdPersonUnit.PerformAim(camForward);
+                _thirdPersonUnit.PerformAim(camForward, Time.deltaTime);
             } else {
                 _thirdPersonUnit.PerformReleaseShot();
             }

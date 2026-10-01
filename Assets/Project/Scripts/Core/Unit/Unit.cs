@@ -37,7 +37,10 @@ namespace Aegis.Core
         public float AttackTime => Weaponry.AttackTime > 0.01f ? Weaponry.AttackTime : _common.UnarmedCooldown;
         public float AttackEventTime => Weaponry.AttackEventTime > 0.01f ? Weaponry.AttackEventTime : 0.5f;
         public bool IsAiming { get; private set; }
+        public float BowDrawSeconds => 0.8f;
         public Vector3 AimDirection { get; private set; }
+        public float AimHeldSeconds { get; private set; }
+        public bool AimCancelled { get; private set; }
 
         // ─── Runtime state ────────────────────────────────────
         public Vector3 FixedPosition { get; set; }
@@ -47,6 +50,7 @@ namespace Aegis.Core
         public bool SelectedByPlayer { get; private set; }
         public bool IsPlayerControlled { get; private set; }
         public UnitControlMode ControlMode { get; private set; } = UnitControlMode.Indirect;
+
 
         // ─── Events ───────────────────────────────────────────
         public event Action<BodyPartId, float, float> BodyPartHealthChanged;
@@ -190,20 +194,27 @@ namespace Aegis.Core
         }
 
         // ─── Combat ───────────────────────────────────────────
-        public void PerformAim(Vector3 worldDirection)
+        public void PerformAim(Vector3 worldDirection, float deltaTime)
         {
             if (!IsAlive || ControlMode != UnitControlMode.Direct || !CanShoot) return;
             worldDirection.y = 0f;
             AimDirection = worldDirection.normalized;
-            if (IsAiming) return;
+            if (IsAiming) {
+                AimHeldSeconds += deltaTime;
+                return;
+            }
             IsAiming = true;
+            AimHeldSeconds = 0f;
+            AimCancelled = false;
             AimStarted?.Invoke();
         }
         public void ReleaseAim()
         {
             if (!IsAiming) return;
             IsAiming = false;
+            AimCancelled = AimHeldSeconds < BowDrawSeconds;
             AimEnded?.Invoke();
+            if (!AimCancelled) ShotReleased?.Invoke();
         }
         public void PerformAttackAction(WorldEntity target)
         {

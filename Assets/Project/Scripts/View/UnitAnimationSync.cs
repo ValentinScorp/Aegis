@@ -44,7 +44,7 @@ namespace Aegis.View
             }
 
             // Debug.Log($"[{name}] UpdateAimAnimation called, IsAiming={_unit.IsAiming}");
-            _animator.UpdateAimAnimation(_unit.IsAiming, Time.deltaTime);
+            _animator.UpdateAimAnimation(_unit.IsAiming, _unit.AimCancelled, Time.deltaTime);
         }
     }
 }

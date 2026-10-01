@@ -102,26 +102,30 @@ namespace Aegis.View
         {
             PlayOnce(DeathHash);
         }
-        public void UpdateAimAnimation(bool isAiming, float dt)
+        public void UpdateAimAnimation(bool isAiming, bool cancelled, float dt)
         {
             if (isAiming) {
+                if (!_upperActive) _bowTime = 0f;          // кожен натяг починається з нуля
                 _upperActive = true;
                 _upperWeight = Mathf.MoveTowards(_upperWeight, 1f, dt * _layerBlendSpeed);
-                _bowTime = Mathf.MoveTowards(_bowTime, _bowDrawNormalizedTime, dt * _drawSpeed);
+
+                float drawSeconds = Mathf.Max(0.05f, _unit != null ? _unit.BowDrawSeconds : 0.8f);
+                float drawSpeed = _bowDrawNormalizedTime / drawSeconds;
+                _bowTime = Mathf.MoveTowards(_bowTime, _bowDrawNormalizedTime, dt * drawSpeed);
             } else if (_upperActive) {
-                _bowTime += dt * _releaseSpeed;
-                if (_bowTime >= 1f) {
-                    _bowTime = 1f;
-                    _upperActive = false;
+                if (cancelled) {
+                    // скасований натяг: тятива повертається назад, без анімації пострілу
+                    _bowTime = Mathf.MoveTowards(_bowTime, 0f, dt * _releaseSpeed);
+                    if (_bowTime <= 0f) _upperActive = false;
+                } else {
+                    _bowTime += dt * _releaseSpeed;
+                    if (_bowTime >= 1f) { _bowTime = 1f; _upperActive = false; }
                 }
             } else {
                 _upperWeight = Mathf.MoveTowards(_upperWeight, 0f, dt * _layerBlendSpeed);
             }
 
             _animator.SetLayerWeight(_upperBodyLayer, _upperWeight);
-            
-            // Debug.Log($"weight={_upperWeight:F2}, bowTime={_bowTime:F2}, active={_upperActive}");
-
             if (_upperWeight > 0.001f)
                 _animator.Play(BowShootUpperHash, _upperBodyLayer, _bowTime);
         }
