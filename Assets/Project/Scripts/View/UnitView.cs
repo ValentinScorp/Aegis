@@ -19,12 +19,14 @@ namespace Aegis.View
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
+        private UnitAimTwist _unitAimTwist;
         private UnitAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
         private UnitWeaponryView _weaponry;
         private static readonly Dictionary<WorldEntity, UnitView> _views = new();
         private readonly Dictionary<BodyPartId, HitZoneView> _hitZones = new();
+        private const bool PLAYER_AIM_DIRECT = true;
 
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
@@ -38,6 +40,7 @@ namespace Aegis.View
             _unitAgentMovement = GetComponent<UnitAgentMovement>();
             // Не всі юніти мають CharacterController/пряме керування — компонент опційний.
             _unitDirectMovement = GetComponent<UnitDirectMovement>();
+            _unitAimTwist = GetComponent<UnitAimTwist>();
             _entityAnimator = GetComponentInChildren<UnitAnimator>();
             _unitAnimationSync = ComponentResolver.Require(this, GetComponent<UnitAnimationSync>());
             if (_projectileCatalog == null) Debug.LogWarning("No <ProjectileCatalog> on Humanoid prefab!");
@@ -75,6 +78,7 @@ namespace Aegis.View
                 _unitAgentMovement.Bind(unit);
                 _unitDirectMovement?.Bind(unit);
                 _unitDirectMovement?.SetActive(unit.ControlMode == UnitControlMode.Direct);
+                _unitAimTwist?.Bind(unit);
                 _entityAnimator.Bind(unit);
                 _unitAnimationSync.Bind(unit);
 
@@ -117,6 +121,7 @@ namespace Aegis.View
                 _weaponry.Unbind();
                 _unitAgentMovement.Unbind();
                 _unitDirectMovement?.Unbind();
+                _unitAimTwist?.Unbind();
                 _entityAnimator.Unbind();
                 _unitAnimationSync.Unbind();
 
@@ -216,9 +221,15 @@ namespace Aegis.View
             var arrowPrefab = _projectileCatalog.GetPrefab(unit.Weaponry.ActiveProjectileId);
             if (arrowPrefab == null || _projectileSpawnPoint == null) return;
 
-            Vector3 aimPoint = GetScreenCenterAimPoint();
-            var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
-            arrow.Launch(unit, aimPoint, Vector3.zero); // ціль довільна, упередження не рахуємо
+            if (PLAYER_AIM_DIRECT) {
+                Vector3 dir = Camera.main != null ? Camera.main.transform.forward : _projectileSpawnPoint.forward;
+                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, Quaternion.LookRotation(dir));
+                arrow.LaunchDirection(unit, dir);
+            } else {
+                Vector3 aimPoint = GetScreenCenterAimPoint();
+                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+                arrow.Launch(unit, aimPoint, Vector3.zero);
+            }
         }
         private Vector3 GetScreenCenterAimPoint()
         {

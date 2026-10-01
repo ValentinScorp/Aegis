@@ -9,6 +9,7 @@ namespace Aegis.View
     {
         [SerializeField] private float _rotationSpeedDegPerSec = 720f;
         [SerializeField] private float _gravity = -20f;
+        [SerializeField] private float _maxTwistAngle = 100f;
 
         private CharacterController _controller;
         private Unit _unit;
@@ -44,9 +45,21 @@ namespace Aegis.View
 
             Quaternion? targetRot = null;
 
-            if (_unit.IsAiming)
-                targetRot = Quaternion.LookRotation(_unit.AimDirection, Vector3.up);
-            else if (direction.sqrMagnitude > 0.0001f)
+            if (_unit.IsAiming) {
+                Vector3 aim = _unit.AimDirection;
+                aim.y = 0f;
+
+                if (direction.sqrMagnitude > 0.0001f && aim.sqrMagnitude > 0.0001f) {
+                    // Ноги дивляться в бік руху. Якщо рух майже назад відносно прицілу,
+                    // розвертаємо ноги на 180°, щоб торс не скручувався більше за ліміт.
+                    Vector3 legs = direction;
+                    if (Vector3.Angle(legs, aim) > _maxTwistAngle) legs = -legs;
+                    targetRot = Quaternion.LookRotation(legs, Vector3.up);
+                } else if (aim.sqrMagnitude > 0.0001f) {
+                    // Стоїмо на місці: тіло повністю повертається на ціль, як зараз.
+                    targetRot = Quaternion.LookRotation(aim, Vector3.up);
+                }
+            } else if (direction.sqrMagnitude > 0.0001f)
                 targetRot = Quaternion.LookRotation(direction, Vector3.up);
 
             if (targetRot.HasValue)

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Aegis.Core;
 using Aegis.Utilities;
+using System;
 
 namespace Aegis.View
 {
@@ -17,6 +18,7 @@ namespace Aegis.View
         [SerializeField] private float _maxLifetime = 10f;
         [SerializeField] private float _stickDuration = 20f;
         [SerializeField] private float _playerShotSpeed = 35f;
+        [SerializeField] private float _stickDepth = 0.15f;
         private int _allHitMasks;
         private Unit _owner;
         private Vector3 _velocity;
@@ -97,18 +99,21 @@ namespace Aegis.View
         private void Hit(RaycastHit hit)
         {
             _hasHit = true;
-            transform.position = hit.point;
+
+            Vector3 dir = _velocity.normalized;
+
+            transform.rotation = Quaternion.LookRotation(dir);
+            transform.position = hit.point + dir * _stickDepth;
 
             if (TryGetComponent(out Collider selfCollider))
                 selfCollider.enabled = false;
 
-            if (hit.collider.TryGetComponent(out HitZoneView zone))
+            if (hit.collider.TryGetComponent(out HitZoneView zone)) {
                 _owner?.ApplyProjectileDamage(zone.Owner, zone.BodyPart);
-
-            transform.SetParent(hit.collider.transform, worldPositionStays: true);
+                transform.SetParent(hit.collider.transform, worldPositionStays: true);
+            }
 
             enabled = false;
-
             Destroy(gameObject, _stickDuration);
         }
         public void LaunchStraight(Unit owner, Vector3 aimPoint)
@@ -119,6 +124,14 @@ namespace Aegis.View
             _velocity = dir * _playerShotSpeed;
 
             transform.rotation = Quaternion.LookRotation(_velocity);
+        }
+
+        internal void LaunchDirection(Unit owner, Vector3 direction)
+        {
+            _owner = owner;
+            _velocity = direction.normalized * _playerShotSpeed;
+            transform.rotation = Quaternion.LookRotation(_velocity);
+            Debug.Log($"[Arrow] launch v={_velocity} pos={transform.position}");
         }
     }
 }
