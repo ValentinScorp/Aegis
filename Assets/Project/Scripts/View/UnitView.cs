@@ -18,6 +18,7 @@ namespace Aegis.View
         [SerializeField] private LayerMask _aimRaycastMask;
         [SerializeField] private float _zeroDistance = 10f;   // дистанція, на якій стріла влучає точно в хрестик
         [SerializeField] private bool _playerAimDirect = true;
+        [SerializeField] private Collider _bodyCollider;
 
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
@@ -34,7 +35,7 @@ namespace Aegis.View
 
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
-        private MaterialPropertyBlock _mpb;        
+        private MaterialPropertyBlock _mpb;
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -163,7 +164,7 @@ namespace Aegis.View
             bool directMode = mode == UnitControlMode.Direct;
 
             // if (_healthCanvas != null)
-                // _healthCanvas.enabled = !directMode;
+            // _healthCanvas.enabled = !directMode;
             UpdateHealthDollVisibility();
 
             if (directMode) {
@@ -300,11 +301,18 @@ namespace Aegis.View
             _unitAgentMovement.Stop();
             _unitAgentMovement.DisableAgent();
             _unitDirectMovement?.SetActive(false);
+            
+            if (_bodyCollider != null) _bodyCollider.enabled = false;
 
             var selectable = GetComponent<Selectable>();
             if (selectable) selectable.Select(false);
 
             _entityAnimator.PlayDeath();
+
+            if (_healthCanvas != null) {
+                var t = _healthCanvas.transform;
+                t.localPosition = new Vector3(t.localPosition.x, 0.8f, t.localPosition.z); 
+            }
         }
 
         private void OnPlayerSelection(bool selected)

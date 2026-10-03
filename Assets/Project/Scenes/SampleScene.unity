@@ -1684,8 +1684,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -2532,9 +2532,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6d4482688d1134987518a770aa4ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.World
-  _unitConfigRegistry: {fileID: 11400000, guid: 0ad0687bcfed214428f62598ab521a7e, type: 2}
+  _unitConfigCatalog: {fileID: 11400000, guid: 0ad0687bcfed214428f62598ab521a7e, type: 2}
   _unitCommonConfig: {fileID: 11400000, guid: 4d3f893b45b2fe746adf852026291343, type: 2}
   _humanoidUnit: {fileID: 391847212068966660, guid: b09f8db558ada994ab8ea39a612a7c04, type: 3}
+  _playerInputListener: {fileID: 1814450725}
 --- !u!1 &1871798194
 GameObject:
   m_ObjectHideFlags: 0

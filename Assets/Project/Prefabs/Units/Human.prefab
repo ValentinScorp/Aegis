@@ -499,7 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.EntityView
   _factionPalette: {fileID: 11400000, guid: 58ec9e9c620b09f409b321b341ce8f44, type: 2}
   _bowPrefab: {fileID: 6204959886361044491, guid: 2af3da8a2711c824c95b50d930e5494b, type: 3}
-  _healthView: {fileID: 0}
+  _healthView: {fileID: 1250569602999208233}
   _projectileCatalog: {fileID: 11400000, guid: dba6814a3839e6241bd2fda0635eb230, type: 2}
   _projectileSpawnPoint: {fileID: 124546060268151181}
   _swordPrefab: {fileID: 7030230649132785133, guid: e47b25270eee6c14b9db87f9201e4f09, type: 3}
@@ -508,6 +508,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 66816
   _zeroDistance: 10
+  _playerAimDirect: 1
+  _bodyCollider: {fileID: 1595188489905096564}
 --- !u!114 &6744078577640128774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,7 +754,7 @@ GameObject:
   - component: {fileID: 8900559226208838005}
   - component: {fileID: 1595188489905096564}
   m_Layer: 0
-  m_Name: Collider
+  m_Name: BodyCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1272,6 +1274,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22c1df08f2db3e44c9fb1c8442649790, type: 3}
+--- !u!114 &1250569602999208233 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3749005399516000059, guid: 22c1df08f2db3e44c9fb1c8442649790, type: 3}
+  m_PrefabInstance: {fileID: 2692535620727170578}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8596c1927b613f540a8710e2774950d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.BodyDollView
 --- !u!224 &5560451522483812338 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7527625847980298720, guid: 22c1df08f2db3e44c9fb1c8442649790, type: 3}

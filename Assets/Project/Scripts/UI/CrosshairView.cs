@@ -6,9 +6,9 @@ namespace Aegis.View
 {
     public class CrosshairView : MonoBehaviour
     {
-        [SerializeField] private float _armLength = 10f;
-        [SerializeField] private float _gap = 4f;
-        [SerializeField] private float _thickness = 2f;
+        [SerializeField] private float _armLength = 8f;
+        [SerializeField] private float _gap = 8f;
+        [SerializeField] private float _thickness = 1f;
         [SerializeField] private Color _color = new Color(1f, 1f, 1f, 0.9f);
 
         private Unit _unit;

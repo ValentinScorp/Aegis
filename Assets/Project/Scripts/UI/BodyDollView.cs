@@ -22,5 +22,9 @@ namespace Aegis.View
             foreach (var p in _parts)
                 if (p.Part == part) { p.Apply(current, max); return; }
         }
+        public override void OnHealthDepleted()
+        {
+            
+        }
     }
 }

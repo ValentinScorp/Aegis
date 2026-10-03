@@ -4,6 +4,17 @@ namespace Aegis.Utilities
 {
     public static class ComponentResolver
     {
+        public static T FindInChildren<T>(MonoBehaviour context) where T : Component
+        {
+            if (context == null) return null;
+
+            T component = context.transform.GetComponentInChildren<T>(true);
+
+            if (component == null)
+                Debug.LogError($"[{context.GetType().Name}] {typeof(T).Name} not found in children!", context);
+
+            return component;
+        }
         public static T ResolveOrFind<T>(MonoBehaviour context, T component) where T : Component
         {
             if (component != null) return component;
