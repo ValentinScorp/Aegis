@@ -2,7 +2,7 @@ using UnityEngine;
 using Aegis.Core;
 using Aegis.Utilities;
 using System.Collections.Generic;
-using System.Linq;
+using Aegis.UI;
 
 namespace Aegis.View
 {
@@ -20,6 +20,7 @@ namespace Aegis.View
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
+        private Canvas _healthCanvas;
         private UnitAimTwist _unitAimTwist;
         private UnitAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
@@ -38,6 +39,7 @@ namespace Aegis.View
         private void Awake()
         {
             _healthView = ComponentResolver.Require(this, GetComponentInChildren<HealthView>());
+            _healthCanvas = _healthView.GetComponentInParent<Canvas>(true);
             _unitAgentMovement = GetComponent<UnitAgentMovement>();
             // Не всі юніти мають CharacterController/пряме керування — компонент опційний.
             _unitDirectMovement = GetComponent<UnitDirectMovement>();
@@ -148,9 +150,12 @@ namespace Aegis.View
         }
         private void OnControlModeChanged(UnitControlMode mode)
         {
-            bool direct = mode == UnitControlMode.Direct;
+            bool directMode = mode == UnitControlMode.Direct;
 
-            if (direct) {
+            if (_healthCanvas != null)
+                _healthCanvas.enabled = !directMode;
+
+            if (directMode) {
                 _unitAgentMovement.DisableAgent();
                 _unitDirectMovement?.SetActive(true);
             } else {
@@ -158,7 +163,7 @@ namespace Aegis.View
                 _unitAgentMovement.EnableAgent();
             }
 
-            if (direct && _unitDirectMovement == null)
+            if (directMode && _unitDirectMovement == null)
                 Debug.LogWarning($"[EntityView] Unit переведено в Direct-режим, але на префабі '{name}' немає EntityDirectMovement/CharacterController.", this);
         }
         private void OnActionPerformed(UnitActionEvent actionEvent)

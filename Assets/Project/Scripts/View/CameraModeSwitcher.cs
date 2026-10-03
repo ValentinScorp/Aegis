@@ -1,6 +1,7 @@
-using UnityEngine;
 using Aegis.Core;
+using Aegis.UI;
 using Aegis.View;
+using UnityEngine;
 
 namespace Aegis.Services
 {
@@ -15,6 +16,7 @@ namespace Aegis.Services
         [SerializeField] private CameraView _cameraView;
         [SerializeField] private PlayerInputListener _inputListener;
         [SerializeField] private SelectionController _selectionController;
+        [SerializeField] private PlayerHealthHud _playerHealthHud;
 
         private CrosshairView _crosshair;
         private CameraRig _camRig;
@@ -110,12 +112,14 @@ namespace Aegis.Services
             unit.SetControlMode(UnitControlMode.Direct);
             _camRig.SetMode(CameraMode.ThirdPerson, unit);
             _crosshair.Bind(unit);
+            _playerHealthHud?.Bind(unit);
         }
         private void ReleaseThirdPersonUnit()
         {
             if (_thirdPersonUnit == null) return;
             _thirdPersonUnit.ReleaseAim();
             _crosshair?.Unbind();
+            _playerHealthHud.Unbind();
             _thirdPersonUnit.PerformDirectMove(Vector3.zero);
             _thirdPersonUnit.SetControlMode(UnitControlMode.Indirect);
             _thirdPersonUnit = null;

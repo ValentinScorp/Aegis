@@ -1,4 +1,5 @@
 using Aegis.Core;
+using Aegis.UI;
 
 namespace Aegis.View
 {

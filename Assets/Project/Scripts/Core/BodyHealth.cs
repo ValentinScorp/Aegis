@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-
 using System.Linq;
-using UnityEngine;
+
 
 namespace Aegis.Core
 {
@@ -35,7 +34,7 @@ namespace Aegis.Core
             foreach (var kv in _parts) {
                 var part = kv.Key;
                 kv.Value.Changed += (cur, max) => {
-                    Debug.Log($"[BodyHealth] {part}: {cur}/{max}");
+                    // Debug.Log($"[BodyHealth] {part}: {cur}/{max}");
                     PartChanged?.Invoke(part, cur, max);
                 };
             }

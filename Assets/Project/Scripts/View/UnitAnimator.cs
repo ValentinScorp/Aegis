@@ -9,7 +9,7 @@ namespace Aegis.View
     public class UnitAnimator : MonoBehaviour
     {
         [SerializeField, Range(0f, 1f)] private float _bowDrawNormalizedTime = 0.45f; // підберіть на око: кадр, де тятива натягнута
-        [SerializeField] private float _drawSpeed = 2.5f;   // швидкість фази натягу (1/сек по normalizedTime)
+        // [SerializeField] private float _drawSpeed = 2.5f;   // швидкість фази натягу (1/сек по normalizedTime)
         [SerializeField] private float _releaseSpeed = 3.5f; // швидкість фази спуску
         [SerializeField] private float _layerBlendSpeed = 6f;
         private Animator _animator;

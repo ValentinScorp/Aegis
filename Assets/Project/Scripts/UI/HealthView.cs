@@ -1,7 +1,7 @@
 using Aegis.Core;
 using UnityEngine;
 
-namespace Aegis.View
+namespace Aegis.UI
 {
     public abstract class HealthView : MonoBehaviour
     {
