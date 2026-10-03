@@ -131,7 +131,23 @@ namespace Aegis.View
             _owner = owner;
             _velocity = direction.normalized * _playerShotSpeed;
             transform.rotation = Quaternion.LookRotation(_velocity);
-            Debug.Log($"[Arrow] launch v={_velocity} pos={transform.position}");
+            // Debug.Log($"[Arrow] launch v={_velocity} pos={transform.position}");
+        }
+        internal void LaunchAtCrosshair(Unit owner, Ray cameraRay, float zeroDistance)
+        {
+            _owner = owner;
+            Vector3 muzzle = transform.position;
+
+            // точка на осі камери, на zeroDistance попереду дула (по глибині)
+            float along = Mathf.Max(0f, Vector3.Dot(muzzle - cameraRay.origin, cameraRay.direction));
+            Vector3 target = cameraRay.origin + cameraRay.direction * (along + zeroDistance);
+
+            // компенсація просідання: стріла за час польоту t падає на 0.5·g·t²
+            float t = (target - muzzle).magnitude / _playerShotSpeed;
+            target += Vector3.up * (0.5f * _gravity * t * t);
+
+            _velocity = (target - muzzle).normalized * _playerShotSpeed;
+            transform.rotation = Quaternion.LookRotation(_velocity);
         }
     }
 }

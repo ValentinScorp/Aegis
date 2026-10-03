@@ -51,7 +51,7 @@ namespace Aegis.Core
             if (IsHolstered) Unholster();
             else Holster();
         }
-        private void Holster()
+        public void Holster()
         {
             if (IsHolstered) return;
             IsHolstered = true;

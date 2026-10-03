@@ -203,6 +203,7 @@ namespace Aegis.Core
                 AimHeldSeconds += deltaTime;
                 return;
             }
+            _weaponry.Unholster();
             IsAiming = true;
             AimHeldSeconds = 0f;
             AimCancelled = false;
@@ -212,7 +213,14 @@ namespace Aegis.Core
         {
             if (!IsAiming) return;
             IsAiming = false;
-            AimCancelled = AimHeldSeconds < BowDrawSeconds;
+            AimCancelled = false;
+            AimEnded?.Invoke();
+        }
+        public void PerformReleaseShot()
+        {
+            if(!IsAiming) return;
+            IsAiming = false;
+            AimCancelled = AimHeldSeconds < BowDrawSeconds; 
             AimEnded?.Invoke();
             if (!AimCancelled) ShotReleased?.Invoke();
         }
@@ -237,13 +245,7 @@ namespace Aegis.Core
                 ApplyDamage(target, bodyPart, Weaponry.Damage);
             }
         }
-        public void PerformReleaseShot()
-        {
-            if (!IsAiming) return;
-            IsAiming = false;
-            AimEnded?.Invoke();
-            ShotReleased?.Invoke();
-        }
+
         public void ApplyProjectileDamage(WorldEntity target, BodyPartId bodyPart)
         {
             ApplyDamage(target, bodyPart, Weaponry.Damage);

@@ -311,7 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2350081519840094950}
   - component: {fileID: 8289442698810755439}
-  - component: {fileID: 3083268536838819926}
+  - component: {fileID: 709332516845403710}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3083268536838819926
+--- !u!114 &709332516845403710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -400,7 +400,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9070557443878832773}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a135fd614a0b6644c8b8a951ae2d832f, type: 3}
+  m_Script: {fileID: 11500000, guid: 49ae90be63f7f094db983cd9a4b2fc30, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  _healthBar: {fileID: 8289442698810755439}
+  m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.HealthBarView

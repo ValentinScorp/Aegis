@@ -36,15 +36,16 @@ namespace Aegis.View
         private void UpdateDirectMode()
         {
             if (_directMovement != null) {
-                // Debug.Log($"[Sync] IsMoving={_directMovement.IsMoving}");
                 if (_directMovement.IsMoving)
                     _animator.PlayWalk(_directMovement.CurrentSpeedNormalized * _unit.WalkAnimationSpeedMultiplier);
                 else
                     _animator.PlayIdle();
             }
-
-            // Debug.Log($"[{name}] UpdateAimAnimation called, IsAiming={_unit.IsAiming}");
             _animator.UpdateAimAnimation(_unit.IsAiming, _unit.AimCancelled, Time.deltaTime);
+
+            // Не цілимось і шар лука вимкнувся: ховаємо зброю (стоїмо чи йдемо, не важливо)
+            if (!_unit.IsAiming && !_animator.IsAimAnimationActive)
+                _unit.Weaponry.Holster();
         }
     }
 }

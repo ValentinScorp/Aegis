@@ -15,6 +15,8 @@ namespace Aegis.Services
         [SerializeField] private CameraView _cameraView;
         [SerializeField] private PlayerInputListener _inputListener;
         [SerializeField] private SelectionController _selectionController;
+
+        private CrosshairView _crosshair;
         private CameraRig _camRig;
         private SelectionModel _selectionModel;
         private Unit _thirdPersonUnit;
@@ -26,6 +28,10 @@ namespace Aegis.Services
             _inputListener = Utilities.ComponentResolver.ResolveOrFind(this, _inputListener);
             _selectionController = Utilities.ComponentResolver.ResolveOrFind(this, _selectionController);
             _selectionModel = _selectionController?.Model;
+
+            _crosshair = FindFirstObjectByType<CrosshairView>();
+            if (_crosshair == null)
+                _crosshair = new GameObject("CrosshairCanvas").AddComponent<CrosshairView>();
         }
 
         private void OnEnable()
@@ -103,11 +109,13 @@ namespace Aegis.Services
             _thirdPersonUnit = unit;
             unit.SetControlMode(UnitControlMode.Direct);
             _camRig.SetMode(CameraMode.ThirdPerson, unit);
+            _crosshair.Bind(unit);
         }
         private void ReleaseThirdPersonUnit()
-        {            
+        {
             if (_thirdPersonUnit == null) return;
             _thirdPersonUnit.ReleaseAim();
+            _crosshair?.Unbind();
             _thirdPersonUnit.PerformDirectMove(Vector3.zero);
             _thirdPersonUnit.SetControlMode(UnitControlMode.Indirect);
             _thirdPersonUnit = null;

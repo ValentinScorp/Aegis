@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using Aegis.Core;
 using Aegis.Utilities;
-using UnityEditor.Timeline.Actions;
+// using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 namespace Aegis.View
 {
     public class UnitAnimator : MonoBehaviour
     {
-        [SerializeField] private ClipAction _swordHitClip;
         [SerializeField, Range(0f, 1f)] private float _bowDrawNormalizedTime = 0.45f; // підберіть на око: кадр, де тятива натягнута
         [SerializeField] private float _drawSpeed = 2.5f;   // швидкість фази натягу (1/сек по normalizedTime)
         [SerializeField] private float _releaseSpeed = 3.5f; // швидкість фази спуску
@@ -36,6 +35,7 @@ namespace Aegis.View
         private readonly Dictionary<int, float> _clipLengths = new();
 
         public bool IsWalking => _currentStateHash == WalkHash;
+        public bool IsAimAnimationActive => _upperActive || _upperWeight > 0.001f;
         public void SetWalkSpeed(float speed) => _animator.SetFloat(WalkSpeedHash, speed);
 
         private void Awake()

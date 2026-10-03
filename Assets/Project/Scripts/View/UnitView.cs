@@ -16,6 +16,7 @@ namespace Aegis.View
         [SerializeField] private GameObject _swordPrefab;
         [SerializeField] private BodyPartId _aimBodyPart = BodyPartId.Torso;
         [SerializeField] private LayerMask _aimRaycastMask;
+        [SerializeField] private float _zeroDistance = 10f;   // дистанція, на якій стріла влучає точно в хрестик
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
@@ -93,7 +94,9 @@ namespace Aegis.View
                 unit.ShotReleased += OnShotReleased;
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
+                unit.BodyPartHealthChanged += _healthView.OnPartChanged;
                 unit.Died += _healthView.OnHealthDepleted;
+                _healthView.Refresh(unit.BodyHealth);
 
                 foreach (var zone in GetComponentsInChildren<HitZoneView>(true)) {
                     zone.Bind(unit);
@@ -135,6 +138,7 @@ namespace Aegis.View
                 unit.ShotReleased -= OnShotReleased;
 
                 unit.HealthChanged -= _healthView.OnHealthChanged;
+                unit.BodyPartHealthChanged -= _healthView.OnPartChanged;
                 unit.Died -= _healthView.OnHealthDepleted;
 
                 foreach (var zone in GetComponentsInChildren<HitZoneView>(true))
@@ -222,9 +226,13 @@ namespace Aegis.View
             if (arrowPrefab == null || _projectileSpawnPoint == null) return;
 
             if (PLAYER_AIM_DIRECT) {
-                Vector3 dir = Camera.main != null ? Camera.main.transform.forward : _projectileSpawnPoint.forward;
-                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, Quaternion.LookRotation(dir));
-                arrow.LaunchDirection(unit, dir);
+                var cam = Camera.main;
+                Ray ray = cam != null
+                    ? new Ray(cam.transform.position, cam.transform.forward)
+                    : new Ray(_projectileSpawnPoint.position, _projectileSpawnPoint.forward);
+
+                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+                arrow.LaunchAtCrosshair(unit, ray, _zeroDistance);
             } else {
                 Vector3 aimPoint = GetScreenCenterAimPoint();
                 var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);

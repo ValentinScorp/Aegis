@@ -12,7 +12,7 @@ namespace Aegis.Core
         public CameraMode Mode => CameraMode.ThirdPerson;
 
         private const float Distance = 4.5f;
-        private const float Height = 2f;
+        private const float Height = 2.5f;
         private const float LookSensitivity = 0.15f;
         private const float MinPitch = -10f; // side
         private const float MaxPitch = 75f; // top
