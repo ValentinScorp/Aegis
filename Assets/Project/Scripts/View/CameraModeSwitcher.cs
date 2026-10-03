@@ -110,6 +110,10 @@ namespace Aegis.Services
             ReleaseThirdPersonUnit();
             _thirdPersonUnit = unit;
             unit.SetControlMode(UnitControlMode.Direct);
+            
+            if (_selectionModel.Selected == unit)
+                _selectionModel.Clear();
+
             _camRig.SetMode(CameraMode.ThirdPerson, unit);
             _crosshair.Bind(unit);
             _playerHealthHud?.Bind(unit);

@@ -24,7 +24,8 @@ namespace Aegis.View
         private void Update()
         {
             if (_unit?.Config == null) return;
-
+            if (!_unit.IsAlive) return;
+            
             if (_unit.ControlMode == UnitControlMode.Direct) {
                 UpdateDirectMode();
             } else if (_animator.IsWalking) {

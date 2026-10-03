@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90d86bc5642a821488754066f9acc54a, type: 3}
-  m_Name: UnitConfigRegistry
+  m_Name: UnitConfigCatalog
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.View.UnitConfigRegistry
   _entries:
   - Type: 1

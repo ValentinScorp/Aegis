@@ -1,5 +1,7 @@
 using System;
+using Aegis.Core;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Aegis.Services
@@ -18,11 +20,12 @@ namespace Aegis.Services
         public Vector2 LookDelta => IsLookHeld ? _inputActions.Camera.Look.ReadValue<Vector2>() : Vector2.zero;
         public Vector2 PointerPosition => _inputActions.Gameplay.Point.ReadValue<Vector2>();
         public bool IsLookHeld => _inputActions.Camera.LookHold.IsPressed();
-         public bool IsAimHeld => _inputActions.Gameplay.Aim.IsPressed(); 
+        public bool IsAimHeld => _inputActions.Gameplay.Aim.IsPressed();
 
         public event Action FreeCameraRequested;
         public event Action FollowCameraRequested;
         public event Action ThirdPersonCameraRequested;
+        public event Action<bool> ShowInfoHoldChanged;
 
         private void Awake()
         {
@@ -37,18 +40,36 @@ namespace Aegis.Services
         {
             _inputActions.Gameplay.Enable();
             _inputActions.Gameplay.Tap.performed += OnTapPerformed;
+            _inputActions.Gameplay.ShowInfo.performed += OnShowInfoPressed;
+            _inputActions.Gameplay.ShowInfo.canceled += OnShowInfoReleased;
             _inputActions.Camera.Enable();
         }
         private void OnDisable()
         {
             _inputActions.Gameplay.Tap.performed -= OnTapPerformed;
+            _inputActions.Gameplay.ShowInfo.performed -= OnShowInfoPressed;
+            _inputActions.Gameplay.ShowInfo.canceled -= OnShowInfoReleased;
             _inputActions.Gameplay.Disable();
             _inputActions.Camera.Disable();
+        }
+
+        private void OnShowInfoPressed(InputAction.CallbackContext context)
+        {
+            ShowInfoHoldChanged?.Invoke(true);
+        }
+        private void OnShowInfoReleased(InputAction.CallbackContext context)
+        {
+            ShowInfoHoldChanged?.Invoke(false);
         }
         private void Update()
         {
             _hotkeyListener.Update();
+
             bool held = IsLookHeld;
+
+            if (held && !_lookWasHeld && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                held = false;
+
             if (held != _lookWasHeld) {
                 if (held) {
                     _savedCursorPos = Mouse.current.position.ReadValue();

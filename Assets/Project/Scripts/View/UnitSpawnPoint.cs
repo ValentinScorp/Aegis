@@ -18,6 +18,13 @@ namespace Aegis.View
                 Gizmos.DrawSphere(transform.position + Vector3.up * 0.1f, _gizmoRadius);
             else
                 Gizmos.DrawWireSphere(transform.position, _gizmoRadius);
+
+            // Напрямок погляду юніта
+            Vector3 origin = transform.position + Vector3.up * 0.1f;
+            Vector3 tip = origin + transform.forward * 1f;
+            Gizmos.DrawLine(origin, tip);
+            Gizmos.DrawLine(tip, tip - (transform.forward + transform.right) * 0.25f);
+            Gizmos.DrawLine(tip, tip - (transform.forward - transform.right) * 0.25f);
         }
     }
 }

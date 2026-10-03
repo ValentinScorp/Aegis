@@ -14,6 +14,8 @@ namespace Aegis.Core
 
         public void Select(Unit unit)
         {
+            if (unit != null && unit.ControlMode == UnitControlMode.Direct) return;
+            
             if (unit == _selectedUnit) return;
             _selectedUnit?.Select(false);
             _selectedUnit = unit;

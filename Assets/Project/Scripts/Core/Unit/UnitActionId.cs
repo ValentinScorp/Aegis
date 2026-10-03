@@ -1,6 +1,6 @@
 namespace Aegis.Core
 {
-    public enum UnitAction
+    public enum UnitActionId
     {
         Idle,
         Walk,

@@ -4,10 +4,10 @@ namespace Aegis.Core
 {
     public readonly struct UnitActionEvent
     {
-        public readonly UnitAction Action;
+        public readonly UnitActionId Action;
         public readonly Vector3 TargetPosition;
 
-        public UnitActionEvent(UnitAction action, Vector3 targetPosition)
+        public UnitActionEvent(UnitActionId action, Vector3 targetPosition)
         {
             Action = action;
             TargetPosition = targetPosition;

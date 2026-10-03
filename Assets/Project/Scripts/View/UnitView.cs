@@ -17,6 +17,8 @@ namespace Aegis.View
         [SerializeField] private BodyPartId _aimBodyPart = BodyPartId.Torso;
         [SerializeField] private LayerMask _aimRaycastMask;
         [SerializeField] private float _zeroDistance = 10f;   // дистанція, на якій стріла влучає точно в хрестик
+        [SerializeField] private bool _playerAimDirect = true;
+
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
@@ -26,13 +28,15 @@ namespace Aegis.View
         private UnitAnimationSync _unitAnimationSync;
         private WorldEntity _entity;
         private UnitWeaponryView _weaponry;
+        private bool _showInfoRequested;
         private static readonly Dictionary<WorldEntity, UnitView> _views = new();
         private readonly Dictionary<BodyPartId, HitZoneView> _hitZones = new();
-        private const bool PLAYER_AIM_DIRECT = true;
 
         public WorldEntity Entity => _entity;
         public Unit GetUnit() => _entity as Unit;
-        private MaterialPropertyBlock _mpb;
+        private MaterialPropertyBlock _mpb;        
+
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => _views.Clear();
 
@@ -104,6 +108,7 @@ namespace Aegis.View
                     zone.Bind(unit);
                     _hitZones[zone.BodyPart] = zone;
                 }
+                UpdateHealthDollVisibility();
             }
         }
         private static string GetPath(Transform t)
@@ -148,12 +153,18 @@ namespace Aegis.View
             }
             _entity = null;
         }
+        private void LateUpdate()
+        {
+            if (_entity != null)
+                _entity.Rotation = transform.rotation;
+        }
         private void OnControlModeChanged(UnitControlMode mode)
         {
             bool directMode = mode == UnitControlMode.Direct;
 
-            if (_healthCanvas != null)
-                _healthCanvas.enabled = !directMode;
+            // if (_healthCanvas != null)
+                // _healthCanvas.enabled = !directMode;
+            UpdateHealthDollVisibility();
 
             if (directMode) {
                 _unitAgentMovement.DisableAgent();
@@ -172,13 +183,13 @@ namespace Aegis.View
             if (unit == null) return;
 
             switch (actionEvent.Action) {
-                case UnitAction.Attack:
+                case UnitActionId.Attack:
                     _unitAgentMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
                     var ainmSpeed = _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
                     _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
                     break;
-                case UnitAction.Idle:
+                case UnitActionId.Idle:
                     _entityAnimator.PlayIdle();
                     break;
             }
@@ -223,6 +234,11 @@ namespace Aegis.View
 
             return transform.position + Vector3.up;   // запасний варіант, якщо зон нема
         }
+        public void SetInfoVisible(bool visible)
+        {
+            _showInfoRequested = visible;
+            UpdateHealthDollVisibility();
+        }
         private void OnShotReleased()
         {
             if (_entity is not Unit unit) return;
@@ -230,7 +246,7 @@ namespace Aegis.View
             var arrowPrefab = _projectileCatalog.GetPrefab(unit.Weaponry.ActiveProjectileId);
             if (arrowPrefab == null || _projectileSpawnPoint == null) return;
 
-            if (PLAYER_AIM_DIRECT) {
+            if (_playerAimDirect) {
                 var cam = Camera.main;
                 Ray ray = cam != null
                     ? new Ray(cam.transform.position, cam.transform.forward)
@@ -283,6 +299,7 @@ namespace Aegis.View
         {
             _unitAgentMovement.Stop();
             _unitAgentMovement.DisableAgent();
+            _unitDirectMovement?.SetActive(false);
 
             var selectable = GetComponent<Selectable>();
             if (selectable) selectable.Select(false);
@@ -305,6 +322,12 @@ namespace Aegis.View
             _renderer.GetPropertyBlock(_mpb);
             _mpb.SetColor("_FactionColor", color);
             _renderer.SetPropertyBlock(_mpb);
+        }
+        private void UpdateHealthDollVisibility()
+        {
+            if (_healthCanvas == null || _entity is not Unit unit) return;
+
+            _healthCanvas.enabled = _showInfoRequested && (unit.ControlMode != UnitControlMode.Direct);
         }
     }
 }

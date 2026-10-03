@@ -12,7 +12,6 @@ public class RestartSceneButton : MonoBehaviour
 
     private void Restart()
     {
-        Debug.Log("restarting");
         Unpause();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

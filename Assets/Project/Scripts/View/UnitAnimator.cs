@@ -100,6 +100,9 @@ namespace Aegis.View
         }
         public void PlayDeath()
         {
+            _upperActive = false;
+            _upperWeight = 0f;
+            _animator.SetLayerWeight(_upperBodyLayer, 0f);
             PlayOnce(DeathHash);
         }
         public void UpdateAimAnimation(bool isAiming, bool cancelled, float dt)

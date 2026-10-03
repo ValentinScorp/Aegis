@@ -68,7 +68,7 @@ namespace Aegis.Core
         public event Action AimEnded;
         public event Action ShotReleased;
 
-        public Unit(Vector3 position, FactionId factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
+        public Unit(Vector3 position, Quaternion rotation, FactionId factionId, UnitType type, UnitConfig config, UnitCommonConfig common)
         {
             FactionId = factionId;
             EntityType = type;
@@ -89,6 +89,7 @@ namespace Aegis.Core
 
             StateMachine = new UnitStateMachine(this);
             Position = position;
+            Rotation = rotation;
             FixedPosition = Position;
         }
 
@@ -116,6 +117,7 @@ namespace Aegis.Core
         }
         public void PerformDeath()
         {
+            ReleaseAim();
             StateMachine.SetState(UnitState.Dead);
             SelectedByPlayer = false;
             WasSelectedByPlayer?.Invoke(false);
@@ -227,9 +229,9 @@ namespace Aegis.Core
         public void PerformAttackAction(WorldEntity target)
         {
             _weaponry.Unholster();
-            ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Attack, target.Position));
+            ActionPerformed?.Invoke(new UnitActionEvent(UnitActionId.Attack, target.Position));
         }
-        public void StopAttackAction() => ActionPerformed?.Invoke(new UnitActionEvent(UnitAction.Idle, Vector3.zero));
+        public void StopAttackAction() => ActionPerformed?.Invoke(new UnitActionEvent(UnitActionId.Idle, Vector3.zero));
         public void PerformProjectileLaunch(WorldEntity target)
         {
             if (AttackTarget == null) return;

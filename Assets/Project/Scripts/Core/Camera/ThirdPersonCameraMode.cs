@@ -17,12 +17,27 @@ namespace Aegis.Core
         private const float MinPitch = -10f; // side
         private const float MaxPitch = 75f; // top
         private const float SmoothTime = 0.08f;
-
+        private const float EnterPitch = 15f;
         private Vector3 _pivot;
 
         public void Enter(CameraRig rig)
         {
-            if (rig.Target != null) _pivot = rig.Target.Position;
+            if (rig.Target == null) return;
+            
+            _pivot = rig.Target.Position;
+
+            // Напрямок погляду юніта у площині землі
+            Vector3 fwd = rig.Target.Rotation * Vector3.forward;
+            fwd.y = 0f;
+            float yaw = fwd.sqrMagnitude > 0.0001f
+                ? Mathf.Atan2(fwd.x, fwd.z) * Mathf.Rad2Deg
+                : rig.Yaw;
+
+            rig.ApplyRotation(yaw, EnterPitch);
+
+            // Одразу ставимо камеру за спину, без плавного підльоту
+            Quaternion rot = Quaternion.Euler(EnterPitch, yaw, 0f);
+            rig.ApplyPosition(_pivot - rot * Vector3.forward * Distance + Vector3.up * Height);
         }
         public void Exit(CameraRig rig) { }
 

@@ -47,9 +47,16 @@ namespace Aegis.Core
 
         public void SetMode(CameraMode mode, WorldEntity target = null)
         {
+            bool targetChanged = Target != target;
+
             Target = target;
 
-            if (CurrentMode == mode && _current != null) return;
+            if (CurrentMode == mode && _current != null) {
+                if (targetChanged) {
+                    _current.Enter(this);
+                }
+                return;
+            }
 
             if (!_modes.TryGetValue(mode, out var next)) {
                 Debug.LogWarning($"[CameraRig] Режим {mode} не зареєстрований");
