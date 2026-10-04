@@ -18,7 +18,7 @@ public class EntityViewDebugEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Debug (Core state)", EditorStyles.boldLabel);
         EditorGUILayout.LabelField("HP", $"{unit.BodyHealth.GetCurrentAllParts():0} / {unit.BodyHealth.GetMaxAllParts():0}");
-        EditorGUILayout.LabelField("State", unit.StateMachine.Current?.GetType().Name ?? "—");
+        EditorGUILayout.LabelField("State", unit.DebugActivity ?? "—");
         EditorGUILayout.LabelField("Is Alive", unit.IsAlive.ToString());
 
         if (Application.isPlaying)

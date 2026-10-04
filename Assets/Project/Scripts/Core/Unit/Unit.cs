@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Aegis.Core.AI;
 using UnityEngine;
 
 namespace Aegis.Core
@@ -23,7 +24,15 @@ namespace Aegis.Core
         public UnitWeaponry Weaponry => _weaponry;
         public BodyHealth BodyHealth => _bodyHealth;
         public bool IsAlive => BodyHealth.IsAlive;
-        public UnitStateMachine StateMachine { get; private set; }
+        public BehaviorTreeRunner Brain { get; private set; }
+        public string DebugActivity { get; set; } = "—";
+        public Vector3? PlayerOrder { get; set; }
+        public bool IsChasing { get; set; }
+        public bool MoveFinished { get; set; }
+        // ---- AI ----
+        public float LeashRadius => _common.ChaseRadius;
+        public WorldEntity CurrentTarget { get; set; }
+        public bool IsInPerimeter(Vector3 p, float radius) => (p - FixedPosition).sqrMagnitude <= radius * radius;
 
         // ─── Derived combat / movement stats ──────────────────
         // public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
@@ -87,10 +96,39 @@ namespace Aegis.Core
             _bodyHealth.PartChanged += OnBodyPartHealthChanged;
             _bodyHealth.Depleted += OnHealthDepleted;
 
-            StateMachine = new UnitStateMachine(this);
             Position = position;
             Rotation = rotation;
             FixedPosition = Position;
+            Brain = new BehaviorTreeRunner(this, SoldierTreeFactory.Build());
+        }
+
+        // ----- AI -------
+        public void RaiseWalk(Vector3 d) => WalkTo?.Invoke(d);
+        public void PerformWalk(Vector3 destination)
+        {
+            if (!BodyHealth.IsAlive) return;
+            FixedPosition = destination;
+            PlayerOrder = destination;      // стан не ставимо, це робить дерево
+        }
+
+        public void MovementComplete(Vector3 position)
+        {
+            Position = position;
+            MoveFinished = true;            // замість SetState(Idle)
+        }
+        public void PerformReturnHome()
+        {
+            if (!IsAlive) return;
+            WalkTo?.Invoke(FixedPosition);   // FixedPosition не змінюємо
+        }
+
+        public void PerformDeath()
+        {
+            ReleaseAim();
+            Brain.Stop();
+            SelectedByPlayer = false;
+            WasSelectedByPlayer?.Invoke(false);
+            Died?.Invoke();
         }
 
         // ─── Health / death ───────────────────────────────────
@@ -115,14 +153,6 @@ namespace Aegis.Core
         {
             PerformDeath();
         }
-        public void PerformDeath()
-        {
-            ReleaseAim();
-            StateMachine.SetState(UnitState.Dead);
-            SelectedByPlayer = false;
-            WasSelectedByPlayer?.Invoke(false);
-            Died?.Invoke();
-        }
 
         // ─── Selection & control ──────────────────────────────
         public void Select(bool selected)
@@ -146,7 +176,7 @@ namespace Aegis.Core
 
             if (mode == UnitControlMode.Direct) {
                 StopMovement();
-                StateMachine.Stop();
+                Brain.Stop();
             }
 
             ControlMode = mode;
@@ -154,20 +184,6 @@ namespace Aegis.Core
         }
 
         // ─── Movement ─────────────────────────────────────────        
-        public void PerformWalk(Vector3 destination)
-        {
-            if (!BodyHealth.IsAlive) return;
-
-            FixedPosition = destination;
-
-            var walk = StateMachine.GetState<UnitStateWalk>();
-            if (walk != null)
-                walk.Destination = destination;
-
-            StateMachine.SetState(UnitState.Walk);
-            // Debug.Log("Performing walk!");
-            WalkTo?.Invoke(destination);
-        }
         public void PerformChase(WorldEntity entity)
         {
             ChaseTo?.Invoke(entity.Position);
@@ -187,12 +203,6 @@ namespace Aegis.Core
         public void StopMovement()
         {
             ExecutedStopMovement?.Invoke();
-        }
-        public void MovementComplete(Vector3 position)
-        {
-            Position = position;
-
-            StateMachine.SetState(UnitState.Idle);
         }
 
         // ─── Combat ───────────────────────────────────────────
@@ -220,9 +230,9 @@ namespace Aegis.Core
         }
         public void PerformReleaseShot()
         {
-            if(!IsAiming) return;
+            if (!IsAiming) return;
             IsAiming = false;
-            AimCancelled = AimHeldSeconds < BowDrawSeconds; 
+            AimCancelled = AimHeldSeconds < BowDrawSeconds;
             AimEnded?.Invoke();
             if (!AimCancelled) ShotReleased?.Invoke();
         }
@@ -285,7 +295,8 @@ namespace Aegis.Core
             }
             ClosestTarget = closest;
 
-            StateMachine.UpdateInteractions(closest);
+            ClosestTarget = CurrentTarget;
+
         }
 
         private bool HasLineOfSight(WorldEntity target)
@@ -313,8 +324,8 @@ namespace Aegis.Core
 
         internal void UpdateActions(float deltaTime)
         {
-            if (ControlMode == UnitControlMode.Direct) return;
-            StateMachine.UpdateActions(deltaTime);
+            if (!IsAlive || ControlMode == UnitControlMode.Direct) return;
+            Brain.Tick(deltaTime);
         }
     }
 }
