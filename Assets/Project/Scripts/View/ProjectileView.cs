@@ -19,6 +19,7 @@ namespace Aegis.View
         [SerializeField] private float _stickDuration = 20f;
         [SerializeField] private float _playerShotSpeed = 35f;
         [SerializeField] private float _stickDepth = 0.15f;
+        [SerializeField] private float _deathImpulse = 100f;
         private int _allHitMasks;
         private Unit _owner;
         private Vector3 _velocity;
@@ -72,7 +73,6 @@ namespace Aegis.View
                 Vector3 dir = delta / dist;
                 int count = Physics.SphereCastNonAlloc(prev, _arrowRadius, dir, _hits, dist,
                                                        _allHitMasks, QueryTriggerInteraction.Collide);
-
                 int best = -1;
                 float bestDist = float.MaxValue;
                 for (int i = 0; i < count; i++) {
@@ -110,6 +110,19 @@ namespace Aegis.View
 
             if (hit.collider.TryGetComponent(out HitZoneView zone)) {
                 _owner?.ApplyProjectileDamage(zone.Owner, zone.BodyPart);
+
+                var victimDbg = zone.Owner as Unit;
+                var rbDbg = hit.collider.attachedRigidbody;
+                // Debug.Log($"[Impulse] victim={(victimDbg != null)} alive={victimDbg?.IsAlive} " +
+                //           $"rb={(rbDbg != null ? rbDbg.name : "null")} kinematic={(rbDbg != null && rbDbg.isKinematic)} " +
+                //           $"impulse={_deathImpulse}");
+
+                if (zone.Owner is Unit victim && !victim.IsAlive) {
+                    var rb = hit.collider.attachedRigidbody;
+                    if (rb != null && !rb.isKinematic)
+                        rb.AddForceAtPosition(dir * _deathImpulse, hit.point, ForceMode.Impulse);
+                }
+
                 transform.SetParent(hit.collider.transform, worldPositionStays: true);
             }
 

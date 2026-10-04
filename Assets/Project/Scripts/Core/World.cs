@@ -38,6 +38,13 @@ namespace Aegis.Core
             unit.SetPlayerControlled(true);
             PlayerUnitAssigned?.Invoke(unit);
         }
+        public void Reset()
+        {
+            _entities.Clear();
+            PlayerUnit = null;
+            UnitCreated = null;
+            PlayerUnitAssigned = null;
+        }
         public void OnInteractionsUpdate()
         {
             foreach (var entity in _entities) {

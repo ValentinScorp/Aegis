@@ -2534,7 +2534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Aegis.World
   _unitConfigCatalog: {fileID: 11400000, guid: 0ad0687bcfed214428f62598ab521a7e, type: 2}
   _unitCommonConfig: {fileID: 11400000, guid: 4d3f893b45b2fe746adf852026291343, type: 2}
-  _humanoidUnit: {fileID: 391847212068966660, guid: b09f8db558ada994ab8ea39a612a7c04, type: 3}
+  _humanoidUnit: {fileID: 7484099227369125434, guid: cac9002e45119fd40b8411afc222c33a, type: 3}
   _playerInputListener: {fileID: 1814450725}
 --- !u!1 &1871798194
 GameObject:

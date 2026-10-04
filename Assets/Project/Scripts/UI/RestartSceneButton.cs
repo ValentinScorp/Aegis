@@ -1,3 +1,4 @@
+using Aegis.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class RestartSceneButton : MonoBehaviour
     private void Restart()
     {
         Unpause();
+        World.Instance.Reset();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     private void Unpause()

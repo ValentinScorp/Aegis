@@ -19,7 +19,7 @@ namespace Aegis.View
         [SerializeField] private float _zeroDistance = 10f;   // дистанція, на якій стріла влучає точно в хрестик
         [SerializeField] private bool _playerAimDirect = true;
         [SerializeField] private Collider _bodyCollider;
-
+        [SerializeField] private RagdollController _ragdoll;
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
@@ -301,17 +301,20 @@ namespace Aegis.View
             _unitAgentMovement.Stop();
             _unitAgentMovement.DisableAgent();
             _unitDirectMovement?.SetActive(false);
-            
+
             if (_bodyCollider != null) _bodyCollider.enabled = false;
 
             var selectable = GetComponent<Selectable>();
             if (selectable) selectable.Select(false);
 
-            _entityAnimator.PlayDeath();
+            if (_ragdoll != null)
+                _ragdoll.Die();
+            else
+                _entityAnimator.PlayDeath();
 
             if (_healthCanvas != null) {
                 var t = _healthCanvas.transform;
-                t.localPosition = new Vector3(t.localPosition.x, 0.8f, t.localPosition.z); 
+                t.localPosition = new Vector3(t.localPosition.x, 0.8f, t.localPosition.z);
             }
         }
 
