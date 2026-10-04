@@ -30,7 +30,7 @@ namespace Aegis.Core
         public bool IsChasing { get; set; }
         public bool MoveFinished { get; set; }
         // ---- AI ----
-        public float LeashRadius => _common.ChaseRadius;
+        public float LeashRadius => _common.LeashRadius;
         public WorldEntity CurrentTarget { get; set; }
         public bool IsInPerimeter(Vector3 p, float radius) => (p - FixedPosition).sqrMagnitude <= radius * radius;
 
@@ -38,7 +38,7 @@ namespace Aegis.Core
         // public float MaxHealth => _common.BaseHealth + Stats.GetStat(StatType.Strength) * _common.HealthPerStrength;
         public float MoveSpeed => _common.MoveSpeed; // поки без формули від Speed — про це наступним кроком
         public float SearchRadius => _common.SearchRadius;
-        public float ChaseRadius => _common.ChaseRadius;
+        public float ChaseRadius => _common.LeashRadius;
         public float AttackDamage => Weaponry.Damage > 0.01f ? Weaponry.Damage : _common.UnarmedDamage;
         public float AttackRange => Weaponry.GetAttackRange();
         public bool CanShoot => Weaponry.HasBow;
@@ -293,10 +293,31 @@ namespace Aegis.Core
                     closest = e;
                 }
             }
-            ClosestTarget = closest;
+            if (!IsTargetStillValid(CurrentTarget))
+                CurrentTarget = FindNewTarget(allEntities);
 
             ClosestTarget = CurrentTarget;
+        }
+        private bool IsTargetStillValid(WorldEntity t)
+        {
+            if (t is not Unit u || !u.IsAlive) return false;
+            return IsInPerimeter(u.Position, LeashRadius + 3f);
+        }
+        private WorldEntity FindNewTarget(IReadOnlyList<WorldEntity> allEntities)
+        {
+            WorldEntity best = null;
+            float bestSqr = SearchRadius * SearchRadius;
 
+            foreach (var e in allEntities) {
+                if (e is not IFactionMember fm) continue;
+                if (fm == (IFactionMember)this || fm.FactionId == FactionId) continue;
+                if (fm is IDamageable d && !d.IsAlive) continue;
+                if (!IsInPerimeter(e.Position, LeashRadius)) continue;   // ворог у периметрі
+
+                float sqr = (e.Position - Position).sqrMagnitude;
+                if (sqr < bestSqr && HasLineOfSight(e)) { bestSqr = sqr; best = e; }
+            }
+            return best;
         }
 
         private bool HasLineOfSight(WorldEntity target)

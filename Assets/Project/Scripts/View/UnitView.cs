@@ -24,6 +24,7 @@ namespace Aegis.View
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
         private Canvas _healthCanvas;
+        private ProjectilePool _projectilePool;
         private UnitAimTwist _unitAimTwist;
         private UnitAnimator _entityAnimator;
         private UnitAnimationSync _unitAnimationSync;
@@ -67,8 +68,9 @@ namespace Aegis.View
 
             Unbind();
         }
-        public void Initialize(FactionId factionIdid)
+        public void Initialize(FactionId factionIdid, ProjectilePool projectilePool)
         {
+            _projectilePool = projectilePool;
             _mpb = new MaterialPropertyBlock();
             SetFactionColor(_factionPalette.GetColor(factionIdid));
         }
@@ -212,7 +214,7 @@ namespace Aegis.View
                 var arrowPrefab = _projectileCatalog.GetPrefab(unit.Weaponry.ActiveProjectileId);
                 if (target == null || arrowPrefab == null || _projectileSpawnPoint == null) return;
 
-                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+                var arrow = SpawnArrow(arrowPrefab);
                 var aimPoint = GetAimPointOn(target);
                 Debug.DrawLine(_projectileSpawnPoint.position, aimPoint, Color.green, 3f);
                 arrow.Launch(unit, aimPoint, target.Velocity);
@@ -253,11 +255,11 @@ namespace Aegis.View
                     ? new Ray(cam.transform.position, cam.transform.forward)
                     : new Ray(_projectileSpawnPoint.position, _projectileSpawnPoint.forward);
 
-                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+                var arrow = SpawnArrow(arrowPrefab);
                 arrow.LaunchAtCrosshair(unit, ray, _zeroDistance);
             } else {
                 Vector3 aimPoint = GetScreenCenterAimPoint();
-                var arrow = Instantiate(arrowPrefab, _projectileSpawnPoint.position, _projectileSpawnPoint.rotation);
+                var arrow = SpawnArrow(arrowPrefab);
                 arrow.Launch(unit, aimPoint, Vector3.zero);
             }
         }
@@ -339,6 +341,13 @@ namespace Aegis.View
             if (_healthCanvas == null || _entity is not Unit unit) return;
 
             _healthCanvas.enabled = _showInfoRequested && (unit.ControlMode != UnitControlMode.Direct);
+        }
+        private ProjectileView SpawnArrow(ProjectileView prefab)
+        {
+            var p = _projectileSpawnPoint;
+            return _projectilePool != null
+                ? _projectilePool.Spawn(prefab, p.position, p.rotation)
+                : Instantiate(prefab, p.position, p.rotation);   // запобіжник, якщо пул не призначено
         }
     }
 }

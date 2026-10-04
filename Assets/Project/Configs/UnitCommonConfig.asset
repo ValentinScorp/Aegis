@@ -17,7 +17,7 @@ MonoBehaviour:
   BaseHealth: 50
   HealthPerStrength: 5
   SearchRadius: 20
-  ChaseRadius: 12
+  LeashRadius: 20
   MoveSpeed: 3.5
   WalkAnimationSpeedMultiplier: 2.5
   EyeHeight: 1.6

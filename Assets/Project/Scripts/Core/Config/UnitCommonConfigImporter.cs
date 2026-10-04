@@ -34,7 +34,7 @@ namespace Aegis.Core
             config.BaseHealth = entry.base_health;
             config.HealthPerStrength = entry.health_per_strength;
             config.SearchRadius = entry.search_radius;
-            config.ChaseRadius = entry.chase_radius;
+            config.LeashRadius = entry.leash_radius;
             config.MoveSpeed = entry.move_speed;
             config.WalkAnimationSpeedMultiplier = entry.walk_animation_speed_multiplier;
 

@@ -7,7 +7,7 @@ public class UnitCommonConfigEntry
     public float base_health;
     public float health_per_strength;
     public float search_radius;
-    public float chase_radius;
+    public float leash_radius;
     public float move_speed;
     public float walk_animation_speed_multiplier;
 }

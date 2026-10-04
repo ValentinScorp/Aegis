@@ -28,9 +28,21 @@ namespace Aegis.View
         private float _travelled;
         private float _accumulator;
         private readonly RaycastHit[] _hits = new RaycastHit[8];
+        private ProjectilePool _pool;
+        private ProjectileView _prefab;
+        private Vector3 _baseScale;
+        private float _stuckTimer;
+        internal ProjectileView Prefab => _prefab;
+
         private void Awake()
         {
             _allHitMasks = _hitZoneMask | _groundMask | _obstacleMask;
+            _baseScale = transform.localScale;
+        }
+        internal void Init(ProjectilePool pool, ProjectileView prefab)
+        {
+            _pool = pool;
+            _prefab = prefab;
         }
 
         public void Launch(Unit owner, Vector3 aimPoint, Vector3 targetVelocity)
@@ -46,17 +58,38 @@ namespace Aegis.View
 
         private void Update()
         {
-            if (_hasHit) return;
+            if (_hasHit) {
+                _stuckTimer += Time.deltaTime;
+                if (_stuckTimer >= _stickDuration)
+                    Despawn();
+                return;
+            }
 
             _age += Time.deltaTime;
             _accumulator += Time.deltaTime;
 
             while (_accumulator >= ArrowBallistics.SimStep) {
                 _accumulator -= ArrowBallistics.SimStep;
-                if (!StepOnce()) return;   // влучили, стріла вже знищена
+                if (!StepOnce()) return;
             }
 
             if (_age >= _maxLifetime)
+                Despawn();
+        }
+        internal void OnSpawn()
+        {
+            _owner = null;
+            _velocity = Vector3.zero;
+            _age = 0f; _travelled = 0f; _accumulator = 0f; _stuckTimer = 0f;
+            _hasHit = false;
+            transform.localScale = _baseScale;   // застрягаючи в юніті, стріла могла змінити масштаб
+            if (TryGetComponent(out Collider c)) c.enabled = true;
+        }
+        private void Despawn()
+        {
+            if (_pool != null)
+                _pool.Release(this);
+            else
                 Destroy(gameObject);
         }
 
@@ -126,8 +159,7 @@ namespace Aegis.View
                 transform.SetParent(hit.collider.transform, worldPositionStays: true);
             }
 
-            enabled = false;
-            Destroy(gameObject, _stickDuration);
+            _stuckTimer = 0f;
         }
         public void LaunchStraight(Unit owner, Vector3 aimPoint)
         {

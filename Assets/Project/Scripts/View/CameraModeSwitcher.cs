@@ -17,8 +17,8 @@ namespace Aegis.Services
         [SerializeField] private PlayerInputListener _inputListener;
         [SerializeField] private SelectionController _selectionController;
         [SerializeField] private PlayerHealthHud _playerHealthHud;
+        [SerializeField] private CrosshairView _crosshair;
 
-        private CrosshairView _crosshair;
         private CameraRig _camRig;
         private SelectionModel _selectionModel;
         private Unit _thirdPersonUnit;
@@ -31,7 +31,6 @@ namespace Aegis.Services
             _selectionController = Utilities.ComponentResolver.ResolveOrFind(this, _selectionController);
             _selectionModel = _selectionController?.Model;
 
-            _crosshair = FindFirstObjectByType<CrosshairView>();
             if (_crosshair == null)
                 _crosshair = new GameObject("CrosshairCanvas").AddComponent<CrosshairView>();
         }

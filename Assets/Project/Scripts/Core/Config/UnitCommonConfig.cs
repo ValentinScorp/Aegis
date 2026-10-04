@@ -16,7 +16,7 @@ namespace Aegis.Core
 
         [Header("Movement")]
         public float SearchRadius;
-        public float ChaseRadius;
+        public float LeashRadius;
         public float MoveSpeed;
         public float WalkAnimationSpeedMultiplier;
 

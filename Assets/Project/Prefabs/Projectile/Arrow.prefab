@@ -63,7 +63,7 @@ MonoBehaviour:
   _stickDuration: 20
   _playerShotSpeed: 35
   _stickDepth: 0.15
-  _deathImpulse: 500
+  _deathImpulse: 20
 --- !u!1 &8531845194257202943
 GameObject:
   m_ObjectHideFlags: 0

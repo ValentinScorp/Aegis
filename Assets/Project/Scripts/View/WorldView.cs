@@ -12,6 +12,8 @@ namespace Aegis.View
         [SerializeField] private UnitCommonConfig _unitCommonConfig;
         [SerializeField] private UnitView _humanoidUnit;
         [SerializeField] private PlayerInputListener _playerInputListener;
+        [SerializeField] private ProjectilePool _projectilePool;
+        [SerializeField] private Transform _unitsRoot;
 
         private List<UnitView> _views = new();
         private World _world;
@@ -21,6 +23,8 @@ namespace Aegis.View
             if (_unitCommonConfig == null) Debug.LogWarning("[WorldView] No UnitCommonConfig assigned!");
             if (_humanoidUnit == null) Debug.LogWarning("[WorldView] No unit prefab assigned!");
             if (_playerInputListener == null) Debug.LogWarning("[WorldView] No PlayerInputListener assigned!");
+            if (_projectilePool == null) Debug.LogWarning("[WorldView] No ProjectilePool assigned!");
+            if (_unitsRoot == null) Debug.LogWarning("[WorldView] No Units root assigned, units will spawn under WorldView!");
 
             _world = World.Instance;
         }
@@ -81,8 +85,10 @@ namespace Aegis.View
         {
             if (entity is not Unit unit) return;
 
-            var view = Instantiate(_humanoidUnit, unit.Position, unit.Rotation, transform);
-            view.Initialize(unit.FactionId);
+            var parent = _unitsRoot != null ? _unitsRoot : transform;
+            var view = Instantiate(_humanoidUnit, unit.Position, unit.Rotation, parent);
+            view.name = $"{unit.EntityType}_{unit.FactionId}_{_views.Count:00}";
+            view.Initialize(unit.FactionId, _projectilePool);
             view.Bind(unit);
             _views.Add(view);
         }
