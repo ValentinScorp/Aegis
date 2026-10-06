@@ -9,17 +9,19 @@ namespace Aegis.Core.AI
             var u = c.Unit;
             _target = u.CurrentTarget;
             u.AttackTarget = _target;
+            u.FacingTarget = _target;
             u.StopMovement();
             u.PerformAttackAction(_target);
             _timer = 0f; _damageDone = false;
         }
+        protected override void OnExit(BTContext c) => c.Unit.FacingTarget = null;
         protected override BTStatus OnTick(BTContext c)
         {
             var u = c.Unit;
             if (_target == null || u.CurrentTarget != _target) return BTStatus.Failure;
 
             _timer += c.DeltaTime;
-            if (!_damageDone && _timer >= u.AttackTime * u.AttackEventTime) {
+            if (!_damageDone && _timer >= u.AttackTime * u.AttackEventTime && u.IsFacing(_target)) {
                 u.PerformAttackImpact(_target, BodyPartId.Torso);
                 _damageDone = true;
             }

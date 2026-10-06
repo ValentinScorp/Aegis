@@ -30,6 +30,7 @@ namespace Aegis.Core
         public bool IsChasing { get; set; }
         public bool MoveFinished { get; set; }
         // ---- AI ----
+        public WorldEntity FacingTarget { get; set; }
         public float LeashRadius => _common.LeashRadius;
         public WorldEntity CurrentTarget { get; set; }
         public bool IsInPerimeter(Vector3 p, float radius) => (p - FixedPosition).sqrMagnitude <= radius * radius;
@@ -271,6 +272,13 @@ namespace Aegis.Core
         }
 
         // ─── AI / interactions ────────────────────────────────
+        public bool IsFacing(WorldEntity t, float maxAngle = 15f)
+        {
+            var dir = t.Position - Position; dir.y = 0f;
+            if (dir.sqrMagnitude < 0.001f) return true;
+            var fwd = Rotation * Vector3.forward; fwd.y = 0f;
+            return Vector3.Angle(fwd, dir) <= maxAngle;
+        }
         public void UpdateInteractions(IReadOnlyList<WorldEntity> allEntities)
         {
             if (!BodyHealth.IsAlive) return;

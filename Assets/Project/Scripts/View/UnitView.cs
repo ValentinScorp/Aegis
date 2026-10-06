@@ -20,6 +20,7 @@ namespace Aegis.View
         [SerializeField] private bool _playerAimDirect = true;
         [SerializeField] private Collider _bodyCollider;
         [SerializeField] private RagdollController _ragdoll;
+        [SerializeField] private float _turnSpeed = 180f;
         private Renderer _renderer;
         private UnitAgentMovement _unitAgentMovement;
         private UnitDirectMovement _unitDirectMovement;
@@ -156,6 +157,15 @@ namespace Aegis.View
             }
             _entity = null;
         }
+        private void Update()
+        {
+            if (_entity is not Unit unit || unit.ControlMode == UnitControlMode.Direct) return;
+
+            var target = unit.FacingTarget;
+            if (target == null) return;
+
+            _unitAgentMovement.RotateTowards(target.Position, _turnSpeed);
+        }
         private void LateUpdate()
         {
             if (_entity != null)
@@ -187,7 +197,6 @@ namespace Aegis.View
 
             switch (actionEvent.Action) {
                 case UnitActionId.Attack:
-                    _unitAgentMovement.LookAt(actionEvent.TargetPosition);
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
                     var ainmSpeed = _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
                     _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
