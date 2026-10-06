@@ -8,16 +8,21 @@ namespace Aegis.View
 {
     public class UnitAnimator : MonoBehaviour
     {
-        [SerializeField, Range(0f, 1f)] private float _bowDrawNormalizedTime = 0.45f; // підберіть на око: кадр, де тятива натягнута
-        // [SerializeField] private float _drawSpeed = 2.5f;   // швидкість фази натягу (1/сек по normalizedTime)
-        [SerializeField] private float _releaseSpeed = 3.5f; // швидкість фази спуску
         [SerializeField] private float _layerBlendSpeed = 6f;
+        [SerializeField] private float _releaseSeconds = 0.25f;
         private Animator _animator;
         private Unit _unit;
         private int _currentStateHash;
         private float _upperWeight;
-        private float _bowTime;
-        private bool _upperActive;
+        private bool _wasAiming;
+        private bool _releasing;
+        private float _releaseTimer;
+        private float _phaseTime;
+
+        private static readonly int BowDrawHash = Animator.StringToHash("BowDraw");
+        private static readonly int BowReleaseHash = Animator.StringToHash("BowRelease");
+        private static readonly int DrawSpeedHash = Animator.StringToHash("DrawSpeed");
+        private static readonly int ReleaseSpeedHash = Animator.StringToHash("ReleaseSpeed");
 
         private static readonly int IdleHash = Animator.StringToHash("Idle");
         private static readonly int DeathHash = Animator.StringToHash("Death");
@@ -35,8 +40,9 @@ namespace Aegis.View
         private readonly Dictionary<int, float> _clipLengths = new();
 
         public bool IsWalking => _currentStateHash == WalkHash;
-        public bool IsAimAnimationActive => _upperActive || _upperWeight > 0.001f;
+        public bool IsAimAnimationActive => _wasAiming || _releasing || _upperWeight > 0.001f;
         public void SetWalkSpeed(float speed) => _animator.SetFloat(WalkSpeedHash, speed);
+        public float ReleaseSeconds => _releaseSeconds;
 
         private void Awake()
         {
@@ -100,37 +106,41 @@ namespace Aegis.View
         }
         public void PlayDeath()
         {
-            _upperActive = false;
+            _wasAiming = false;
+            _releasing = false;
             _upperWeight = 0f;
             _animator.SetLayerWeight(_upperBodyLayer, 0f);
             PlayOnce(DeathHash);
         }
         public void UpdateAimAnimation(bool isAiming, bool cancelled, float dt)
         {
+            float drawSeconds = Mathf.Max(0.05f, _unit != null ? _unit.BowDrawSeconds : 0.8f);
+
             if (isAiming) {
-                if (!_upperActive) _bowTime = 0f;          // кожен натяг починається з нуля
-                _upperActive = true;
-                _upperWeight = Mathf.MoveTowards(_upperWeight, 1f, dt * _layerBlendSpeed);
-
-                float drawSeconds = Mathf.Max(0.05f, _unit != null ? _unit.BowDrawSeconds : 0.8f);
-                float drawSpeed = _bowDrawNormalizedTime / drawSeconds;
-                _bowTime = Mathf.MoveTowards(_bowTime, _bowDrawNormalizedTime, dt * drawSpeed);
-            } else if (_upperActive) {
-                if (cancelled) {
-                    // скасований натяг: тятива повертається назад, без анімації пострілу
-                    _bowTime = Mathf.MoveTowards(_bowTime, 0f, dt * _releaseSpeed);
-                    if (_bowTime <= 0f) _upperActive = false;
-                } else {
-                    _bowTime += dt * _releaseSpeed;
-                    if (_bowTime >= 1f) { _bowTime = 1f; _upperActive = false; }
+                if (!_wasAiming) {
+                    _animator.SetFloat(DrawSpeedHash, GetClipLength("Bow_Draw") / drawSeconds);
+                    _animator.Play(BowDrawHash, _upperBodyLayer, 0f);
+                    _releasing = false;
+                    _phaseTime = 0f;
                 }
+                _phaseTime += dt;
+                _upperWeight = Mathf.MoveTowards(_upperWeight, 1f, dt * _layerBlendSpeed);
             } else {
-                _upperWeight = Mathf.MoveTowards(_upperWeight, 0f, dt * _layerBlendSpeed);
+                if (_wasAiming && !cancelled) {
+                    _animator.SetFloat(ReleaseSpeedHash, GetClipLength("Bow_Release") / _releaseSeconds);
+                    _animator.Play(BowReleaseHash, _upperBodyLayer, 0f);
+                    _releasing = true;
+                    _phaseTime = 0f;
+                }
+                if (_releasing) {
+                    _phaseTime += dt;
+                    float k = Mathf.Clamp01(_phaseTime / _releaseSeconds);
+                } else {
+                    _upperWeight = Mathf.MoveTowards(_upperWeight, 0f, dt * _layerBlendSpeed);
+                }
             }
-
+            _wasAiming = isAiming;
             _animator.SetLayerWeight(_upperBodyLayer, _upperWeight);
-            if (_upperWeight > 0.001f)
-                _animator.Play(BowShootUpperHash, _upperBodyLayer, _bowTime);
         }
         private void PlayOnce(int stateHash)
         {

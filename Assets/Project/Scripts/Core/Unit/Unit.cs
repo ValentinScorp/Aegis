@@ -207,6 +207,26 @@ namespace Aegis.Core
         }
 
         // ─── Combat ───────────────────────────────────────────
+        public void BeginDraw()
+        {
+            if (IsAiming) return;
+            _weaponry.Unholster();
+            IsAiming = true; AimCancelled = false;
+            AimStarted?.Invoke();
+        }
+        public void ReleaseArrow(WorldEntity target)
+        {
+            if (!IsAiming) return;
+            IsAiming = false; AimCancelled = false;
+            AimEnded?.Invoke();
+            PerformProjectileLaunch(target);
+        }
+        public void CancelDraw()
+        {
+            if (!IsAiming) return;
+            IsAiming = false; AimCancelled = true;
+            AimEnded?.Invoke();
+        }
         public void PerformAim(Vector3 worldDirection, float deltaTime)
         {
             if (!IsAlive || ControlMode != UnitControlMode.Direct || !CanShoot) return;

@@ -17,7 +17,9 @@ namespace Aegis.Core.AI
                     new Selector(
                         new Sequence(
                             new Condition(c => c.Unit.CanAttack(c.Unit.CurrentTarget)),
-                            new AttackAction()),
+                            new Selector(
+                                new Sequence(new Condition(c => c.Unit.Weaponry.BowActive), new BowAttackAction()),
+                                new AttackAction())),
                         new Sequence(
                             new Condition(CanChase),
                             new ChaseAction()))),

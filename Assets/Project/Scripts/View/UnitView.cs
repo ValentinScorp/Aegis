@@ -102,6 +102,8 @@ namespace Aegis.View
                 unit.Died += OnDied;
                 unit.ProjectileLaunched += OnProjectileLaunched;
                 unit.ShotReleased += OnShotReleased;
+                unit.AimStarted += OnAimStarted;
+                unit.AimEnded += OnAimEnded;
 
                 unit.HealthChanged += _healthView.OnHealthChanged;
                 unit.BodyPartHealthChanged += _healthView.OnPartChanged;
@@ -147,6 +149,8 @@ namespace Aegis.View
                 unit.Died -= OnDied;
                 unit.ProjectileLaunched -= OnProjectileLaunched;
                 unit.ShotReleased -= OnShotReleased;
+                unit.AimStarted += OnAimStarted;
+                unit.AimEnded += OnAimEnded;
 
                 unit.HealthChanged -= _healthView.OnHealthChanged;
                 unit.BodyPartHealthChanged -= _healthView.OnPartChanged;
@@ -199,7 +203,7 @@ namespace Aegis.View
                 case UnitActionId.Attack:
                     var weaponAnim = unit.Weaponry.ActiveAnimation;
                     var ainmSpeed = _entityAnimator.PlayAttack(weaponAnim, unit.AttackTime);
-                    _weaponry.GetActiveHandWeapon()?.PlayShootAnimation(ainmSpeed);
+                    _weaponry.GetActiveHandWeapon()?.PlayDraw(ainmSpeed);
                     break;
                 case UnitActionId.Idle:
                     _entityAnimator.PlayIdle();
@@ -271,6 +275,18 @@ namespace Aegis.View
                 var arrow = SpawnArrow(arrowPrefab);
                 arrow.Launch(unit, aimPoint, Vector3.zero);
             }
+        }
+        private void OnAimStarted()
+        {
+            if (_entity is Unit unit)
+                _weaponry.GetActiveHandWeapon()?.PlayDraw(unit.BowDrawSeconds);
+        }
+        private void OnAimEnded()
+        {
+            if (_entity is not Unit unit) return;
+            var weapon = _weaponry.GetActiveHandWeapon();
+            if (unit.AimCancelled) weapon?.PlayIdle();
+            else weapon?.PlayRelease(_entityAnimator.ReleaseSeconds);
         }
         private Vector3 GetScreenCenterAimPoint()
         {

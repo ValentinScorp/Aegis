@@ -28,8 +28,11 @@ namespace Aegis.View
             
             if (_unit.ControlMode == UnitControlMode.Direct) {
                 UpdateDirectMode();
-            } else if (_animator.IsWalking) {
-                _animator.SetWalkSpeed(_movement.NormalizedSpeed * _unit.WalkAnimationSpeedMultiplier);
+            } else  {
+                if (_animator.IsWalking) {
+                    _animator.SetWalkSpeed(_movement.NormalizedSpeed * _unit.WalkAnimationSpeedMultiplier);
+                }
+                _animator.UpdateAimAnimation(_unit.IsAiming, _unit.AimCancelled, Time.deltaTime);
             }
             // Debug.Log($"[{name}] ControlMode={_unit.ControlMode}, IsMoving={_directMovement?.IsMoving}, Speed={_directMovement?.CurrentSpeedNormalized}");
 
